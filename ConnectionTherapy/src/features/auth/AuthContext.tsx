@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
-import { Session, AuthChangeEvent } from '@supabase/supabase-js';
-import { OAuthProvider, User } from './auth.types';
+import { Session, AuthChangeEvent, User } from '@supabase/supabase-js';
+import { OAuthProvider } from './auth.types';
 import { supabase } from '../../supabase/supabase';
 import { loginWithEmail as authServiceLogin, signUpWithEmail as authServiceSignUp, oauthLogin as authServiceOAuthLogin, signOut as authServiceSignOut } from './services/auth.service';
 import userData from './utils/userData';

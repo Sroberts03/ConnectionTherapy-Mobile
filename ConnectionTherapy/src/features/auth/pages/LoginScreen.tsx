@@ -22,7 +22,7 @@ export default function LoginScreen() {
 
     return (
         <KeyboardAvoidingView
-            className="flex-1 bg-background"
+            className="flex-1 bg-primary-50"
             behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
             <ScrollView
