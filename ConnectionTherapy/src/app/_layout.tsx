@@ -6,6 +6,8 @@ import { useEffect } from "react";
 import { View, ActivityIndicator } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { QuoteProvider } from "../features/quote/QuoteContext";
+import { SQLiteProvider } from "expo-sqlite";
+import { initializeDatabase } from "../db/database";
 
 function IntialLayout() {
     const { session, error, loadingAuth, user } = useAuth();
@@ -41,13 +43,15 @@ function IntialLayout() {
 export default function RootLayout() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
-            <SafeAreaView className="flex-1 bg-primary-50">
-                <AuthProvider>
-                    <QuoteProvider>
-                        <IntialLayout />
-                    </QuoteProvider>
-                </AuthProvider>
-            </SafeAreaView>
+            <SQLiteProvider databaseName="connectionTherapy.db" onInit={initializeDatabase}>
+                <SafeAreaView className="flex-1 bg-primary-50">
+                    <AuthProvider>
+                        <QuoteProvider>
+                            <IntialLayout />
+                        </QuoteProvider>
+                    </AuthProvider>
+                </SafeAreaView>
+            </SQLiteProvider>
         </GestureHandlerRootView>
     )
 }

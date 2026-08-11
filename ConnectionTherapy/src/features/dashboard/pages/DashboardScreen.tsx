@@ -3,7 +3,7 @@ import QuoteCard from '../../quote/components/QuoteCard'
 import { useQuote } from '../../quote/QuoteContext'
 import { useAuth } from '../../auth/AuthContext'
 import { useEffect } from 'react'
-import { getFirstName } from '../../../utils/getFirstName'
+import DashboardHeader from '../components/DashboardHeader'
 
 export default function DashboardScreen() {
     const { getQuote } = useQuote()
@@ -16,13 +16,13 @@ export default function DashboardScreen() {
     }, [session])
 
     return (
-        <ScrollView className="flex-1 bg-primary-50">
+        <ScrollView 
+            className="flex-1 bg-transparent"
+            contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 32, paddingBottom: 40 }}
+            showsVerticalScrollIndicator={false}
+        >
+            <DashboardHeader />
             <QuoteCard />
-            <View className="m-4">
-                <Text className="text-2xl font-semibold">
-                    Welcome back, {getFirstName(user?.user_metadata.display_name)}!
-                </Text>
-            </View>
         </ScrollView>
     )
 }
