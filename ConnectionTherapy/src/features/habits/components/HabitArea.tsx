@@ -20,16 +20,16 @@ export default function HabitArea({habits}: HabitAreaProps) {
         const intelectualHabits = new Map<number, Habit>()
         const socialHabits = new Map<number, Habit>()
         habits.forEach((habit) => {
-            if (habit.category === "spiritual") {
+            if (habit.category === "Spiritual") {
                 spiritualHabits.set(habit.id, habit)
             }
-            if (habit.category === "physical") {
+            if (habit.category === "Physical") {
                 physicalHabits.set(habit.id, habit)
             }
-            if (habit.category === "social") {
+            if (habit.category === "Social") {
                 socialHabits.set(habit.id, habit)
             }
-            if (habit.category === "intellectual") {
+            if (habit.category === "Intellectual") {
                 intelectualHabits.set(habit.id, habit)
             }
         })

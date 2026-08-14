@@ -17,7 +17,7 @@ export default function DashboardScreen() {
 
     return (
         <ScrollView 
-            className="flex-1 bg-transparent"
+            className="flex-1 bg-primary-50"
             contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 32, paddingBottom: 40 }}
             showsVerticalScrollIndicator={false}
         >

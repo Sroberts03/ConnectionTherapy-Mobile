@@ -1,6 +1,5 @@
 import { Session } from "@supabase/supabase-js";
-
-const backendOrigin = process.env.EXPO_PUBLIC_BACKEND_ORIGIN;
+import { Platform } from "react-native";
 
 export type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "OPTIONS";
 
@@ -11,13 +10,18 @@ export default async function HTTPRequest(
     session?: Session,
     body?: Object,
 ) {
-    if (!backendOrigin) {
+    let currentOrigin = process.env.EXPO_PUBLIC_BACKEND_ORIGIN;
+    if (currentOrigin && Platform.OS === 'android') {
+        currentOrigin = currentOrigin.replace('127.0.0.1', '10.0.2.2').replace('localhost', '10.0.2.2');
+    }
+
+    if (!currentOrigin) {
         throw new Error("EXPO_PUBLIC_BACKEND_ORIGIN environment variable is not set");
     }
     if (needsAuth && !session) {
         throw new Error("No session provided for authenticated request");
     }
-    const response = await fetch(`${backendOrigin}/${endpoint}`, {
+    const response = await fetch(`${currentOrigin}/${endpoint}`, {
         method: method,
         headers: {
             "Content-Type": "application/json",

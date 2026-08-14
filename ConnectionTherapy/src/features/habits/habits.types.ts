@@ -1,8 +1,8 @@
 export enum HabitCategory {
-    SOCIAL = 'social',
-    PHYSICAL = 'physical',
-    SPIRITUAL = 'spiritual',
-    INTELLECTUAL = 'intellectual',
+    SOCIAL = 'Social',
+    PHYSICAL = 'Physical',
+    SPIRITUAL = 'Spiritual',
+    INTELLECTUAL = 'Intellectual',
 }
 
 export interface Habit {
@@ -13,3 +13,14 @@ export interface Habit {
     category: HabitCategory
     is_completed: boolean
 }
+
+export interface HabitDetails {
+    name: string
+    description: string
+    duration: string
+    category: HabitCategory
+    repetition: string
+    startDate: string
+    endDate: string
+}
+    

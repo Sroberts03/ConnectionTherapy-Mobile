@@ -2,6 +2,8 @@ import { Text, View, TouchableOpacity } from "react-native"
 import { Habit, HabitCategory } from "../habits.types"
 import HabitCard from "./HabitCard"
 import { Ionicons } from "@expo/vector-icons"
+import NewHabit from "./NewHabit"
+import { useState } from "react"
 
 interface HabitPillarContainerProps {
     habits: Map<number, Habit>
@@ -9,6 +11,8 @@ interface HabitPillarContainerProps {
 }
 
 export default function HabitPillarContainer({habits, category}: HabitPillarContainerProps) {
+    const [newHabitVisible, setNewHabitVisible] = useState(false)
+
     const getIcon = () => {
         switch (category) {
             case HabitCategory.SPIRITUAL: return "leaf-outline"
@@ -41,10 +45,16 @@ export default function HabitPillarContainer({habits, category}: HabitPillarCont
                 ))}
             </View>
 
-            <TouchableOpacity className="flex-row items-center mt-5 ml-1">
+            <TouchableOpacity className="flex-row items-center mt-5 ml-1" onPress={() => setNewHabitVisible(true)}>
                 <Ionicons name="add" size={16} color="#9ca3af" />
                 <Text className="text-neutral-400 font-medium ml-1">Add habit</Text>
             </TouchableOpacity>
+
+            <NewHabit 
+                isVisible={newHabitVisible}
+                onClose={() => setNewHabitVisible(false)}
+                category={category}
+            />
         </View>
     )
 }

@@ -1,5 +1,7 @@
-import { Text, View, TouchableOpacity } from "react-native"
+import { Text, View, TouchableOpacity, Platform } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
+import { useState } from "react"
+import DateTimePicker from '@react-native-community/datetimepicker'
 
 interface DatePickerProps {
     date: Date
@@ -8,6 +10,21 @@ interface DatePickerProps {
 
 export default function DatePicker({date, setDate}: DatePickerProps) {
     const today = new Date();
+    const [showPicker, setShowPicker] = useState(false);
+
+    const handleValueChange = (event: any, selectedDate: Date) => {
+        setDate(selectedDate);
+        setShowPicker(false);
+    };
+
+    const handleDismiss = () => {
+        setShowPicker(false);
+    };
+
+    const isToday = 
+        date.getDate() === today.getDate() &&
+        date.getMonth() === today.getMonth() &&
+        date.getFullYear() === today.getFullYear();
 
     const handlePrevDay = () => {
         const newDate = new Date(date);
@@ -20,11 +37,6 @@ export default function DatePicker({date, setDate}: DatePickerProps) {
         newDate.setDate(date.getDate() + 1);
         setDate(newDate);
     }
-
-    const isToday = 
-        date.getDate() === today.getDate() &&
-        date.getMonth() === today.getMonth() &&
-        date.getFullYear() === today.getFullYear();
 
     const getDisplayText = () => {
         if (isToday) return "Today";
@@ -43,7 +55,7 @@ export default function DatePicker({date, setDate}: DatePickerProps) {
                 </TouchableOpacity>
 
                 <View className="flex-row items-center">
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => setShowPicker(!showPicker)}>
                         <Ionicons name="calendar-outline" size={24} color="#0d9488" />
                     </TouchableOpacity>
                     <Text className="text-xl font-bold text-neutral-600 ml-4">{getDisplayText()}</Text>
@@ -53,6 +65,20 @@ export default function DatePicker({date, setDate}: DatePickerProps) {
                     <Ionicons name="chevron-forward" size={24} color="#9ca3af" />
                 </TouchableOpacity>
             </View>
+
+            {showPicker && (
+                <View className="bg-white rounded-2xl w-11/12 self-center overflow-hidden shadow-sm border border-neutral-100 smt-2 mt-2" style={{ height: 340 }}>
+                    <DateTimePicker
+                        value={date}
+                        mode="date"
+                        display="inline"
+                        onValueChange={handleValueChange}
+                        onDismiss={handleDismiss}
+                        themeVariant="light"
+                        style={{ width: '100%', height: 340 }}
+                    />
+                </View>
+            )}
             
             {!isToday && (
                 <View className="flex-row items-center justify-center w-11/12 self-center mt-2">
