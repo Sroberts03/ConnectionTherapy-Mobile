@@ -3,6 +3,11 @@ import { Habit, HabitCategory, HabitDetails } from "../habits.types";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useSQLiteContext } from "expo-sqlite";
+import HabitNameInput from "./HabitNameInput";
+import HabitDescInput from "./HabitDescInput";
+import HabitDurationInput from "./HabitDurationInput";
+import HabitCategorySelector from "./HabitCategorySelector";
+import HabitStartEndDateInput from "./HabitStartEndDateInput";
 
 interface NewHabitProps {
     isVisible: boolean
@@ -18,14 +23,11 @@ export default function NewHabit({ isVisible, onClose, category, habitId }: NewH
     const [description, setDescription] = useState(habit?.description || "")
     const [duration, setDuration] = useState(habit?.duration || "")
     const [currentCategory, setCurrentCategory] = useState<HabitCategory>(category || habit?.category || HabitCategory.PHYSICAL)
-    const [repetition, setRepetition] = useState(habit?.repetition || "")
+    const [repetition, setRepetition] = useState(habit?.repetition || "N")
     const today = new Date();
     const localDateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     const [startDate, setStartDate] = useState(habit?.startDate || localDateStr)
-    const [endDate, setEndDate] = useState(habit?.endDate || localDateStr)
-
-
-    const categories = Object.values(HabitCategory)
+    const [endDate, setEndDate] = useState(habit?.endDate || "")
 
     useEffect(() => {
         if (!habitId) return;
@@ -36,6 +38,17 @@ export default function NewHabit({ isVisible, onClose, category, habitId }: NewH
     const handleSave = () => {
         // TODO: Save logic
         onClose();
+    }
+
+    const reset = () => {
+        setHabit(undefined);
+        setName("");
+        setDescription("");
+        setDuration("");
+        setCurrentCategory(category || HabitCategory.PHYSICAL);
+        setRepetition("N");
+        setStartDate(localDateStr);
+        setEndDate("");
     }
 
     return (
@@ -62,65 +75,42 @@ export default function NewHabit({ isVisible, onClose, category, habitId }: NewH
                         </View>
 
                         <ScrollView className="p-6" showsVerticalScrollIndicator={false}>
-                            {/* Name Input */}
-                            <View className="mb-5">
-                                <Text className="text-sm font-semibold text-neutral-600 mb-2 ml-1">Habit Name</Text>
-                                <TextInput 
-                                    className="bg-neutral-50 border border-neutral-200 rounded-2xl px-4 py-4 text-base text-neutral-800"
-                                    placeholder="e.g. Read a book"
-                                    placeholderTextColor="#9ca3af"
-                                    value={name}
-                                    onChangeText={setName}
-                                />
-                            </View>
+                            <HabitNameInput 
+                                name={name} 
+                                setName={setName} 
+                            />
 
-                            {/* Description Input */}
-                            <View className="mb-5">
-                                <Text className="text-sm font-semibold text-neutral-600 mb-2 ml-1">Description (Optional)</Text>
-                                <TextInput 
-                                    className="bg-neutral-50 border border-neutral-200 rounded-2xl px-4 py-4 text-base text-neutral-800"
-                                    placeholder="e.g. Read 10 pages before bed"
-                                    placeholderTextColor="#9ca3af"
-                                    value={description}
-                                    onChangeText={setDescription}
-                                    multiline
-                                />
-                            </View>
+                            <HabitDescInput 
+                                description={description} 
+                                setDescription={setDescription} 
+                            />
 
-                            {/* Duration Input */}
-                            <View className="mb-5">
-                                <Text className="text-sm font-semibold text-neutral-600 mb-2 ml-1">Duration / Goal</Text>
-                                <TextInput 
-                                    className="bg-neutral-50 border border-neutral-200 rounded-2xl px-4 py-4 text-base text-neutral-800"
-                                    placeholder="e.g. 30 mins, 1 chapter"
-                                    placeholderTextColor="#9ca3af"
-                                    value={duration}
-                                    onChangeText={setDuration}
-                                />
-                            </View>
+                            <HabitDurationInput 
+                                duration={duration} 
+                                setDuration={setDuration} 
+                            />
 
-                            {/* Category Selector */}
-                            <View className="mb-8">
-                                <Text className="text-sm font-semibold text-neutral-600 mb-3 ml-1">Category</Text>
-                                <View className="flex-row flex-wrap gap-2">
-                                    {categories.map((cat) => (
-                                        <TouchableOpacity 
-                                            key={cat}
-                                            onPress={() => setCurrentCategory(cat)}
-                                            className={`px-4 py-2.5 rounded-full border ${currentCategory === cat ? 'bg-teal-600 border-teal-600' : 'bg-neutral-50 border-neutral-200'}`}
-                                        >
-                                            <Text className={`capitalize font-semibold ${currentCategory === cat ? 'text-white' : 'text-neutral-600'}`}>
-                                                {cat}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    ))}
-                                </View>
-                            </View>
+                            <HabitCategorySelector 
+                                currentCategory={currentCategory} 
+                                setCurrentCategory={setCurrentCategory} 
+                            />
+                                                       
+                            <HabitStartEndDateInput 
+                                startDate={startDate} 
+                                setStartDate={setStartDate}
+                                endDate={endDate} 
+                                setEndDate={setEndDate} 
+                                repetition={repetition}
+                                setRepetition={setRepetition}
+                            />
 
                             {/* Action Buttons */}
                             <View className="flex-row gap-4 mb-6">
                                 <TouchableOpacity 
-                                    onPress={onClose}
+                                    onPress={() => {
+                                        reset();
+                                        onClose();
+                                    }}
                                     className="flex-1 bg-neutral-100 py-4 rounded-2xl items-center"
                                 >
                                     <Text className="text-neutral-600 font-bold text-base">Cancel</Text>
