@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import DateInput from "../../../globalComponents/DateInput";
+import CustomRepeatBuilder from "./CustomRepeatBuilder";
 
 interface HabitStartEndDateInputProps {
     startDate: string
@@ -9,12 +11,27 @@ interface HabitStartEndDateInputProps {
     setEndDate: (date: string) => void
     repetition: string
     setRepetition: (repeat: string) => void
+    setCustomRepetition: (customRepetition: string) => void
 }
 
-export default function HabitStartEndDateInput({ startDate, setStartDate, endDate, setEndDate, repetition, setRepetition }: HabitStartEndDateInputProps) {
+export default function HabitStartEndDateInput({ startDate, setStartDate, endDate, setEndDate, repetition, setRepetition, setCustomRepetition }: HabitStartEndDateInputProps) {
     const [showRepeatInfo, setShowRepeatInfo] = useState<boolean>(false)
     const [showStartDatePicker, setShowStartDatePicker] = useState<boolean>(false)
     const [showEndDatePicker, setShowEndDatePicker] = useState<boolean>(false)
+    const [showRepeatDropdown, setShowRepeatDropdown] = useState<boolean>(false)
+    
+    const repeatOptions = [
+        {label: "Daily", value: "FREQ=DAILY"},
+        {label: "Weekdays", value: "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"},
+        {label: "Weekends", value: "FREQ=WEEKLY;BYDAY=SA,SU"},
+        {label: "Weekly", value: "FREQ=WEEKLY"},
+        {label: "Bi-Weekly", value: "FREQ=WEEKLY;INTERVAL=2"},
+        {label: "Monthly", value: "FREQ=MONTHLY"},
+        {label: "Every 3 months", value: "FREQ=MONTHLY;INTERVAL=3"},
+        {label: "Every 6 months", value: "FREQ=MONTHLY;INTERVAL=6"},
+        {label: "Yearly", value: "FREQ=YEARLY"},
+        {label: "Custom", value: "custom"},
+    ]
     
     return (
         <View>
@@ -39,6 +56,55 @@ export default function HabitStartEndDateInput({ startDate, setStartDate, endDat
             {showRepeatInfo ? 
                 <View>
                     <View className="mb-5">
+                        <Text className="text-sm font-semibold text-neutral-600 mb-2 ml-1">Repeat</Text>
+                        
+                        <TouchableOpacity 
+                            activeOpacity={0.7}
+                            onPress={() => setShowRepeatDropdown(!showRepeatDropdown)}
+                            className={`flex-row items-center justify-between bg-neutral-50 border ${showRepeatDropdown ? 'border-teal-500' : 'border-neutral-200'} rounded-2xl px-4 py-4`}
+                        >
+                            <Text className={`text-base font-medium ${repetition !== "N" ? 'text-teal-700' : 'text-neutral-700'}`}>
+                                {repetition === "None" ? "None" : repeatOptions.find(o => o.value === repetition)?.label || "Custom"}
+                            </Text>
+                            <Ionicons name={showRepeatDropdown ? "chevron-up" : "chevron-down"} size={20} color="#9ca3af" />
+                        </TouchableOpacity>
+
+                        {showRepeatDropdown && (
+                            <View className="bg-white border border-neutral-200 rounded-2xl mt-2 overflow-hidden">
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setRepetition("None");
+                                        setShowRepeatDropdown(false);
+                                    }}
+                                    className={`px-4 py-4 border-b border-neutral-100 ${repetition === "None" ? 'bg-teal-50' : ''}`}
+                                >
+                                    <Text className={`text-base font-medium ${repetition === "None" ? 'text-teal-700' : 'text-neutral-700'}`}>
+                                        None
+                                    </Text>
+                                </TouchableOpacity>
+                                {repeatOptions.map((opt, index) => (
+                                    <TouchableOpacity
+                                        key={opt.value}
+                                        onPress={() => {
+                                            setRepetition(opt.value);
+                                            setShowRepeatDropdown(false);
+                                        }}
+                                        className={`px-4 py-4 ${index < repeatOptions.length - 1 ? 'border-b border-neutral-100' : ''} ${repetition === opt.value ? 'bg-teal-50' : ''}`}
+                                    >
+                                        <Text className={`text-base font-medium ${repetition === opt.value ? 'text-teal-700' : 'text-neutral-700'}`}>
+                                            {opt.label}
+                                        </Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        )}
+
+                        {repetition === "custom" ? 
+                            <CustomRepeatBuilder setCustomRepetition={setCustomRepetition}/> 
+                        : null}
+                    </View>
+                    
+                    <View className="mb-5">
                         <View className="flex-row justify-between items-center">
                             <Text className="text-sm font-semibold text-neutral-600 mb-2 ml-1">End Date (Optional)</Text>
                             {endDate !== "" ? (
@@ -56,11 +122,6 @@ export default function HabitStartEndDateInput({ startDate, setStartDate, endDat
                             showDatePicker={showEndDatePicker}
                             setShowDatePicker={setShowEndDatePicker}
                         />
-                    </View>
-
-                    <View className="mb-5">
-                        <Text className="text-sm font-semibold text-neutral-600 mb-2 ml-1">Repeat</Text>
-            
                     </View>
                 </View>
             : null}

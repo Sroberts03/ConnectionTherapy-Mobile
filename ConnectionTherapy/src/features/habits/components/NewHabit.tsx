@@ -23,7 +23,8 @@ export default function NewHabit({ isVisible, onClose, category, habitId }: NewH
     const [description, setDescription] = useState(habit?.description || "")
     const [duration, setDuration] = useState(habit?.duration || "")
     const [currentCategory, setCurrentCategory] = useState<HabitCategory>(category || habit?.category || HabitCategory.PHYSICAL)
-    const [repetition, setRepetition] = useState(habit?.repetition || "N")
+    const [repetition, setRepetition] = useState(habit?.repetition || "None")
+    const [customRepetition, setCustomRepetition] = useState<string>("")
     const today = new Date();
     const localDateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     const [startDate, setStartDate] = useState(habit?.startDate || localDateStr)
@@ -36,8 +37,11 @@ export default function NewHabit({ isVisible, onClose, category, habitId }: NewH
     },[habitId])
 
     const handleSave = () => {
-        // TODO: Save logic
-        onClose();
+        if (repetition === "custom") {
+            console.log(customRepetition);
+            return;
+        }
+        console.log(repetition);
     }
 
     const reset = () => {
@@ -63,7 +67,7 @@ export default function NewHabit({ isVisible, onClose, category, habitId }: NewH
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
                     className="w-11/12 max-h-[90%]"
                 >
-                    <View className="bg-white rounded-3xl overflow-hidden shadow-xl">
+                    <View className="bg-white rounded-3xl overflow-hidden shadow-xl mb-16">
                         {/* Header */}
                         <View className="flex-row justify-between items-center p-6 border-b border-neutral-100">
                             <Text className="text-xl font-bold text-neutral-800">
@@ -102,6 +106,7 @@ export default function NewHabit({ isVisible, onClose, category, habitId }: NewH
                                 setEndDate={setEndDate} 
                                 repetition={repetition}
                                 setRepetition={setRepetition}
+                                setCustomRepetition={setCustomRepetition}
                             />
 
                             {/* Action Buttons */}
