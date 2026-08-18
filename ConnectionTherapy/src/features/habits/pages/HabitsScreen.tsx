@@ -66,7 +66,11 @@ export default function HabitsScreen() {
     }
     
     return (
-        <ScrollView className={`flex-1 bg-primary-50 ${Platform.OS === "ios" ? 'mt-12' : 'mt-16'}`}>
+        <ScrollView 
+            className={`flex-1 bg-primary-50`}
+            contentContainerStyle={{ paddingTop: Platform.OS === "ios" ? 40 : 48 }}
+            showsVerticalScrollIndicator={false}
+        >
             <DatePicker
                 date={date}
                 setDate={setDate}

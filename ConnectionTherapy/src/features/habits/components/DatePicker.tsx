@@ -49,7 +49,7 @@ export default function DatePicker({date, setDate}: DatePickerProps) {
 
     return (
         <View>
-            <View className="flex-row items-center justify-between bg-white rounded-[2rem] px-6 py-4 w-11/12 self-center shadow-sm border border-neutral-100">
+            <View className="flex-row items-center justify-between bg-white rounded-[2rem] px-6 py-4 w-11/12 self-center mt-6 shadow-sm border border-neutral-100">
                 <TouchableOpacity onPress={handlePrevDay} className="p-2">
                     <Ionicons name="chevron-back" size={24} color="#9ca3af" />
                 </TouchableOpacity>

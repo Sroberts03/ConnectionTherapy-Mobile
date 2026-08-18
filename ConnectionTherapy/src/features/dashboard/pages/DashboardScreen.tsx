@@ -1,4 +1,4 @@
-import { ScrollView, View, Text } from 'react-native'
+import { ScrollView, View, Text, Platform } from 'react-native'
 import QuoteCard from '../../quote/components/QuoteCard'
 import { useQuote } from '../../quote/QuoteContext'
 import { useAuth } from '../../auth/AuthContext'
@@ -17,8 +17,8 @@ export default function DashboardScreen() {
 
     return (
         <ScrollView 
-            className="flex-1 bg-primary-50"
-            contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 32, paddingBottom: 40 }}
+            className="flex-1 bg-primary-50 "
+            contentContainerStyle={{ paddingHorizontal: 24, paddingTop: Platform.OS === "ios" ? 40 : 48, paddingBottom: 40 }}
             showsVerticalScrollIndicator={false}
         >
             <DashboardHeader />
