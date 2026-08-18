@@ -1,18 +1,28 @@
 import { SQLiteDatabase } from "expo-sqlite";
-import { Habit, HabitCategory } from "../habits.types";
-import { RRule, rrulestr } from 'rrule'
-import { createHabitInstanceDataAccess, createNewHabitDataAccess, getHabitsDataAccess, markHabitCompleteDataAccess, markHabitIncompleteDataAccess } from "./habits.dataAccess";
-import { CreationError } from "../errors/CreationError";
+import { Habit, HabitCategory, HabitDetails } from "../habits.types";
+
+import { 
+    createHabitInstanceDataAccess, 
+    createNewHabitDataAccess, 
+    deleteHabitInstances, 
+    getHabitDetailsDataAccess, 
+    getHabitIdFromInstanceId, 
+    getHabitsDataAccess, 
+    markHabitCompleteDataAccess, 
+    markHabitIncompleteDataAccess, 
+    updateHabitDataAccess, 
+    userOwnsHabitDataAccess 
+} from "./habits.dataAccess";
+import getDates from "../utils/getDates";
+import creationValidation from "../utils/habitValidation";
+import { formatDate, getToday } from "../utils/dates";
 
 export async function getHabits(
     date: Date,
     userId: string,
     db: SQLiteDatabase
 ): Promise<Habit[]> {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
+    const formattedDate = formatDate(date);
     const habits: Habit[] = await getHabitsDataAccess(formattedDate, userId, db);
     return habits;
 }
@@ -22,11 +32,7 @@ export async function toggleComplete(
     isComplete: boolean,
     db: SQLiteDatabase
 ): Promise<void> {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
+    const formattedDate = getToday();
     if (isComplete) {
         await markHabitCompleteDataAccess(habitId, formattedDate, db);
     } else {
@@ -35,6 +41,7 @@ export async function toggleComplete(
 }
 
 export async function createNewHabit (
+    userCurrentDate: string,
     name: string,
     duration: string,
     category: HabitCategory,
@@ -45,43 +52,9 @@ export async function createNewHabit (
     userId: string,
     db: SQLiteDatabase,
 ): Promise<Habit | null> {
-    if (name.trim() === "") {
-        throw new CreationError("Habit name cannot be empty", "name");
-    }
-    if (!duration || duration.trim() === "") {
-        throw new CreationError("Habit duration cannot be empty", "duration");
-    }
-    if (!startDate || startDate.trim() === "") {
-        throw new CreationError("Habit start date cannot be empty", "startDate");
-    }
-    if (!category) {
-        throw new CreationError("Habit category cannot be empty", "category");
-    }
-    if (endDate && endDate < startDate) {
-        throw new CreationError("Habit end date cannot be before start date", "endDate");
-    }
-    
-    let occurenceDates: Date[] = [];
-    const start = new Date(`${startDate}T00:00:00`);
-    const twoWeeksOut = new Date(start);
-    twoWeeksOut.setDate(twoWeeksOut.getDate() + 14);
-    
-    let boundaryEnd = twoWeeksOut;
-    if (endDate) {
-        const providedEnd = new Date(`${endDate}T23:59:59`);
-        boundaryEnd = providedEnd < twoWeeksOut ? providedEnd : twoWeeksOut;
-    }
+    creationValidation(name, duration, category, startDate, endDate);
 
-    if (repetition === "None" || !repetition) {
-        occurenceDates = [start]
-    } else {
-        const parsedRule = rrulestr(repetition);
-        const ruleWithStart = new RRule({
-            ...parsedRule.options,
-            dtstart: start,
-        })
-        occurenceDates = ruleWithStart.between(start, boundaryEnd, true)
-    }
+    const occurenceDates = getDates(startDate, endDate, repetition);
 
     const habitId: number = await createNewHabitDataAccess(
         name,
@@ -95,20 +68,76 @@ export async function createNewHabit (
         db
     )
 
-    const today = new Date();
-    const todayYear = today.getFullYear();
-    const todayMonth = String(today.getMonth() + 1).padStart(2, '0');
-    const todayDay = String(today.getDate()).padStart(2, '0');
-    const formattedToday = `${todayYear}-${todayMonth}-${todayDay}`;
+    return createInstances(userCurrentDate, occurenceDates, habitId, db);
+}
 
+export async function updateHabit(
+    userCurrentDate: string,
+    habitInstanceId: number,
+    name: string,
+    duration: string,
+    category: HabitCategory,
+    startDate: string,
+    repetition: string,
+    endDate: string,
+    description: string,
+    userId: string,
+    db: SQLiteDatabase,
+): Promise<Habit | null> {
+    creationValidation(name, duration, category, startDate, endDate)
+
+    const occurenceDates = getDates(startDate, endDate, repetition);
+
+    const isAllowedToUpdate = await userOwnsHabitDataAccess(habitInstanceId, userId, db)
+    if (!isAllowedToUpdate) {
+        throw new Error("You can not update this habit")
+    }
+
+    const habitId = await getHabitIdFromInstanceId(habitInstanceId, db)
+
+    await updateHabitDataAccess(
+        habitId,
+        name,
+        duration,
+        category,
+        startDate,
+        repetition,
+        endDate,
+        description,
+        userId,
+        db
+    )
+    await deleteHabitInstances(habitId, getToday(), db)
+
+    return createInstances(userCurrentDate, occurenceDates, habitId, db);
+}
+
+export async function getHabitDetails(
+    habitId: number, 
+    userId: string, 
+    db: SQLiteDatabase
+): Promise<HabitDetails> {
+    const userCanGetHabit = await userOwnsHabitDataAccess(habitId, userId, db)
+    if (!userCanGetHabit) {
+        throw new Error("User does not own this habit")
+    }
+    const habit = await getHabitDetailsDataAccess(habitId, db);
+    if (!habit) {
+        throw new Error("Habit not found")
+    }
+    return habit;
+}
+
+export async function createInstances(
+    userCurrentDate: string,
+    occurenceDates: Date[], 
+    habitId: number, 
+    db: SQLiteDatabase
+): Promise<Habit | null> {
     let returnInstance: Habit | null = null;
     for (const date of occurenceDates) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const formattedDate = `${year}-${month}-${day}`;
-        const instance = await createHabitInstanceDataAccess(formattedDate, formattedToday, habitId, db);
-        if (instance) {
+        const instance = await createHabitInstanceDataAccess(formatDate(date), habitId, db);
+        if (formatDate(date) === userCurrentDate) {
             returnInstance = instance;
         }
     }

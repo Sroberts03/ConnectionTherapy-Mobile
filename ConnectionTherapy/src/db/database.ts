@@ -2,6 +2,11 @@ import { type SQLiteDatabase } from 'expo-sqlite';
 
 export async function initializeDatabase(db: SQLiteDatabase) {
     try {
+        // await db.execAsync(`DROP TABLE habits;`);
+        // await db.execAsync(`DROP TABLE habit_entries;`);
+        // await db.execAsync(`DROP TABLE journal_entries;`);
+        // await db.execAsync(`DROP TABLE daily_checks;`);
+
         await db.execAsync(`
             CREATE TABLE IF NOT EXISTS habits (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -14,7 +19,8 @@ export async function initializeDatabase(db: SQLiteDatabase) {
                 start_date DATE NOT NULL,
                 end_date DATE,
                 is_active BOOLEAN NOT NULL DEFAULT 1,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
         `);
 

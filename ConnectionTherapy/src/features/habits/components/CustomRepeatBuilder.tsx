@@ -1,20 +1,35 @@
 import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import CreateRepeatString from "../utils/CreateRepeatString";
+import CreateRepeatString from "../utils/createRepeatString";
 import { TextInput } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker";
+import {
+    parseCustomFreq,
+    parseCustomInterval,
+    parseCustomByDay,
+    parseCustomByMonthDay,
+    parseCustomEachOrOnThe,
+    parseCustomDayOfMonthInterval
+} from "../utils/parseRepeatString";
 
 interface CustomRepeatBuilderProps {
     setCustomRepetition: (repetition: string) => void
+    customRepetition?: string
 }
 
-export default function CustomRepeatBuilder({ setCustomRepetition }: CustomRepeatBuilderProps) {
-    const [freq, setFreq] = useState<string>("DAILY")
-    const [interval, setInterval] = useState<number>(1)
-    const [byDay, setByDay] = useState<string[]>([])
-    const [dayOfMonthInterval, setDayOfMonthInterval] = useState<"1" | "2" | "3" | "4" | "5" | "-1" | "">("")
-    const [byMonthDay, setByMonthDay] = useState<number[]>([])
-    const [eachOrOnThe, setEachOrOnThe] = useState<"Each" | "On The...">("Each")
+export default function CustomRepeatBuilder({ setCustomRepetition, customRepetition }: CustomRepeatBuilderProps) {
+    const [freq, setFreq]
+        = useState<string>(customRepetition ? parseCustomFreq(customRepetition) : "DAILY")
+    const [interval, setInterval] 
+        = useState<number>(customRepetition ? parseCustomInterval(customRepetition) : 1)
+    const [byDay, setByDay] 
+        = useState<string[]>(customRepetition ? parseCustomByDay(customRepetition) : [])
+    const [dayOfMonthInterval, setDayOfMonthInterval] 
+        = useState<"1" | "2" | "3" | "4" | "5" | "-1" | "">(customRepetition ? parseCustomDayOfMonthInterval(customRepetition) : "")
+    const [byMonthDay, setByMonthDay] 
+        = useState<number[]>(customRepetition ? parseCustomByMonthDay(customRepetition) : [])
+    const [eachOrOnThe, setEachOrOnThe]
+        = useState<"Each" | "On The...">(customRepetition ? parseCustomEachOrOnThe(customRepetition) : "Each")
 
     const daysOfWeek = [
         { label: "Sun", value: "SU" },

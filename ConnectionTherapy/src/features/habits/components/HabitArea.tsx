@@ -5,9 +5,10 @@ import HabitPillarContainer from "./HabitPillarContainer"
 
 interface HabitAreaProps {
     habits: Map<number, Habit>
+    date: Date
 }
 
-export default function HabitArea({habits}: HabitAreaProps) {
+export default function HabitArea({habits, date}: HabitAreaProps) {
     const pillars = [HabitCategory.SPIRITUAL, HabitCategory.PHYSICAL, HabitCategory.SOCIAL, HabitCategory.INTELLECTUAL]
     const [spiritualHabits, setSpiritualHabits] = useState<Map<number, Habit>>(new Map)
     const [physicalHabits, setPhysicalHabits] = useState<Map<number, Habit>>(new Map)
@@ -56,6 +57,7 @@ export default function HabitArea({habits}: HabitAreaProps) {
                             pillar === HabitCategory.PHYSICAL ? setPhysicalHabits :
                             pillar === HabitCategory.SOCIAL ? setSocialHabits :
                             setIntellectualHabits}
+                        date={date}
                     />
                 )
             })}

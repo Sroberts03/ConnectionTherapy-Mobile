@@ -15,6 +15,7 @@ export interface Habit {
 }
 
 export interface HabitDetails {
+    id: number
     name: string
     description: string
     duration: string

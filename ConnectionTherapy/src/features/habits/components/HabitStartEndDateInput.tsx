@@ -15,6 +15,7 @@ interface HabitStartEndDateInputProps {
     setRepetition: (repeat: string) => void
     setCustomRepetition: (customRepetition: string) => void
     creationError: CreationError | null
+    customRepetition?: string
 }
 
 export default function HabitStartEndDateInput({ 
@@ -23,9 +24,10 @@ export default function HabitStartEndDateInput({
     endDate, 
     setEndDate, 
     repetition, 
-    setRepetition, 
+    setRepetition,
     setCustomRepetition, 
-    creationError 
+    creationError,
+    customRepetition 
 }: HabitStartEndDateInputProps) {
     const [showRepeatInfo, setShowRepeatInfo] = useState<boolean>(false)
     const [showStartDatePicker, setShowStartDatePicker] = useState<boolean>(false)
@@ -42,7 +44,7 @@ export default function HabitStartEndDateInput({
         {label: "Every 3 months", value: "FREQ=MONTHLY;INTERVAL=3"},
         {label: "Every 6 months", value: "FREQ=MONTHLY;INTERVAL=6"},
         {label: "Yearly", value: "FREQ=YEARLY"},
-        {label: "Custom", value: "custom"},
+        {label: "Custom", value: "custom"}
     ]
     
     return (
@@ -118,7 +120,7 @@ export default function HabitStartEndDateInput({
                         )}
 
                         {repetition === "custom" ? 
-                            <CustomRepeatBuilder setCustomRepetition={setCustomRepetition}/> 
+                            <CustomRepeatBuilder setCustomRepetition={setCustomRepetition} customRepetition={customRepetition} /> 
                         : null}
                     </View>
                     

@@ -1,5 +1,6 @@
-import { Habit, HabitCategory } from "../habits.types";
+import { Habit, HabitCategory, HabitDetails } from "../habits.types";
 import { SQLiteDatabase } from "expo-sqlite";
+import { getToday } from "../utils/dates";
 
 export async function getHabitsDataAccess(
     formattedDate: string,
@@ -29,9 +30,9 @@ export async function markHabitCompleteDataAccess(
 ) {
     await db.runAsync(`
             UPDATE habit_entries
-            SET is_completed = 1, updated_at = ?
+            SET is_completed = 1, completed_at = ?, updated_at = ?
             WHERE id = ?
-    `, [date, habitId]);
+    `, [date, date, habitId]);
 }
 
 export async function markHabitIncompleteDataAccess(
@@ -41,7 +42,7 @@ export async function markHabitIncompleteDataAccess(
 ) {
     await db.runAsync(`
             UPDATE habit_entries
-            SET is_completed = 0, updated_at = ?
+            SET is_completed = 0, completed_at = null, updated_at = ?
             WHERE id = ?
     `, [date, habitId]);
 }
@@ -79,23 +80,97 @@ export async function getHabitInstanceDataAccess(id: number, db: SQLiteDatabase)
     return result[0];
 }
 
-export async function createHabitInstanceDataAccess(
-    date: string,
-    today: string,
+export async function getHabitDetailsDataAccess(
     habitId: number,
     db: SQLiteDatabase
-): Promise<Habit | null> {
-    if (date === today ) {
-        const id = await db.runAsync(`
-            INSERT INTO habit_entries (habit_id, complete_by)
-            VALUES (?, ?)
-        `, [habitId, date]);
-        return await getHabitInstanceDataAccess(id.lastInsertRowId, db)
-    } else {
-        await db.runAsync(`
-            INSERT INTO habit_entries (habit_id, complete_by)
-            VALUES (?, ?)
-        `, [habitId, date]);
-        return null;
+): Promise<HabitDetails> {
+    const result = await db.getAllAsync<HabitDetails>(`
+            SELECT
+                he.id,
+                h.name,
+                h.description,
+                h.duration,
+                h.category,
+                h.frequency as repetition,
+                h.start_date as startDate,
+                h.end_date as endDate,
+                he.is_completed as isCompleted
+            FROM habit_entries he
+            JOIN habits h on he.habit_id = h.id
+            WHERE he.id = ?`, [habitId])
+    return result[0];
+}
+
+export async function createHabitInstanceDataAccess(
+    date: string,
+    habitId: number,
+    db: SQLiteDatabase
+): Promise<Habit> {
+    const id = await db.runAsync(`
+        INSERT INTO habit_entries (habit_id, complete_by)
+        VALUES (?, ?)
+    `, [habitId, date]);
+    return await getHabitInstanceDataAccess(id.lastInsertRowId, db)
+}
+
+export async function userOwnsHabitDataAccess(
+    habitInstanceId: number,
+    userId: string,
+    db: SQLiteDatabase
+): Promise<boolean> {
+    try {
+        const result = await db.getAllAsync<number>(`
+                SELECT
+                    he.id
+                FROM habit_entries he
+                JOIN habits h on he.habit_id = h.id
+                WHERE he.id = ? and h.user_id = ?`, 
+                [habitInstanceId, userId])
+        return result.length > 0;
+    } catch {
+        return false
     }
+}
+
+export async function updateHabitDataAccess(
+    habitId: number,
+    name: string,
+    duration: string,
+    category: HabitCategory,
+    startDate: string,
+    repetition: string,
+    endDate: string,
+    description: string,
+    userId: string,
+    db: SQLiteDatabase,
+): Promise<void> {
+    await db.runAsync(`
+            UPDATE habits
+            SET 
+                name = ?, 
+                description = ?, 
+                duration = ?, 
+                category = ?, 
+                frequency = ?, 
+                start_date = ?, 
+                end_date = ?, 
+                updated_at = ?
+            WHERE id = ?
+    `, [name, description, duration, category, repetition, startDate, endDate, getToday(), habitId]);
+}
+
+export async function getHabitIdFromInstanceId(habitInstanceId: number, db: SQLiteDatabase): Promise<number> {
+    const result = await db.getAllAsync<{habitId: number}>(`
+            SELECT
+                habit_id as habitId
+            FROM habit_entries
+            WHERE id = ?`, [habitInstanceId])
+    return result[0].habitId;
+}
+
+export async function deleteHabitInstances(habitId: number, today: string, db: SQLiteDatabase) {
+    await db.runAsync(`
+            DELETE FROM habit_entries
+            WHERE habit_id = ? AND complete_by >= ?
+    `, [habitId, today]);
 }

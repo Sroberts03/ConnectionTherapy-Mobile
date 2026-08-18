@@ -9,10 +9,13 @@ interface HabitPillarContainerProps {
     habits: Map<number, Habit>
     setHabits: (habits: Map<number, Habit>) => void
     category: HabitCategory
+    date: Date
 }
 
-export default function HabitPillarContainer({habits, category, setHabits}: HabitPillarContainerProps) {
+export default function HabitPillarContainer({habits, category, setHabits, date}: HabitPillarContainerProps) {
     const [newHabitVisible, setNewHabitVisible] = useState(false)
+    const [editHabitId, setEditHabitId] = useState<number | undefined>(undefined);
+    const [deleteHabitId, setDeleteHabitId] = useState<number | undefined>(undefined);
 
     const getIcon = () => {
         switch (category) {
@@ -42,7 +45,12 @@ export default function HabitPillarContainer({habits, category, setHabits}: Habi
                     </View>
                 )}
                 {Array.from(habits.values()).map((habit) => (
-                    <HabitCard key={habit.id} habit={habit} />
+                    <HabitCard 
+                        key={habit.id} 
+                        habit={habit} 
+                        setEditHabitId={setEditHabitId}
+                        setDeleteHabitId={setDeleteHabitId}
+                    />
                 ))}
             </View>
 
@@ -57,6 +65,16 @@ export default function HabitPillarContainer({habits, category, setHabits}: Habi
                 category={category}
                 habits={habits}
                 setHabits={setHabits}
+                date={date}
+            />
+            <NewHabit
+                isVisible={editHabitId != undefined}
+                onClose={() => setEditHabitId(undefined)}
+                category={category}
+                habits={habits}
+                setHabits={setHabits}
+                date={date}
+                habitId={editHabitId}
             />
         </View>
     )

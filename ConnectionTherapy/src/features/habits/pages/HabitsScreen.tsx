@@ -77,6 +77,7 @@ export default function HabitsScreen() {
                     <ErrorLoading error={habitError} loading={habitLoading} />
                     <HabitArea
                         habits={habits}
+                        date={date}
                     />
                 </View>
             }
