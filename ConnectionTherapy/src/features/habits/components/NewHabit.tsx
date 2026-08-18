@@ -21,11 +21,12 @@ interface NewHabitProps {
     habits: Map<number, Habit>
     setHabits: (habits: Map<number, Habit>) => void
     date: Date
+    setError: (error: string) => void
     category?: HabitCategory
     habitId?: number
 }
 
-export default function NewHabit({ isVisible, onClose, habits, setHabits, date, category, habitId }: NewHabitProps) {
+export default function NewHabit({ isVisible, onClose, habits, setHabits, date, setError, category, habitId }: NewHabitProps) {
     const db = useSQLiteContext();
     const { user } = useAuth();
     const [name, setName] = useState("")
@@ -106,7 +107,9 @@ export default function NewHabit({ isVisible, onClose, habits, setHabits, date, 
             if (err instanceof CreationError) {
                 setCreationError(err);
             } else {
-                throw err;
+                setError(err instanceof Error ? err.message : "Error updating habit");
+                reset();
+                onClose();
             }
         }
     }
@@ -135,7 +138,9 @@ export default function NewHabit({ isVisible, onClose, habits, setHabits, date, 
             if (err instanceof CreationError) {
                 setCreationError(err);
             } else {
-                throw err;
+                setError(err instanceof Error ? err.message : "Error creating new habit");
+                reset();
+                onClose();
             }
         }
     }

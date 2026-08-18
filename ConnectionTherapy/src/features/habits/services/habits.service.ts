@@ -4,9 +4,10 @@ import { Habit, HabitCategory, HabitDetails } from "../habits.types";
 import { 
     createHabitInstanceDataAccess, 
     createNewHabitDataAccess, 
-    deleteHabitInstances, 
+    deleteHabitInstanceDataAccess, 
+    deleteHabitInstancesDataAccess, 
     getHabitDetailsDataAccess, 
-    getHabitIdFromInstanceId, 
+    getHabitIdFromInstanceIdDataAccess, 
     getHabitsDataAccess, 
     markHabitCompleteDataAccess, 
     markHabitIncompleteDataAccess, 
@@ -93,7 +94,7 @@ export async function updateHabit(
         throw new Error("You can not update this habit")
     }
 
-    const habitId = await getHabitIdFromInstanceId(habitInstanceId, db)
+    const habitId = await getHabitIdFromInstanceIdDataAccess(habitInstanceId, db)
 
     await updateHabitDataAccess(
         habitId,
@@ -107,7 +108,7 @@ export async function updateHabit(
         userId,
         db
     )
-    await deleteHabitInstances(habitId, getToday(), db)
+    await deleteHabitInstancesDataAccess(habitId, getToday(), db)
 
     return createInstances(userCurrentDate, occurenceDates, habitId, db);
 }
@@ -142,4 +143,23 @@ export async function createInstances(
         }
     }
     return returnInstance;
+}
+
+export async function deleteHabit(
+    type: "future" | "single", 
+    habitInstanceId: number, 
+    userId: string,
+    userCurrentDate: string,
+    db: SQLiteDatabase
+) {
+    const isAllowedToUpdate = await userOwnsHabitDataAccess(habitInstanceId, userId, db)
+    if (!isAllowedToUpdate) {
+        throw new Error("You can not delete this habit")
+    }
+    if (type === "single") {
+        await deleteHabitInstanceDataAccess(habitInstanceId, db)
+    } else if (type === "future") {
+        const habitId = await getHabitIdFromInstanceIdDataAccess(habitInstanceId, db)
+        await deleteHabitInstancesDataAccess(habitId, userCurrentDate, db)
+    }
 }

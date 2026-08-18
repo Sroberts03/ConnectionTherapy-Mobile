@@ -4,15 +4,17 @@ import HabitCard from "./HabitCard"
 import { Ionicons } from "@expo/vector-icons"
 import NewHabit from "./NewHabit"
 import { useState } from "react"
+import ConfirmDeleteHabit from "./ConfirmDeleteHabit"
 
 interface HabitPillarContainerProps {
     habits: Map<number, Habit>
     setHabits: (habits: Map<number, Habit>) => void
     category: HabitCategory
     date: Date
+    setError: (error: string) => void
 }
 
-export default function HabitPillarContainer({habits, category, setHabits, date}: HabitPillarContainerProps) {
+export default function HabitPillarContainer({habits, category, setHabits, date, setError}: HabitPillarContainerProps) {
     const [newHabitVisible, setNewHabitVisible] = useState(false)
     const [editHabitId, setEditHabitId] = useState<number | undefined>(undefined);
     const [deleteHabitId, setDeleteHabitId] = useState<number | undefined>(undefined);
@@ -50,11 +52,18 @@ export default function HabitPillarContainer({habits, category, setHabits, date}
                         habit={habit} 
                         setEditHabitId={setEditHabitId}
                         setDeleteHabitId={setDeleteHabitId}
+                        setError={setError}
                     />
                 ))}
             </View>
 
-            <TouchableOpacity className="flex-row items-center mt-5 ml-1" onPress={() => setNewHabitVisible(true)}>
+            <TouchableOpacity 
+                className="flex-row items-center mt-5 ml-1" 
+                onPress={() => {
+                    setNewHabitVisible(true)
+                    setError("")
+                }}
+            >
                 <Ionicons name="add" size={16} color="#9ca3af" />
                 <Text className="text-neutral-400 font-medium ml-1">Add habit</Text>
             </TouchableOpacity>
@@ -66,6 +75,7 @@ export default function HabitPillarContainer({habits, category, setHabits, date}
                 habits={habits}
                 setHabits={setHabits}
                 date={date}
+                setError={setError}
             />
             <NewHabit
                 isVisible={editHabitId != undefined}
@@ -75,6 +85,17 @@ export default function HabitPillarContainer({habits, category, setHabits, date}
                 setHabits={setHabits}
                 date={date}
                 habitId={editHabitId}
+                setError={setError}
+            />
+            <ConfirmDeleteHabit
+                isVisible={deleteHabitId != undefined}
+                onClose={() => setDeleteHabitId(undefined)}
+                onConfirm={() => setDeleteHabitId(undefined)}
+                habitId={deleteHabitId}
+                habits={habits}
+                setHabits={setHabits}
+                setError={setError}
+                date={date}
             />
         </View>
     )

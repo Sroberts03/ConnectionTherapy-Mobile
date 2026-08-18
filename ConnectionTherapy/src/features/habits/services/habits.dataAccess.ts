@@ -159,7 +159,7 @@ export async function updateHabitDataAccess(
     `, [name, description, duration, category, repetition, startDate, endDate, getToday(), habitId]);
 }
 
-export async function getHabitIdFromInstanceId(habitInstanceId: number, db: SQLiteDatabase): Promise<number> {
+export async function getHabitIdFromInstanceIdDataAccess(habitInstanceId: number, db: SQLiteDatabase): Promise<number> {
     const result = await db.getAllAsync<{habitId: number}>(`
             SELECT
                 habit_id as habitId
@@ -168,9 +168,25 @@ export async function getHabitIdFromInstanceId(habitInstanceId: number, db: SQLi
     return result[0].habitId;
 }
 
-export async function deleteHabitInstances(habitId: number, today: string, db: SQLiteDatabase) {
+export async function deleteHabitInstancesDataAccess(habitId: number, today: string, db: SQLiteDatabase) {
     await db.runAsync(`
             DELETE FROM habit_entries
             WHERE habit_id = ? AND complete_by >= ?
     `, [habitId, today]);
 }
+
+export async function deleteHabitInstanceDataAccess(habitInstanceId: number, db: SQLiteDatabase) {
+    await db.runAsync(`
+        DELETE FROM habit_entries
+        WHERE id = ?
+    `, [habitInstanceId])
+}
+
+export async function markHabitInactiveDataAccess(habitId: number, db: SQLiteDatabase) {
+    await db.runAsync(`
+        UPDATE habits
+        SET is_active = 0
+        WHERE id = ?
+    `, [habitId])
+}
+    

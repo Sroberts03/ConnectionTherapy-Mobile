@@ -10,9 +10,10 @@ interface HabitCardProps {
     habit: Habit
     setEditHabitId: (id: number | undefined) => void;
     setDeleteHabitId: (id: number | undefined) => void;
+    setError: (error: string) => void
 }
 
-export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId }: HabitCardProps) {
+export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId, setError }: HabitCardProps) {
     const db = useSQLiteContext();
     const [isCompleted, setIsCompleted] = useState(habit.isCompleted);
 
@@ -26,8 +27,8 @@ export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId }: H
             await toggleComplete(habit.id, targetState, db);
             setIsCompleted(targetState);
             habit.isCompleted = targetState;
-        } catch {
-            Alert.alert("Error toggling complete")
+        } catch (e) {
+            setError(e instanceof Error ? e.message : "Failed to toggle complete")
         }
     }
 
@@ -36,13 +37,19 @@ export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId }: H
             <View className="flex-row h-full">
                 <TouchableOpacity
                     className="bg-blue-500 justify-center items-center w-16 h-full ml-2 rounded-xl"
-                    onPress={() => setEditHabitId(habit.id)}
+                    onPress={() => {
+                        setEditHabitId(habit.id)
+                        setError("")
+                    }}
                 >
                     <Ionicons name="pencil" size={24} color="white" />
                 </TouchableOpacity>
                 <TouchableOpacity
                     className="bg-red-500 justify-center items-center w-16 h-full ml-2 rounded-xl"
-                    onPress={() => setDeleteHabitId(habit.id)}
+                    onPress={() => {
+                        setDeleteHabitId(habit.id)
+                        setError("")
+                    }}
                 >
                     <Ionicons name="trash" size={24} color="white" />
                 </TouchableOpacity>
