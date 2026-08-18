@@ -7,10 +7,11 @@ import { useState } from "react"
 
 interface HabitPillarContainerProps {
     habits: Map<number, Habit>
+    setHabits: (habits: Map<number, Habit>) => void
     category: HabitCategory
 }
 
-export default function HabitPillarContainer({habits, category}: HabitPillarContainerProps) {
+export default function HabitPillarContainer({habits, category, setHabits}: HabitPillarContainerProps) {
     const [newHabitVisible, setNewHabitVisible] = useState(false)
 
     const getIcon = () => {
@@ -54,6 +55,8 @@ export default function HabitPillarContainer({habits, category}: HabitPillarCont
                 isVisible={newHabitVisible}
                 onClose={() => setNewHabitVisible(false)}
                 category={category}
+                habits={habits}
+                setHabits={setHabits}
             />
         </View>
     )

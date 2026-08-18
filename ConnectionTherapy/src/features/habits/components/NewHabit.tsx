@@ -8,19 +8,26 @@ import HabitDescInput from "./HabitDescInput";
 import HabitDurationInput from "./HabitDurationInput";
 import HabitCategorySelector from "./HabitCategorySelector";
 import HabitStartEndDateInput from "./HabitStartEndDateInput";
+import { createNewHabit } from "../services/habits.service";
+import { CreationError } from "../errors/CreationError";
+import CreationErrorMessage from "./CreationError";
+import { useAuth } from "../../auth/AuthContext";
 
 interface NewHabitProps {
     isVisible: boolean
     onClose: () => void
+    habits: Map<number, Habit>
+    setHabits: (habits: Map<number, Habit>) => void
     category?: HabitCategory
     habitId?: number
 }
 
-export default function NewHabit({ isVisible, onClose, category, habitId }: NewHabitProps) {
+export default function NewHabit({ isVisible, onClose, habits, setHabits, category, habitId }: NewHabitProps) {
     const db = useSQLiteContext();
+    const { user } = useAuth();
     const [habit, setHabit] = useState<HabitDetails | undefined>(undefined);
     const [name, setName] = useState(habit?.name || "")
-    const [description, setDescription] = useState(habit?.description || "")
+    const [description, setDescription] = useState<string>(habit?.description || "")
     const [duration, setDuration] = useState(habit?.duration || "")
     const [currentCategory, setCurrentCategory] = useState<HabitCategory>(category || habit?.category || HabitCategory.PHYSICAL)
     const [repetition, setRepetition] = useState(habit?.repetition || "None")
@@ -28,20 +35,39 @@ export default function NewHabit({ isVisible, onClose, category, habitId }: NewH
     const today = new Date();
     const localDateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     const [startDate, setStartDate] = useState(habit?.startDate || localDateStr)
-    const [endDate, setEndDate] = useState(habit?.endDate || "")
+    const [endDate, setEndDate] = useState<string>(habit?.endDate || "")
+    const [creationError, setCreationError] = useState<CreationError | null>(null)
 
     useEffect(() => {
         if (!habitId) return;
-
-            
     },[habitId])
 
-    const handleSave = () => {
-        if (repetition === "custom") {
-            console.log(customRepetition);
-            return;
+    const handleSave = async () => {
+        if (!user?.id) return;
+        try {
+            const newHabit = await createNewHabit(
+                name,
+                duration,
+                currentCategory,
+                startDate,
+                repetition == "custom" ? customRepetition : repetition,
+                endDate,
+                description,
+                user?.id,
+                db
+            )
+            if (newHabit) {
+                setHabits(new Map([...habits, [newHabit.id, newHabit]]));
+            }
+            reset();
+            onClose();
+        } catch (err) {
+            if (err instanceof CreationError) {
+                setCreationError(err);
+            } else {
+                throw err;
+            }
         }
-        console.log(repetition);
     }
 
     const reset = () => {
@@ -53,6 +79,12 @@ export default function NewHabit({ isVisible, onClose, category, habitId }: NewH
         setRepetition("N");
         setStartDate(localDateStr);
         setEndDate("");
+        setCreationError(null);
+    }
+
+    const closeAndReset = () => {
+        reset();
+        onClose();
     }
 
     return (
@@ -60,7 +92,7 @@ export default function NewHabit({ isVisible, onClose, category, habitId }: NewH
             animationType="fade"
             transparent={true}
             visible={isVisible}
-            onRequestClose={onClose}
+            onRequestClose={closeAndReset}
         >
             <View className="flex-1 bg-black/50 justify-center items-center">
                 <KeyboardAvoidingView 
@@ -73,7 +105,7 @@ export default function NewHabit({ isVisible, onClose, category, habitId }: NewH
                             <Text className="text-xl font-bold text-neutral-800">
                                 {habit ? 'Edit Habit' : `Create New ${currentCategory} Habit`}
                             </Text>
-                            <TouchableOpacity onPress={onClose} className="bg-neutral-100 p-2 rounded-full">
+                            <TouchableOpacity onPress={closeAndReset} className="bg-neutral-100 p-2 rounded-full">
                                 <Ionicons name="close" size={20} color="#6b7280" />
                             </TouchableOpacity>
                         </View>
@@ -82,6 +114,12 @@ export default function NewHabit({ isVisible, onClose, category, habitId }: NewH
                             <HabitNameInput 
                                 name={name} 
                                 setName={setName} 
+                            />
+
+                            <CreationErrorMessage 
+                                error={creationError}
+                                place="name"
+                                className="text-red-500 text-xs font-medium -mt-2 mb-2"
                             />
 
                             <HabitDescInput 
@@ -94,9 +132,21 @@ export default function NewHabit({ isVisible, onClose, category, habitId }: NewH
                                 setDuration={setDuration} 
                             />
 
+                            <CreationErrorMessage 
+                                error={creationError}
+                                place="duration"
+                                className="text-red-500 text-xs font-medium -mt-2 mb-2"
+                            />
+
                             <HabitCategorySelector 
                                 currentCategory={currentCategory} 
                                 setCurrentCategory={setCurrentCategory} 
+                            />
+
+                            <CreationErrorMessage 
+                                error={creationError}
+                                place="category"
+                                className="text-red-500 text-xs font-medium -mt-2 mb-2"
                             />
                                                        
                             <HabitStartEndDateInput 
@@ -107,6 +157,7 @@ export default function NewHabit({ isVisible, onClose, category, habitId }: NewH
                                 repetition={repetition}
                                 setRepetition={setRepetition}
                                 setCustomRepetition={setCustomRepetition}
+                                creationError={creationError}
                             />
 
                             {/* Action Buttons */}

@@ -51,6 +51,11 @@ export default function HabitArea({habits}: HabitAreaProps) {
                             pillar === HabitCategory.PHYSICAL ? physicalHabits :
                             pillar === HabitCategory.SOCIAL ? socialHabits :
                             intelectualHabits}
+                        setHabits={
+                            pillar === HabitCategory.SPIRITUAL ? setSpiritualHabits :
+                            pillar === HabitCategory.PHYSICAL ? setPhysicalHabits :
+                            pillar === HabitCategory.SOCIAL ? setSocialHabits :
+                            setIntellectualHabits}
                     />
                 )
             })}

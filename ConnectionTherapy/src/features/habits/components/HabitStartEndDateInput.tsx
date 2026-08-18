@@ -3,6 +3,8 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateInput from "../../../globalComponents/DateInput";
 import CustomRepeatBuilder from "./CustomRepeatBuilder";
+import { CreationError } from "../errors/CreationError";
+import CreationErrorMessage from "./CreationError";
 
 interface HabitStartEndDateInputProps {
     startDate: string
@@ -12,9 +14,19 @@ interface HabitStartEndDateInputProps {
     repetition: string
     setRepetition: (repeat: string) => void
     setCustomRepetition: (customRepetition: string) => void
+    creationError: CreationError | null
 }
 
-export default function HabitStartEndDateInput({ startDate, setStartDate, endDate, setEndDate, repetition, setRepetition, setCustomRepetition }: HabitStartEndDateInputProps) {
+export default function HabitStartEndDateInput({ 
+    startDate, 
+    setStartDate, 
+    endDate, 
+    setEndDate, 
+    repetition, 
+    setRepetition, 
+    setCustomRepetition, 
+    creationError 
+}: HabitStartEndDateInputProps) {
     const [showRepeatInfo, setShowRepeatInfo] = useState<boolean>(false)
     const [showStartDatePicker, setShowStartDatePicker] = useState<boolean>(false)
     const [showEndDatePicker, setShowEndDatePicker] = useState<boolean>(false)
@@ -42,6 +54,12 @@ export default function HabitStartEndDateInput({ startDate, setStartDate, endDat
                     setSelectedDate={setStartDate}
                     showDatePicker={showStartDatePicker}
                     setShowDatePicker={setShowStartDatePicker}
+                />
+
+                <CreationErrorMessage 
+                    error={creationError}
+                    place="startDate"
+                    className="text-red-500 text-xs font-medium mb-2"
                 />
             </View>
 
@@ -121,6 +139,11 @@ export default function HabitStartEndDateInput({ startDate, setStartDate, endDat
                             setSelectedDate={setEndDate}
                             showDatePicker={showEndDatePicker}
                             setShowDatePicker={setShowEndDatePicker}
+                        />
+                        <CreationErrorMessage 
+                            error={creationError}
+                            place="endDate"
+                            className="text-red-500 text-xs font-medium mt-1 mb-2"
                         />
                     </View>
                 </View>
