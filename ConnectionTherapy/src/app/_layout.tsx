@@ -1,5 +1,4 @@
 import "../../global.css";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { AuthProvider, useAuth } from "../features/auth/AuthContext";
 import { router, Stack } from "expo-router";
 import { useEffect } from "react";
@@ -44,13 +43,11 @@ export default function RootLayout() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <SQLiteProvider databaseName="connectionTherapy.db" onInit={initializeDatabase}>
-                <SafeAreaView className="flex-1 bg-primary-50">
-                    <AuthProvider>
-                        <QuoteProvider>
-                            <IntialLayout />
-                        </QuoteProvider>
-                    </AuthProvider>
-                </SafeAreaView>
+                <AuthProvider>
+                    <QuoteProvider>
+                        <IntialLayout />
+                    </QuoteProvider>
+                </AuthProvider>
             </SQLiteProvider>
         </GestureHandlerRootView>
     )

@@ -1,4 +1,4 @@
-import { ScrollView, View } from "react-native";
+import { Platform, ScrollView, View } from "react-native";
 import { useEffect, useState } from "react";
 import { getHabits } from "../services/habits.service";
 import { useSQLiteContext } from "expo-sqlite";
@@ -66,7 +66,7 @@ export default function HabitsScreen() {
     }
     
     return (
-        <ScrollView className="flex-1 bg-primary-50">
+        <ScrollView className={`flex-1 bg-primary-50 ${Platform.OS === "ios" ? 'mt-12' : 'mt-16'}`}>
             <DatePicker
                 date={date}
                 setDate={setDate}
