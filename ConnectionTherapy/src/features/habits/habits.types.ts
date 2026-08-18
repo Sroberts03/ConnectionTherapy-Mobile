@@ -11,7 +11,7 @@ export interface Habit {
     description: string
     duration: string
     category: HabitCategory
-    is_completed: boolean
+    isCompleted: boolean
 }
 
 export interface HabitDetails {

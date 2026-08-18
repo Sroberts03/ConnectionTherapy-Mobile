@@ -7,9 +7,11 @@ import ErrorLoading from "../../../globalComponents/ErrorLoading";
 import HabitArea from "../components/HabitArea";
 import DatePicker from "../components/DatePicker";
 import TakeItOneWeekDialog from "../components/TakeItOneWeekDialog";
+import { useAuth } from "../../auth/AuthContext";
 
 export default function HabitsScreen() {
     const db = useSQLiteContext();
+    const { user } = useAuth()
     const [habits, setHabits] = useState<Map<number, Habit>>(new Map)
     const [date, setDate] = useState(new Date())
     const [habitLoading, setHabitLoading] = useState(false)
@@ -17,8 +19,9 @@ export default function HabitsScreen() {
     const [showTakeItOneWeekDialog, setShowTakeItOneWeekDialog] = useState(false)
 
     useEffect(() => {
-        setShowTakeItOneWeekDialog(takeItOneWeekAtATime())
-        if (!showTakeItOneWeekDialog) {
+        const isOutsideRange = takeItOneWeekAtATime()
+        setShowTakeItOneWeekDialog(isOutsideRange)
+        if (!isOutsideRange) {
             fetchHabits()
         }
     }, [date])
@@ -49,8 +52,11 @@ export default function HabitsScreen() {
     const fetchHabits = async () => {
         setHabitLoading(true)
         setHabitError("")
+        if (!user) {
+            return
+        }
         try {
-            const habits: Habit[] = await getHabits(date, db)
+            const habits: Habit[] = await getHabits(date, user.id, db)
             setHabits(new Map(habits.map(habit => [habit.id, habit])))
         } catch (error) {
             setHabitError(error instanceof Error ? error.message : "Unknown error")
@@ -58,7 +64,7 @@ export default function HabitsScreen() {
             setHabitLoading(false)
         }
     }
-
+    
     return (
         <ScrollView className="flex-1 bg-primary-50">
             <DatePicker
