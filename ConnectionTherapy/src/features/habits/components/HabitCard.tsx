@@ -16,7 +16,7 @@ interface HabitCardProps {
 
 export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId, setError }: HabitCardProps) {
     const db = useSQLiteContext();
-    const { setReloadPillars } = usePillarContext()
+    const { reloadPillarPercentages } = usePillarContext()
     const [isCompleted, setIsCompleted] = useState(habit.isCompleted);
 
     useEffect(() => {
@@ -29,7 +29,7 @@ export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId, set
             await toggleComplete(habit.id, targetState, db);
             setIsCompleted(targetState);
             habit.isCompleted = targetState;
-            setReloadPillars(true);
+            reloadPillarPercentages();
         } catch (e) {
             setError(e instanceof Error ? e.message : "Failed to toggle complete")
         }

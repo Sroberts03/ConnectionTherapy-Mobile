@@ -10,48 +10,20 @@ import { getDashboardPillars, getFullPillars } from '../services/dashboard.servi
 import { HabitCategory } from '../../habits/habits.types'
 import { useSQLiteContext } from 'expo-sqlite';
 import { usePillarContext } from '../PillarContext';
+import LoadingPillars from '../components/LoadingPillars'
 
 export default function DashboardScreen() {
     const db = useSQLiteContext();
-    const { reloadPillars, setReloadPillars } = usePillarContext()
     const { getQuote } = useQuote()
     const { session } = useAuth()
-    const [ fullPillars, setFullPillars ] = useState<Map<HabitCategory, ConnectionPillar>>(new Map())
-
-    const getPillars = async () => {
-        if (!session) {
-            return
-        }
-        try {
-            const pillars: Pick<
-                ConnectionPillar,
-                | 'id'
-                | 'name'
-                | 'color'
-                | 'icon'
-            >[] = await getDashboardPillars(session)
-            if (pillars.length > 0) {
-                setFullPillars(await getFullPillars(pillars, db))
-            }
-        } catch (error) {
-            console.error('Error fetching pillars:', error)
-        }
-    }
+    const { pillars, loadingPillars, getPillars } = usePillarContext()
 
     useEffect(() => {
         if (session) {
             getQuote()
+            getPillars()
         }
     }, [session])
-
-    useEffect(() => {
-        const loadPillars = async () => {
-            if (!reloadPillars) return
-            await getPillars()
-            setReloadPillars(false)
-        }
-        loadPillars()
-    }, [reloadPillars])
 
     return (
         <ScrollView 
@@ -61,7 +33,10 @@ export default function DashboardScreen() {
         >
             <DashboardHeader />
             <QuoteCard />
-            <ConnectionPillars pillars={fullPillars} />
+            {loadingPillars ? 
+                <LoadingPillars loadingPillars={loadingPillars} /> : 
+                <ConnectionPillars pillars={pillars} />
+            }
         </ScrollView>
     )
 }
