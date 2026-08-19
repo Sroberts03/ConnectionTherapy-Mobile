@@ -19,12 +19,12 @@ export interface habitContextType {
     setHabitLoading: (habitLoading: boolean) => void
 }
 
-export const DashboardContext = createContext<habitContextType | undefined>(undefined);
+export const HabitContext = createContext<habitContextType | undefined>(undefined);
 
 export function useHabitContext() {
-    const context = useContext(DashboardContext);
+    const context = useContext(HabitContext);
     if (!context) {
-        throw new Error("useDashboardContext must be used within a DashboardProvider");
+        throw new Error("useHabitContext must be used within a HabitProvider");
     }
     return context;
 }
@@ -89,7 +89,7 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
     }
 
     return (
-        <DashboardContext.Provider value={{
+        <HabitContext.Provider value={{
             todaysTopHabits,
             setTodaysTopHabits,
             reloadTopHabits,
@@ -103,6 +103,6 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
             setHabitLoading
         }}>
             {children}
-        </DashboardContext.Provider>
+        </HabitContext.Provider>
     );
 }
