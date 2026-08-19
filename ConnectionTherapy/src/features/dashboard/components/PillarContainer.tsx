@@ -59,8 +59,7 @@ export default function PillarContainer({ pillar }: PillarContainerProps) {
                         strokeDashoffset={strokeDashoffset}
                         strokeLinecap="round"
                         fill="none"
-                        rotation="-90"
-                        origin={`${cx}, ${cy}`}
+                        transform={`rotate(-90 ${cx} ${cy})`}
                     />
                     <Circle
                         cx={dotX}

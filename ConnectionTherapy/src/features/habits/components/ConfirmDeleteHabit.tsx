@@ -5,36 +5,36 @@ import { deleteHabit } from "../services/habits.service";
 import { useSQLiteContext } from "expo-sqlite";
 import { formatDate } from "../../../utils/dates";
 import { useAuth } from "../../auth/AuthContext";
+import { useHabitContext } from "../HabitContext";
 
 interface ConfirmDeleteHabitProps {
     isVisible: boolean;
     onClose: () => void;
     onConfirm: () => void;
-    habits: Map<number, Habit>;
-    setHabits: (habits: Map<number, Habit>) => void;
-    setError: (error: string) => void
     date: Date;
     habitId?: number;
 }
 
-export default function ConfirmDeleteHabit({ isVisible, onClose, onConfirm, habitId, habits, setHabits, setError, date }: ConfirmDeleteHabitProps) {
+export default function ConfirmDeleteHabit({ isVisible, onClose, onConfirm, habitId, date }: ConfirmDeleteHabitProps) {
     const db = useSQLiteContext();
+    const { currentHabits, setCurrentHabits, reloadTopHabits, setHabitError } = useHabitContext();
     const { user } = useAuth();
 
     if (habitId === undefined) return null;
 
-    const habitName = habits.get(habitId)?.name || "";
+    const habitName = currentHabits.get(habitId)?.name || "";
 
     const handleDelete = async (type: 'future' | 'single') => {
         if (!user) return;
         try {
             await deleteHabit(type, habitId, user.id, formatDate(date), db);
-            const updatedHabits = new Map(habits);
+            const updatedHabits = new Map(currentHabits);
             updatedHabits.delete(habitId);
-            setHabits(updatedHabits);
+            setCurrentHabits(updatedHabits);
+            reloadTopHabits();
             onConfirm();
         } catch (e) {
-            setError(e instanceof Error ? e.message : "Failed to delete habit")
+            setHabitError(e instanceof Error ? e.message : "Failed to delete habit")
             onClose();
         }
     }

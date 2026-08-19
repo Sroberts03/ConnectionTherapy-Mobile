@@ -5,9 +5,10 @@ import { getToday } from "../../../utils/dates";
 export async function getHabitsDataAccess(
     formattedDate: string,
     userId: string,
-    db: SQLiteDatabase
+    db: SQLiteDatabase,
+    maxHabits: number | "all"
 ): Promise<Habit[]> {
-    const habits = await db.getAllAsync<Habit>(`
+    const query = `
             SELECT
                 he.id,
                 h.name,
@@ -19,8 +20,14 @@ export async function getHabitsDataAccess(
             FROM habit_entries he
             JOIN habits h on he.habit_id = h.id
             WHERE he.complete_by = ?
-            and h.user_id = ?`,
-            [formattedDate, userId]);
+            and h.user_id = ?
+            ${maxHabits !== "all" ? "LIMIT ?" : ""}`
+            
+    const queryParams = maxHabits !== "all" 
+        ? [formattedDate, userId, maxHabits] 
+        : [formattedDate, userId];
+
+    const habits = await db.getAllAsync<Habit>(query, queryParams);
     return habits;
 }
 

@@ -14,20 +14,19 @@ import CreationErrorMessage from "./CreationError";
 import { useAuth } from "../../auth/AuthContext";
 import { parseRepeatString } from "../utils/parseRepeatString";
 import { formatDate } from "../../../utils/dates";
+import { useHabitContext } from "../HabitContext";
 
 interface NewHabitProps {
     isVisible: boolean
     onClose: () => void
-    habits: Map<number, Habit>
-    setHabits: (habits: Map<number, Habit>) => void
     date: Date
-    setError: (error: string) => void
     category?: HabitCategory
     habitId?: number
 }
 
-export default function NewHabit({ isVisible, onClose, habits, setHabits, date, setError, category, habitId }: NewHabitProps) {
+export default function NewHabit({ isVisible, onClose, date, category, habitId }: NewHabitProps) {
     const db = useSQLiteContext();
+    const { currentHabits, setCurrentHabits, reloadTopHabits, setHabitError } = useHabitContext();
     const { user } = useAuth();
     const [name, setName] = useState("")
     const [description, setDescription] = useState<string>("")
@@ -63,7 +62,6 @@ export default function NewHabit({ isVisible, onClose, habits, setHabits, date, 
             setStartDate(habit.startDate);
             if (habit.endDate) setEndDate(habit.endDate);
         }
-
         fetchHabitInfo();
     }, [habitId])
 
@@ -92,22 +90,23 @@ export default function NewHabit({ isVisible, onClose, habits, setHabits, date, 
                 db
             )
             if (updatedHabit) {
-                const newHabits = new Map(habits);
+                const newHabits = new Map(currentHabits);
                 newHabits.delete(habitId);
                 newHabits.set(updatedHabit.id, updatedHabit);
-                setHabits(newHabits);
+                setCurrentHabits(newHabits);
             } else {
-                const newHabits = new Map(habits);
+                const newHabits = new Map(currentHabits);
                 newHabits.delete(habitId);
-                setHabits(newHabits);
+                setCurrentHabits(newHabits);
             }
             reset();
+            reloadTopHabits();
             onClose();
         } catch (err) {
             if (err instanceof CreationError) {
                 setCreationError(err);
             } else {
-                setError(err instanceof Error ? err.message : "Error updating habit");
+                setHabitError(err instanceof Error ? err.message : "Error updating habit");
                 reset();
                 onClose();
             }
@@ -130,15 +129,16 @@ export default function NewHabit({ isVisible, onClose, habits, setHabits, date, 
                 db
             )
             if (newHabit) {
-                setHabits(new Map([...habits, [newHabit.id, newHabit]]));
+                setCurrentHabits(new Map([...currentHabits, [newHabit.id, newHabit]]));
             }
             reset();
+            reloadTopHabits();
             onClose();
         } catch (err) {
             if (err instanceof CreationError) {
                 setCreationError(err);
             } else {
-                setError(err instanceof Error ? err.message : "Error creating new habit");
+                setHabitError(err instanceof Error ? err.message : "Error creating new habit");
                 reset();
                 onClose();
             }

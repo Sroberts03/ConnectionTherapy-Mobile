@@ -7,22 +7,24 @@ import ErrorLoading from "../../../globalComponents/ErrorLoading";
 import HabitArea from "../components/HabitArea";
 import DatePicker from "../components/DatePicker";
 import TakeItOneWeekDialog from "../components/TakeItOneWeekDialog";
-import { useAuth } from "../../auth/AuthContext";
+import { useHabitContext } from "../HabitContext";
 
 export default function HabitsScreen() {
-    const db = useSQLiteContext();
-    const { user } = useAuth()
-    const [habits, setHabits] = useState<Map<number, Habit>>(new Map)
+    const {
+        currentHabits,
+        reloadCurrentHabits,
+        habitError,
+        setHabitError,
+        habitLoading
+    } = useHabitContext()
     const [date, setDate] = useState(new Date())
-    const [habitLoading, setHabitLoading] = useState(false)
-    const [habitError, setHabitError] = useState<string>("")
     const [showTakeItOneWeekDialog, setShowTakeItOneWeekDialog] = useState(false)
 
     useEffect(() => {
         const isOutsideRange = takeItOneWeekAtATime()
         setShowTakeItOneWeekDialog(isOutsideRange)
         if (!isOutsideRange) {
-            fetchHabits()
+            reloadCurrentHabits(date)
         }
     }, [date])
 
@@ -48,22 +50,6 @@ export default function HabitsScreen() {
         // Return true (block) if the difference is more than 1 week
         return Math.round(diffMs / oneWeekMs) > 1;
     }
-
-    const fetchHabits = async () => {
-        setHabitLoading(true)
-        setHabitError("")
-        if (!user) {
-            return
-        }
-        try {
-            const habits: Habit[] = await getHabits(date, user.id, db)
-            setHabits(new Map(habits.map(habit => [habit.id, habit])))
-        } catch (error) {
-            setHabitError(error instanceof Error ? error.message : "Unknown error")
-        } finally {
-            setHabitLoading(false)
-        }
-    }
     
     return (
         <ScrollView 
@@ -80,7 +66,7 @@ export default function HabitsScreen() {
                 <View>
                     <ErrorLoading error={habitError} loading={habitLoading} />
                     <HabitArea
-                        habits={habits}
+                        habits={currentHabits}
                         date={date}
                         setError={setHabitError}
                     />

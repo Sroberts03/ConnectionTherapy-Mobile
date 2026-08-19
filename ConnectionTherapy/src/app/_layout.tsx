@@ -8,6 +8,7 @@ import { QuoteProvider } from "../features/quote/QuoteContext";
 import { SQLiteProvider } from "expo-sqlite";
 import { initializeDatabase } from "../db/database";
 import { PillarProvider } from "../features/dashboard/PillarContext";
+import { HabitProvider } from "../features/habits/HabitContext";
 
 function IntialLayout() {
     const { session, error, loadingAuth, user } = useAuth();
@@ -47,7 +48,9 @@ export default function RootLayout() {
                 <AuthProvider>
                     <QuoteProvider>
                         <PillarProvider>
-                            <IntialLayout />
+                            <HabitProvider>
+                                <IntialLayout />
+                            </HabitProvider>
                         </PillarProvider>
                     </QuoteProvider>
                 </AuthProvider>

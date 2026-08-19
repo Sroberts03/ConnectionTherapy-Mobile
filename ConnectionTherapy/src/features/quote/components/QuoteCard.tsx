@@ -1,10 +1,11 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useQuote } from "../QuoteContext";
 import ErrorLoading from "../../../globalComponents/ErrorLoading";
 import QuoteLoading from "./QuoteLoading";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function QuoteCard() {
-    const { quote, quoteLoading, quoteError } = useQuote();
+    const { quote, quoteLoading, quoteError, getQuote } = useQuote();
 
     return (
         <View 
@@ -21,6 +22,9 @@ export default function QuoteCard() {
                 <QuoteLoading loading={quoteLoading} />
             ) : quote ? (
                 <>
+                    <TouchableOpacity className="absolute top-2 right-2" onPress={getQuote}>
+                        <Ionicons name="refresh" size={20} color="#999" />
+                    </TouchableOpacity>
                     <Text className="text-xl font-medium text-neutral-800 text-center leading-relaxed italic mb-6">"{quote.text}"</Text>
                     <View className="h-px w-12 bg-neutral-300 mb-4" />
                     <Text className="text-xs font-bold text-neutral-500 uppercase tracking-widest text-center" >{quote.author}</Text>

@@ -21,10 +21,12 @@ import { formatDate, getToday } from "../../../utils/dates";
 export async function getHabits(
     date: Date,
     userId: string,
-    db: SQLiteDatabase
+    db: SQLiteDatabase,
+    maxHabits: "all" | number = "all"
 ): Promise<Habit[]> {
     const formattedDate = formatDate(date);
-    const habits: Habit[] = await getHabitsDataAccess(formattedDate, userId, db);
+    let habits: Habit[];
+    habits = await getHabitsDataAccess(formattedDate, userId, db, maxHabits);
     return habits;
 }
 

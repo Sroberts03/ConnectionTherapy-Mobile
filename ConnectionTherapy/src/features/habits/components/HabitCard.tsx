@@ -2,21 +2,17 @@ import { useState, useEffect } from "react"
 import { Habit } from "../habits.types"
 import { View, Text, TouchableOpacity, Alert } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { useSQLiteContext } from "expo-sqlite";
-import { toggleComplete } from "../services/habits.service";
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-import { usePillarContext } from "../../dashboard/PillarContext";
+import { useHabitContext } from "../HabitContext";
 
 interface HabitCardProps {
     habit: Habit
-    setEditHabitId: (id: number | undefined) => void;
-    setDeleteHabitId: (id: number | undefined) => void;
-    setError: (error: string) => void
+    setEditHabitId?: (id: number | undefined) => void;
+    setDeleteHabitId?: (id: number | undefined) => void;
 }
 
-export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId, setError }: HabitCardProps) {
-    const db = useSQLiteContext();
-    const { reloadPillarPercentages } = usePillarContext()
+export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId }: HabitCardProps) {
+    const { toggleHabitComplete, setHabitError } = useHabitContext()
     const [isCompleted, setIsCompleted] = useState(habit.isCompleted);
 
     useEffect(() => {
@@ -24,25 +20,19 @@ export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId, set
     }, [habit.isCompleted]);
 
     const completePressed = async () => {
-        const targetState = !isCompleted;
-        try {
-            await toggleComplete(habit.id, targetState, db);
-            setIsCompleted(targetState);
-            habit.isCompleted = targetState;
-            reloadPillarPercentages();
-        } catch (e) {
-            setError(e instanceof Error ? e.message : "Failed to toggle complete")
-        }
+        toggleHabitComplete(habit.id, isCompleted)
     }
 
     const renderRightActions = () => {
+        if (!setEditHabitId || !setDeleteHabitId) return null;
+
         return (
             <View className="flex-row h-full">
                 <TouchableOpacity
                     className="bg-blue-500 justify-center items-center w-16 h-full ml-2 rounded-xl"
                     onPress={() => {
                         setEditHabitId(habit.id)
-                        setError("")
+                        setHabitError("")
                     }}
                 >
                     <Ionicons name="pencil" size={24} color="white" />
@@ -51,7 +41,7 @@ export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId, set
                     className="bg-red-500 justify-center items-center w-16 h-full ml-2 rounded-xl"
                     onPress={() => {
                         setDeleteHabitId(habit.id)
-                        setError("")
+                        setHabitError("")
                     }}
                 >
                     <Ionicons name="trash" size={24} color="white" />

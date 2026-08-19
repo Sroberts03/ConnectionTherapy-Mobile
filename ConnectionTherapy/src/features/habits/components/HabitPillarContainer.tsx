@@ -5,16 +5,15 @@ import { Ionicons } from "@expo/vector-icons"
 import NewHabit from "./NewHabit"
 import { useState } from "react"
 import ConfirmDeleteHabit from "./ConfirmDeleteHabit"
+import { useHabitContext } from "../HabitContext"
 
 interface HabitPillarContainerProps {
-    habits: Map<number, Habit>
-    setHabits: (habits: Map<number, Habit>) => void
     category: HabitCategory
     date: Date
-    setError: (error: string) => void
 }
 
-export default function HabitPillarContainer({habits, category, setHabits, date, setError}: HabitPillarContainerProps) {
+export default function HabitPillarContainer({category, date}: HabitPillarContainerProps) {
+    const { currentHabits, setHabitError } = useHabitContext();
     const [newHabitVisible, setNewHabitVisible] = useState(false)
     const [editHabitId, setEditHabitId] = useState<number | undefined>(undefined);
     const [deleteHabitId, setDeleteHabitId] = useState<number | undefined>(undefined);
@@ -37,7 +36,7 @@ export default function HabitPillarContainer({habits, category, setHabits, date,
             </View>
             
             <View className="gap-y-3">
-                {Array.from(habits.values()).length === 0 && (
+                {Array.from(currentHabits.values()).filter((habit) => habit.category === category).length === 0 && (
                     <View className="rounded-xl p-5 items-center justify-center">
                         <View className="p-3 mb-3">
                             <Ionicons name={getIcon()} size={20} color="#a4a4a4ff" />
@@ -46,13 +45,12 @@ export default function HabitPillarContainer({habits, category, setHabits, date,
                         <Text className="text-sm text-neutral-400 ml-1">Start small to build consistency</Text>
                     </View>
                 )}
-                {Array.from(habits.values()).map((habit) => (
+                {Array.from(currentHabits.values()).filter((habit) => habit.category === category).map((habit) => (
                     <HabitCard 
                         key={habit.id} 
                         habit={habit} 
                         setEditHabitId={setEditHabitId}
                         setDeleteHabitId={setDeleteHabitId}
-                        setError={setError}
                     />
                 ))}
             </View>
@@ -61,7 +59,7 @@ export default function HabitPillarContainer({habits, category, setHabits, date,
                 className="flex-row items-center mt-5 ml-1" 
                 onPress={() => {
                     setNewHabitVisible(true)
-                    setError("")
+                    setHabitError("")
                 }}
             >
                 <Ionicons name="add" size={16} color="#9ca3af" />
@@ -72,29 +70,20 @@ export default function HabitPillarContainer({habits, category, setHabits, date,
                 isVisible={newHabitVisible}
                 onClose={() => setNewHabitVisible(false)}
                 category={category}
-                habits={habits}
-                setHabits={setHabits}
                 date={date}
-                setError={setError}
             />
             <NewHabit
                 isVisible={editHabitId != undefined}
                 onClose={() => setEditHabitId(undefined)}
                 category={category}
-                habits={habits}
-                setHabits={setHabits}
                 date={date}
                 habitId={editHabitId}
-                setError={setError}
             />
             <ConfirmDeleteHabit
                 isVisible={deleteHabitId != undefined}
                 onClose={() => setDeleteHabitId(undefined)}
                 onConfirm={() => setDeleteHabitId(undefined)}
                 habitId={deleteHabitId}
-                habits={habits}
-                setHabits={setHabits}
-                setError={setError}
                 date={date}
             />
         </View>

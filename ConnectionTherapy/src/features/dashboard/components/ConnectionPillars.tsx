@@ -16,7 +16,7 @@ export default function ConnectionPillars({ pillars }: ConnectionPillarsProps) {
             <View className="flex-row items-center justify-between mb-2">
                 <Text className="text-xl font-bold text-neutral-900">Life's Pillars of Connection</Text>
                 <TouchableOpacity onPress={() => router.push("/(tabs)/Habits")} className="flex-row items-center gap-1">
-                    <Text className="text-primary-700 font-medium">View Habits</Text>
+                    <Text className="text-primary-700 font-medium">View Analytics</Text>
                     <Ionicons name="chevron-forward" size={18} color="#222222" />
                 </TouchableOpacity>
             </View>

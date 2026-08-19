@@ -4,43 +4,13 @@ import { useEffect, useState } from "react"
 import HabitPillarContainer from "./HabitPillarContainer"
 
 interface HabitAreaProps {
-    habits: Map<number, Habit>
     date: Date
     setError: (error: string) => void
 }
 
-export default function HabitArea({habits, date, setError}: HabitAreaProps) {
+export default function HabitArea({ date, setError}: HabitAreaProps) {
     const pillars = [HabitCategory.SPIRITUAL, HabitCategory.PHYSICAL, HabitCategory.SOCIAL, HabitCategory.INTELLECTUAL]
-    const [spiritualHabits, setSpiritualHabits] = useState<Map<number, Habit>>(new Map)
-    const [physicalHabits, setPhysicalHabits] = useState<Map<number, Habit>>(new Map)
-    const [intelectualHabits, setIntellectualHabits] = useState<Map<number, Habit>>(new Map)
-    const [socialHabits, setSocialHabits] = useState<Map<number, Habit>>(new Map)
-
-    useEffect(() => {
-        const spiritualHabits = new Map<number, Habit>()
-        const physicalHabits = new Map<number, Habit>()
-        const intelectualHabits = new Map<number, Habit>()
-        const socialHabits = new Map<number, Habit>()
-        habits.forEach((habit) => {
-            if (habit.category === "Spiritual") {
-                spiritualHabits.set(habit.id, habit)
-            }
-            if (habit.category === "Physical") {
-                physicalHabits.set(habit.id, habit)
-            }
-            if (habit.category === "Social") {
-                socialHabits.set(habit.id, habit)
-            }
-            if (habit.category === "Intellectual") {
-                intelectualHabits.set(habit.id, habit)
-            }
-        })
-        setSpiritualHabits(spiritualHabits)
-        setPhysicalHabits(physicalHabits)
-        setIntellectualHabits(intelectualHabits)
-        setSocialHabits(socialHabits)
-    }, [habits])
-
+    
     return (
         <View className={Platform.OS === 'ios' ? "mb-24 mt-4" : "mb-4 mt-4"}>
             {pillars.map((pillar) => {
@@ -48,18 +18,7 @@ export default function HabitArea({habits, date, setError}: HabitAreaProps) {
                     <HabitPillarContainer
                         key={pillar}
                         category={pillar}
-                        habits={
-                            pillar === HabitCategory.SPIRITUAL ? spiritualHabits :
-                            pillar === HabitCategory.PHYSICAL ? physicalHabits :
-                            pillar === HabitCategory.SOCIAL ? socialHabits :
-                            intelectualHabits}
-                        setHabits={
-                            pillar === HabitCategory.SPIRITUAL ? setSpiritualHabits :
-                            pillar === HabitCategory.PHYSICAL ? setPhysicalHabits :
-                            pillar === HabitCategory.SOCIAL ? setSocialHabits :
-                            setIntellectualHabits}
                         date={date}
-                        setError={setError}
                     />
                 )
             })}
