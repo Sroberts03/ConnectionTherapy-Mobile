@@ -1,6 +1,6 @@
 import { Habit, HabitCategory, HabitDetails } from "../habits.types";
 import { SQLiteDatabase } from "expo-sqlite";
-import { getToday } from "../utils/dates";
+import { getToday } from "../../../utils/dates";
 
 export async function getHabitsDataAccess(
     formattedDate: string,
@@ -14,7 +14,8 @@ export async function getHabitsDataAccess(
                 h.description,
                 h.duration,
                 h.category,
-                he.is_completed as isCompleted
+                he.is_completed as isCompleted,
+                he.completed_at as completedOn
             FROM habit_entries he
             JOIN habits h on he.habit_id = h.id
             WHERE he.complete_by = ?
@@ -73,7 +74,8 @@ export async function getHabitInstanceDataAccess(id: number, db: SQLiteDatabase)
                 h.description,
                 h.duration,
                 h.category,
-                he.is_completed as isCompleted
+                he.is_completed as isCompleted,
+                he.completed_at as completedOn
             FROM habit_entries he
             JOIN habits h on he.habit_id = h.id
             WHERE he.id = ?`, [id])

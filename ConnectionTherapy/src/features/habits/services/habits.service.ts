@@ -16,7 +16,7 @@ import {
 } from "./habits.dataAccess";
 import getDates from "../utils/getDates";
 import creationValidation from "../utils/habitValidation";
-import { formatDate, getToday } from "../utils/dates";
+import { formatDate, getToday } from "../../../utils/dates";
 
 export async function getHabits(
     date: Date,

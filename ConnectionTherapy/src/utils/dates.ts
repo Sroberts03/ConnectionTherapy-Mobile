@@ -12,3 +12,11 @@ export function formatDate(date: Date): string {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
 }
+
+export function getStartOfWeek(): string {
+    const today = new Date();
+    const day = today.getDay();
+    const diff = today.getDate() - day;
+    const beginingOfWeek = new Date(today.setDate(diff));
+    return formatDate(beginingOfWeek)
+}

@@ -3,7 +3,7 @@ import { Habit } from "../habits.types";
 import { Ionicons } from "@expo/vector-icons";
 import { deleteHabit } from "../services/habits.service";
 import { useSQLiteContext } from "expo-sqlite";
-import { formatDate } from "../utils/dates";
+import { formatDate } from "../../../utils/dates";
 import { useAuth } from "../../auth/AuthContext";
 
 interface ConfirmDeleteHabitProps {
@@ -22,7 +22,7 @@ export default function ConfirmDeleteHabit({ isVisible, onClose, onConfirm, habi
     const { user } = useAuth();
 
     if (habitId === undefined) return null;
-    
+
     const habitName = habits.get(habitId)?.name || "";
 
     const handleDelete = async (type: 'future' | 'single') => {
@@ -38,7 +38,7 @@ export default function ConfirmDeleteHabit({ isVisible, onClose, onConfirm, habi
             onClose();
         }
     }
-    
+
     return (
         <Modal
             animationType="fade"
@@ -69,22 +69,22 @@ export default function ConfirmDeleteHabit({ isVisible, onClose, onConfirm, habi
                     </Text>
 
                     {/* Action Buttons */}
-                    <TouchableOpacity 
-                        onPress={() => handleDelete('future')} 
+                    <TouchableOpacity
+                        onPress={() => handleDelete('future')}
                         className="w-full bg-[#ff3b30] py-4 rounded-2xl mb-3"
                     >
                         <Text className="text-white text-center font-bold text-base">Delete this and all future events</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity 
-                        onPress={() => handleDelete('single')} 
+                    <TouchableOpacity
+                        onPress={() => handleDelete('single')}
                         className="w-full bg-red-50 border border-red-100 py-4 rounded-2xl mb-6"
                     >
                         <Text className="text-[#ff3b30] text-center font-bold text-base">Delete just this event</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity 
-                        onPress={onClose} 
+                    <TouchableOpacity
+                        onPress={onClose}
                         className="w-full pb-2 pt-2"
                     >
                         <Text className="text-neutral-400 text-center font-bold text-base">Cancel</Text>

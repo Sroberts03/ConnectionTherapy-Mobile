@@ -13,7 +13,7 @@ import { CreationError } from "../errors/CreationError";
 import CreationErrorMessage from "./CreationError";
 import { useAuth } from "../../auth/AuthContext";
 import { parseRepeatString } from "../utils/parseRepeatString";
-import { formatDate } from "../utils/dates";
+import { formatDate } from "../../../utils/dates";
 
 interface NewHabitProps {
     isVisible: boolean
@@ -169,8 +169,8 @@ export default function NewHabit({ isVisible, onClose, habits, setHabits, date, 
             onRequestClose={closeAndReset}
         >
             <View className="flex-1 bg-black/50 justify-center items-center">
-                <KeyboardAvoidingView 
-                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                     className="w-11/12 max-h-[90%]"
                 >
                     <View className="bg-white rounded-3xl overflow-hidden shadow-xl mb-16">
@@ -185,49 +185,49 @@ export default function NewHabit({ isVisible, onClose, habits, setHabits, date, 
                         </View>
 
                         <ScrollView className="p-6" showsVerticalScrollIndicator={false}>
-                            <HabitNameInput 
-                                name={name} 
-                                setName={setName} 
+                            <HabitNameInput
+                                name={name}
+                                setName={setName}
                             />
 
-                            <CreationErrorMessage 
+                            <CreationErrorMessage
                                 error={creationError}
                                 place="name"
                                 className="text-red-500 text-xs font-medium -mt-2 mb-2"
                             />
 
-                            <HabitDescInput 
-                                description={description} 
-                                setDescription={setDescription} 
+                            <HabitDescInput
+                                description={description}
+                                setDescription={setDescription}
                             />
 
-                            <HabitDurationInput 
-                                duration={duration} 
-                                setDuration={setDuration} 
+                            <HabitDurationInput
+                                duration={duration}
+                                setDuration={setDuration}
                             />
 
-                            <CreationErrorMessage 
+                            <CreationErrorMessage
                                 error={creationError}
                                 place="duration"
                                 className="text-red-500 text-xs font-medium -mt-2 mb-2"
                             />
 
-                            <HabitCategorySelector 
-                                currentCategory={currentCategory} 
-                                setCurrentCategory={setCurrentCategory} 
+                            <HabitCategorySelector
+                                currentCategory={currentCategory}
+                                setCurrentCategory={setCurrentCategory}
                             />
 
-                            <CreationErrorMessage 
+                            <CreationErrorMessage
                                 error={creationError}
                                 place="category"
                                 className="text-red-500 text-xs font-medium -mt-2 mb-2"
                             />
-                                                       
-                            <HabitStartEndDateInput 
-                                startDate={startDate} 
+
+                            <HabitStartEndDateInput
+                                startDate={startDate}
                                 setStartDate={setStartDate}
-                                endDate={endDate} 
-                                setEndDate={setEndDate} 
+                                endDate={endDate}
+                                setEndDate={setEndDate}
                                 repetition={repetition}
                                 setRepetition={setRepetition}
                                 setCustomRepetition={setCustomRepetition}
@@ -237,7 +237,7 @@ export default function NewHabit({ isVisible, onClose, habits, setHabits, date, 
 
                             {/* Action Buttons */}
                             <View className="flex-row gap-4 mb-6">
-                                <TouchableOpacity 
+                                <TouchableOpacity
                                     onPress={() => {
                                         reset();
                                         onClose();
@@ -246,7 +246,7 @@ export default function NewHabit({ isVisible, onClose, habits, setHabits, date, 
                                 >
                                     <Text className="text-neutral-600 font-bold text-base">Cancel</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity 
+                                <TouchableOpacity
                                     onPress={handleSave}
                                     className="flex-1 bg-teal-600 py-4 rounded-2xl items-center shadow-sm"
                                 >

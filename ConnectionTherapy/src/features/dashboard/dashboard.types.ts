@@ -2,7 +2,7 @@ import { HabitCategory } from "../habits/habits.types";
 
 export interface ConnectionPillar {
     id: number;
-    pillar: HabitCategory;
+    name: HabitCategory;
     percentage: number;
     color: string;
     icon: string;
