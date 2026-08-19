@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Circle } from 'react-native-svg';
 import * as LucideIcons from 'lucide-react-native';
+import PillarAlert from "./PillarAlert";
 
 interface PillarContainerProps {
     pillar: ConnectionPillar
@@ -27,7 +28,7 @@ export default function PillarContainer({ pillar }: PillarContainerProps) {
     return (
         <View 
             className="bg-white rounded-xl border border-gray-100 items-center justify-center w-[140px] h-[150px]"
-            style={{ 
+            style={{
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 1 },
                 shadowOpacity: 0.05,
@@ -35,12 +36,9 @@ export default function PillarContainer({ pillar }: PillarContainerProps) {
                 elevation: 2
             }}
         >
-            {pillar.danger && (
-                <View className="absolute top-2 right-2 bg-red-50 rounded-full p-[2px]">
-                    <Ionicons name="alert-circle-outline" size={18} color="#ef4444" />
-                </View>
-            )}
-            
+            <PillarAlert
+                pillar={pillar}
+            />
             <View className="items-center justify-center relative mt-2" style={{ width: size, height: size }}>
                 <Svg width={size} height={size} className="absolute">
                     <Circle

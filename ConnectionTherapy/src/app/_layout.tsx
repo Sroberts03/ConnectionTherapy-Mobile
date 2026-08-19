@@ -7,6 +7,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { QuoteProvider } from "../features/quote/QuoteContext";
 import { SQLiteProvider } from "expo-sqlite";
 import { initializeDatabase } from "../db/database";
+import { PillarProvider } from "../features/dashboard/PillarContext";
 
 function IntialLayout() {
     const { session, error, loadingAuth, user } = useAuth();
@@ -45,7 +46,9 @@ export default function RootLayout() {
             <SQLiteProvider databaseName="connectionTherapy.db" onInit={initializeDatabase}>
                 <AuthProvider>
                     <QuoteProvider>
-                        <IntialLayout />
+                        <PillarProvider>
+                            <IntialLayout />
+                        </PillarProvider>
                     </QuoteProvider>
                 </AuthProvider>
             </SQLiteProvider>

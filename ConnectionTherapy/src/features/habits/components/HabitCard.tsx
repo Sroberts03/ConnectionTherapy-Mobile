@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons"
 import { useSQLiteContext } from "expo-sqlite";
 import { toggleComplete } from "../services/habits.service";
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+import { usePillarContext } from "../../dashboard/PillarContext";
 
 interface HabitCardProps {
     habit: Habit
@@ -15,6 +16,7 @@ interface HabitCardProps {
 
 export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId, setError }: HabitCardProps) {
     const db = useSQLiteContext();
+    const { setReloadPillars } = usePillarContext()
     const [isCompleted, setIsCompleted] = useState(habit.isCompleted);
 
     useEffect(() => {
@@ -27,6 +29,7 @@ export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId, set
             await toggleComplete(habit.id, targetState, db);
             setIsCompleted(targetState);
             habit.isCompleted = targetState;
+            setReloadPillars(true);
         } catch (e) {
             setError(e instanceof Error ? e.message : "Failed to toggle complete")
         }

@@ -9,11 +9,13 @@ import { ConnectionPillar } from '../dashboard.types'
 import { getDashboardPillars, getFullPillars } from '../services/dashboard.service'
 import { HabitCategory } from '../../habits/habits.types'
 import { useSQLiteContext } from 'expo-sqlite';
+import { usePillarContext } from '../PillarContext';
 
 export default function DashboardScreen() {
     const db = useSQLiteContext();
+    const { reloadPillars, setReloadPillars } = usePillarContext()
     const { getQuote } = useQuote()
-    const { user, session } = useAuth()
+    const { session } = useAuth()
     const [ fullPillars, setFullPillars ] = useState<Map<HabitCategory, ConnectionPillar>>(new Map())
 
     const getPillars = async () => {
@@ -37,14 +39,19 @@ export default function DashboardScreen() {
     }
 
     useEffect(() => {
-        async function fetchData() {
-            if (session) {
-                getQuote()
-                await getPillars()
-            }
-        }       
-        fetchData()
+        if (session) {
+            getQuote()
+        }
     }, [session])
+
+    useEffect(() => {
+        const loadPillars = async () => {
+            if (!reloadPillars) return
+            await getPillars()
+            setReloadPillars(false)
+        }
+        loadPillars()
+    }, [reloadPillars])
 
     return (
         <ScrollView 
