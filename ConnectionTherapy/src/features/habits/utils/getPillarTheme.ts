@@ -1,4 +1,5 @@
 import { ConnectionPillar } from "../../dashboard/dashboard.types";
+import { usePillarContext } from "../../dashboard/PillarContext";
 import { HabitCategory } from "../habits.types"
 import * as LucideIcons from 'lucide-react-native';
 
@@ -7,7 +8,8 @@ interface PillarTheme {
     IconComponent: React.ComponentType<any>
 }
 
-export function getPillarTheme(pillars: Map<HabitCategory, ConnectionPillar>, category: HabitCategory): PillarTheme {
+export function getPillarTheme(category: HabitCategory): PillarTheme {
+    const { pillars } = usePillarContext()
     const pillar = pillars.get(category)
     let color = "#B0A69D"
     let iconName = "Circle"

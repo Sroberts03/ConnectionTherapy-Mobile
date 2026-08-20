@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react"
 import { Habit } from "../habits.types"
 import { View, Text, TouchableOpacity, Alert } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-import { useHabitContext } from "../HabitContext";
-import { usePillarContext } from "../../dashboard/PillarContext";
 import { getPillarTheme } from "../utils/getPillarTheme";
+import { useHabitCompletion } from "../utils/useHabitCompletion";
+import { getHabitCardStyle } from "../utils/getHabitCardStyle";
 
 interface HabitCardProps {
     habit: Habit
@@ -14,14 +13,20 @@ interface HabitCardProps {
 }
 
 export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId }: HabitCardProps) {
-    const { pillars } = usePillarContext()
-    const { toggleHabitComplete, setHabitError } = useHabitContext()
-    const [isCompleted, setIsCompleted] = useState(habit.isCompleted);
-    const { color, IconComponent } = getPillarTheme(pillars, habit.category);
-
-    useEffect(() => {
-        setIsCompleted(habit.isCompleted);
-    }, [habit.isCompleted]);
+    const { isCompleted, toggleHabitComplete, setHabitError } = useHabitCompletion(habit);
+    const { color, IconComponent } = getPillarTheme(habit.category);
+    const { 
+        iconColor, 
+        nameClassName, 
+        descriptionClassName, 
+        categoryBackgroundColor, 
+        categoryOpacity, 
+        categoryTextColor, 
+        categoryTextClassName, 
+        durationClassName, 
+        checkIconName, 
+        checkIconColor 
+    } = getHabitCardStyle(isCompleted, color);
 
     const completePressed = async () => {
         toggleHabitComplete(habit.id, isCompleted)
@@ -59,31 +64,31 @@ export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId }: H
             <View className="flex-row items-center justify-between border border-neutral-400 rounded-xl p-4 bg-white">
                 <View className="flex-row items-center flex-1">
                     <View className="mr-4 items-center justify-center">
-                        <IconComponent size={28} color={!isCompleted ? color : "#e0dcd4"} />
+                        <IconComponent size={28} color={iconColor} />
                     </View>
                     <View className="flex-1">
-                        <Text className={`text-lg font-semibold ${isCompleted ? 'text-neutral-400 line-through' : 'text-black'}`}>{habit.name}</Text>
+                        <Text className={nameClassName}>{habit.name}</Text>
                         {habit.description && (
-                            <Text className={`text-xs font-semibold ${isCompleted ? 'text-neutral-400 line-through' : 'text-neutral-700'}`}>{habit.description}</Text>
+                            <Text className={descriptionClassName}>{habit.description}</Text>
                         )}
                         <View className="flex-row items-center mt-1 gap-2">
                             <View className="rounded-md overflow-hidden px-2 py-0.5 justify-center items-center w-15 h-5">
                                 <View 
                                     className="absolute top-0 left-0 right-0 bottom-0"
-                                    style={{ backgroundColor: !isCompleted ? color : "#f5f5f5", opacity: !isCompleted ? 0.15 : 1 }} 
+                                    style={{ backgroundColor: categoryBackgroundColor, opacity: categoryOpacity }} 
                                 />
                                 <Text 
-                                    style={{ color: !isCompleted ? color : "#a3a3a3" }} 
-                                    className={`text-[10px] font-semibold capitalize ${isCompleted ? 'line-through' : ''}`}
+                                    style={{ color: categoryTextColor }} 
+                                    className={categoryTextClassName}
                                 >
                                     {habit.category}
                                 </Text>
                             </View>
-                            <Text className={`text-xs ${isCompleted ? 'text-neutral-300 line-through' : 'text-neutral-900'}`}>{habit.duration}</Text>
+                            <Text className={durationClassName}>{habit.duration}</Text>
                         </View>
                     </View>
                     <TouchableOpacity className="mr-3" onPress={() => completePressed()}>
-                        <Ionicons name={isCompleted ? "checkmark-circle" : "ellipse-outline"} size={32} color={isCompleted ? "#14b850ff" : color} />
+                        <Ionicons name={checkIconName} size={32} color={checkIconColor} />
                     </TouchableOpacity>
                 </View>
             </View>
