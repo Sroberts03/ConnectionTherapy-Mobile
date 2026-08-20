@@ -1,6 +1,7 @@
 import { View, TouchableOpacity, Text, Platform } from "react-native"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { Ionicons } from "@expo/vector-icons"
+import { getDateInputStyle } from "../utils/getDateInputstyle"
 
 interface DateInputProps {
     selectedDate: string
@@ -10,6 +11,14 @@ interface DateInputProps {
 }
 
 export default function DateInput({ selectedDate, setSelectedDate, showDatePicker, setShowDatePicker }: DateInputProps) {
+    const { 
+        mainButtonClass, 
+        calendarIconColor, 
+        dateTextClass, 
+        chevronIconColor, 
+        chevron 
+    } = getDateInputStyle(showDatePicker);
+    
     let safeDate = new Date();
     if (selectedDate !== "") {
         const parts = selectedDate.split('-');
@@ -28,15 +37,15 @@ export default function DateInput({ selectedDate, setSelectedDate, showDatePicke
             <TouchableOpacity 
                 activeOpacity={0.7}
                 onPress={() => setShowDatePicker(!showDatePicker)}
-                className={`flex-row items-center justify-between bg-neutral-50 border ${showDatePicker ? 'border-teal-500' : 'border-neutral-200'} rounded-2xl px-4 py-4`}
+                className={mainButtonClass}
             >
                 <View className="flex-row items-center">
-                    <Ionicons name="calendar-outline" size={20} color={showDatePicker ? "#0d9488" : "#9ca3af"} />
-                    <Text className={`text-base font-medium ml-3 ${showDatePicker ? 'text-teal-700' : 'text-neutral-700'}`}>
+                    <Ionicons name="calendar-outline" size={20} color={calendarIconColor} />
+                    <Text className={dateTextClass}>
                         {selectedDate === "" ? "Select a date" : formattedDate}
                     </Text>
                 </View>
-                <Ionicons name={showDatePicker ? "chevron-up" : "chevron-down"} size={20} color="#9ca3af" />
+                <Ionicons name={chevron} size={20} color={chevronIconColor} />
             </TouchableOpacity>
 
             {showDatePicker && (

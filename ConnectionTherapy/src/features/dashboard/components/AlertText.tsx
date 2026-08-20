@@ -1,6 +1,7 @@
 import { ConnectionPillar } from "../dashboard.types";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import getAlertTheme from "../utils/getAlertTheme";
 
 interface AlertTextProps {
     pillar: ConnectionPillar
@@ -11,12 +12,8 @@ interface AlertTextProps {
 export default function AlertText({ pillar, isVisible, onClose }: AlertTextProps) {
     const { danger, concern, name } = pillar;
     if (!isVisible) return null;
-
-    const isDanger = danger;
-    const iconName = isDanger ? "warning" : "alert-circle";
-    const iconColor = isDanger ? "#ef4444" : "#f59e0b";
-    const bgColor = isDanger ? "bg-red-50" : "bg-amber-50";
-    const title = isDanger ? "Action Required" : "Needs Attention";
+    const { iconName, iconColor, bgColor, title, text } = getAlertTheme(danger, name);
+    
     
     return (
         <Modal
@@ -36,12 +33,7 @@ export default function AlertText({ pillar, isVisible, onClose }: AlertTextProps
                     </Text>
                     
                     <Text className="text-center text-base text-neutral-600 mb-8 leading-6">
-                        {isDanger 
-                            ? `Your ${name} pillar is currently in danger. Please take some time to check in with yourself and make sure you're getting the support you need.` 
-                            : concern 
-                            ? `Your ${name} pillar is showing some signs of concern. Consider focusing some energy here soon.` 
-                            : ""
-                        }
+                        {text}
                     </Text>
                     
                     <TouchableOpacity 

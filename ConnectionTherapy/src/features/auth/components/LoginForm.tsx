@@ -4,6 +4,7 @@ import { Feather } from "@expo/vector-icons";
 import { useAuth } from "../AuthContext";
 import GlobalErrorDisplay from "../../../globalComponents/GlobalErrorDisplay";
 import EmailPasswordInput from "./EmailPasswordInput";
+import { forgotPassword } from "../services/auth.service";
 
 export default function LoginForm() {
     const { loginWithEmail, error, clearError } = useAuth();
@@ -17,6 +18,7 @@ export default function LoginForm() {
     };
 
     const forgotPasswordClicked = async () => {
+        await forgotPassword(email);
         alert("forgot password clicked not yet implemented");
     };
 
