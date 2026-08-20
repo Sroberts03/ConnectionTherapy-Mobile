@@ -64,6 +64,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError(null);
   }, []);
 
+  const refreshAuthState = useCallback(async (nextSession: Session | null = null) => {
+    const currentSession = nextSession ?? (await supabase.auth.getSession()).data.session;
+    setSession(currentSession);
+
+    if (currentSession?.user) {
+      setUser(await userData(currentSession.user));
+      return;
+    }
+
+    setUser(null);
+  }, [supabase]);
+
   const loginWithEmail = useCallback(async (email: string, password: string) => {
     setError(null);
     if (!email || !password) {
@@ -72,18 +84,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     try {
       await authServiceLogin(email, password);
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
-      setSession(currentSession);
-      if (currentSession?.user) {
-        setUser(await userData(currentSession.user));
-      } else {
-        setUser(null);
-      }
+      await refreshAuthState();
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Login failed';
       setError(message);
     }
-  }, [supabase]);
+  }, [refreshAuthState]);
 
   const signupWithEmail = useCallback(async (email: string, password: string, fullName: string) => {
     setError(null);
@@ -93,37 +99,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     try {
       await authServiceSignUp(email, password, fullName);
-      // Refresh session after signup
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
-      setSession(currentSession);
-      if (currentSession?.user) {
-        setUser(await userData(currentSession.user));
-      } else {
-        setUser(null);
-      }
+      await refreshAuthState();
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Sign up failed';
       setError(message);
     }
-  }, [supabase]);
+  }, [refreshAuthState]);
 
   const signOut = useCallback(async () => {
     setError(null);
     try {
       await authServiceSignOut();
-      // Refresh session after logout
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
-      setSession(currentSession);
-      if (currentSession?.user) {
-        setUser(await userData(currentSession.user));
-      } else {
-        setUser(null);
-      }
+      await refreshAuthState();
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Sign out failed';
       setError(message);
     }
-  }, [supabase]);
+  }, [refreshAuthState]);
 
   const oauthLogin = useCallback(async (provider: OAuthProvider) => {
     setError(null);
@@ -138,21 +130,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const finishSignUp = useCallback(async () => {
     setError(null);
     try {
-      setLoadingAuth(true)
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
-      setSession(currentSession);
-      if (currentSession?.user) {
-        setUser(await userData(currentSession.user));
-      } else {
-        setUser(null);
-      }
+      setLoadingAuth(true);
+      await refreshAuthState();
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Sign up failed';
       setError(message);
     } finally {
-      setLoadingAuth(false)
+      setLoadingAuth(false);
     }
-  }, []);
+  }, [refreshAuthState]);
 
   return (
     <AuthContext.Provider

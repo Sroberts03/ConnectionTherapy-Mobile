@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons"
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { useHabitContext } from "../HabitContext";
 import { usePillarContext } from "../../dashboard/PillarContext";
-import * as LucideIcons from 'lucide-react-native';
+import { getPillarTheme } from "../utils/getPillarTheme";
 
 interface HabitCardProps {
     habit: Habit
@@ -17,15 +17,7 @@ export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId }: H
     const { pillars } = usePillarContext()
     const { toggleHabitComplete, setHabitError } = useHabitContext()
     const [isCompleted, setIsCompleted] = useState(habit.isCompleted);
-    const pillar = pillars.get(habit.category)
-    let color = "#B0A69D"
-    let iconName = "Circle"
-    let IconComponent = LucideIcons.Circle
-    if (pillar) {
-        color = pillar.color
-        iconName = pillar.icon.charAt(0).toUpperCase() + pillar.icon.slice(1)
-        IconComponent = (LucideIcons as any)[iconName] || LucideIcons.Circle;
-    }
+    const { color, IconComponent } = getPillarTheme(pillars, habit.category);
 
     useEffect(() => {
         setIsCompleted(habit.isCompleted);

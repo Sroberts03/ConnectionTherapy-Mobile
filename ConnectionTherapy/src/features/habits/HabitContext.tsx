@@ -5,7 +5,7 @@ import { useAuth } from "../auth/AuthContext";
 import { getHabits, toggleComplete } from "./services/habits.service";
 import { usePillarContext } from "../dashboard/PillarContext";
 
-export interface habitContextType {
+interface HabitContextType {
     todaysTopHabits: Map<number, Habit>
     setTodaysTopHabits: (todaysTopHabits: Map<number, Habit>) => void
     reloadTopHabits: () => void
@@ -19,7 +19,7 @@ export interface habitContextType {
     setHabitLoading: (habitLoading: boolean) => void
 }
 
-export const HabitContext = createContext<habitContextType | undefined>(undefined);
+const HabitContext = createContext<HabitContextType | undefined>(undefined);
 
 export function useHabitContext() {
     const context = useContext(HabitContext);

@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import ViewOtherInfoButton from "./ViewOtherInfoButton";
 
 interface LoadingPillarsProps {
     loadingPillars: boolean;
@@ -37,13 +38,7 @@ export default function LoadingPillars({ loadingPillars }: LoadingPillarsProps) 
 
     return (
         <View className="mt-4">
-            <View className="flex-row items-center justify-between mb-2">
-                <Text className="text-xl font-bold text-neutral-900">Life's Pillars of Connection</Text>
-                <TouchableOpacity onPress={() => router.push("/(tabs)/Habits")} className="flex-row items-center gap-1">
-                    <Text className="text-primary-700 font-medium">View Habits</Text>
-                    <Ionicons name="chevron-forward" size={18} color="#222222" />
-                </TouchableOpacity>
-            </View>
+            <ViewOtherInfoButton onPress={() => router.push("/(tabs)/Habits")} text="View Progress" />
             <View className="flex-row flex-wrap justify-center gap-4">
                 {skeletonItems.map((item) => (
                     <SkeletonPillar key={`skeleton-${item}`} />

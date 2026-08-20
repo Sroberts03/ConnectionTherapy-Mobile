@@ -7,7 +7,7 @@ import { useState } from "react"
 import ConfirmDeleteHabit from "./ConfirmDeleteHabit"
 import { useHabitContext } from "../HabitContext"
 import { usePillarContext } from "../../dashboard/PillarContext"
-import * as LucideIcons from 'lucide-react-native';
+import { getPillarTheme } from "../utils/getPillarTheme"
 
 interface HabitPillarContainerProps {
     category: HabitCategory
@@ -17,15 +17,8 @@ interface HabitPillarContainerProps {
 export default function HabitPillarContainer({category, date}: HabitPillarContainerProps) {
     const { currentHabits, setHabitError } = useHabitContext();
     const { pillars } = usePillarContext()
-    const pillar = pillars.get(category)
-    let color = "#B0A69D"
-    let iconName = "Circle"
-    let IconComponent = LucideIcons.Circle
-    if (pillar) {
-        color = pillar.color
-        iconName = pillar.icon.charAt(0).toUpperCase() + pillar.icon.slice(1)
-        IconComponent = (LucideIcons as any)[iconName] || LucideIcons.Circle;
-    }
+    const { color, IconComponent } = getPillarTheme(pillars, category);
+    
     const [newHabitVisible, setNewHabitVisible] = useState(false)
     const [editHabitId, setEditHabitId] = useState<number | undefined>(undefined);
     const [deleteHabitId, setDeleteHabitId] = useState<number | undefined>(undefined);

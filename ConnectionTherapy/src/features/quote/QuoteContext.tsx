@@ -3,14 +3,14 @@ import { useAuth } from "../auth/AuthContext";
 import { Quote } from "./quote.types";
 import { getRandomQuote } from "./service/quote.service";
 
-export interface QuoteContextType {
+interface QuoteContextType {
     quote: Quote
     getQuote: () => void
     quoteLoading: boolean
     quoteError: string
 }
 
-export const QuoteContext = createContext<QuoteContextType | undefined>(undefined);
+const QuoteContext = createContext<QuoteContextType | null>(null);
 
 export function QuoteProvider({ children }: { children: ReactNode }) {
     const { session } = useAuth();

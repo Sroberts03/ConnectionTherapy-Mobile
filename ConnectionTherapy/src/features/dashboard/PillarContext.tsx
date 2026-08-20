@@ -5,7 +5,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { useAuth } from "../auth/AuthContext";
 import { getDashboardPillars, getFullPillars } from "./services/dashboard.service";
 
-export interface PillarContextType {
+interface PillarContextType {
     getPillars: () => Promise<void>
     reloadPillarPercentages: () => Promise<void>
     pillars: Map<HabitCategory, ConnectionPillar>

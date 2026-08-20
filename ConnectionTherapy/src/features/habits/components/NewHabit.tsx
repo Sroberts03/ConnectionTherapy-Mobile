@@ -15,6 +15,7 @@ import { useAuth } from "../../auth/AuthContext";
 import { parseRepeatString } from "../utils/parseRepeatString";
 import { formatDate } from "../../../utils/dates";
 import { useHabitContext } from "../HabitContext";
+import { newHabitInput } from "../habit.dto";
 
 interface NewHabitProps {
     isVisible: boolean
@@ -76,19 +77,20 @@ export default function NewHabit({ isVisible, onClose, date, category, habitId }
     const update = async () => {
         if (!user?.id || !habitId) return;
         try {
-            const updatedHabit = await updateHabit(
-                formatDate(date),
-                habitId,
+            const req: newHabitInput = {
+                userCurrentDate: formatDate(date),
+                habitInstanceId: habitId,
                 name,
                 duration,
-                currentCategory,
+                category: currentCategory,
                 startDate,
-                repetition == "custom" ? customRepetition : repetition,
+                repetition: repetition == "custom" ? customRepetition : repetition,
                 endDate,
                 description,
-                user.id,
+                userId: user.id,
                 db
-            )
+            }
+            const updatedHabit = await updateHabit(req);
             if (updatedHabit) {
                 const newHabits = new Map(currentHabits);
                 newHabits.delete(habitId);
@@ -116,18 +118,19 @@ export default function NewHabit({ isVisible, onClose, date, category, habitId }
     const create = async () => {
         if (!user?.id) return;
         try {
-            const newHabit = await createNewHabit(
-                formatDate(date),
+            const req: newHabitInput = {
+                userCurrentDate: formatDate(date),
                 name,
                 duration,
-                currentCategory,
+                category: currentCategory,
                 startDate,
-                repetition == "custom" ? customRepetition : repetition,
+                repetition: repetition == "custom" ? customRepetition : repetition,
                 endDate,
                 description,
-                user.id,
+                userId: user.id,
                 db
-            )
+            }
+            const newHabit = await createNewHabit(req);
             if (newHabit) {
                 setCurrentHabits(new Map([...currentHabits, [newHabit.id, newHabit]]));
             }
@@ -150,7 +153,8 @@ export default function NewHabit({ isVisible, onClose, date, category, habitId }
         setDescription("");
         setDuration("");
         setCurrentCategory(category || HabitCategory.PHYSICAL);
-        setRepetition("N");
+        setRepetition("None");
+        setCustomRepetition("");
         setStartDate(localDateStr);
         setEndDate("");
         setCreationError(null);

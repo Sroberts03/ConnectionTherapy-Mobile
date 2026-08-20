@@ -73,7 +73,7 @@ export async function createNewHabitDataAccess(
     return result.lastInsertRowId;
 }
 
-export async function getHabitInstanceDataAccess(id: number, db: SQLiteDatabase): Promise<Habit> {
+async function getHabitInstanceDataAccess(id: number, db: SQLiteDatabase): Promise<Habit> {
     const result = await db.getAllAsync<Habit>(`
             SELECT
                 he.id,
@@ -191,7 +191,7 @@ export async function deleteHabitInstanceDataAccess(habitInstanceId: number, db:
     `, [habitInstanceId])
 }
 
-export async function markHabitInactiveDataAccess(habitId: number, db: SQLiteDatabase) {
+async function markHabitInactiveDataAccess(habitId: number, db: SQLiteDatabase) {
     await db.runAsync(`
         UPDATE habits
         SET is_active = 0

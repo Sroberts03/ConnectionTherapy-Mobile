@@ -11,6 +11,7 @@ import {
     parseCustomEachOrOnThe,
     parseCustomDayOfMonthInterval
 } from "../utils/parseRepeatString";
+import { formatRepeatStringToEnglish } from "../utils/FormatRepeatStringToEnglish";
 
 interface CustomRepeatBuilderProps {
     setCustomRepetition: (repetition: string) => void
@@ -58,54 +59,7 @@ export default function CustomRepeatBuilder({ setCustomRepetition, customRepetit
         setEachOrOnThe("Each")
     }
 
-    const formatToEnglish = () => {
-        let repetitionString = `Habit will occur every ${interval}`
-        if (freq === "DAILY") {
-            if (interval === 1) {
-                repetitionString += ` day`
-            } else {
-                repetitionString += ` days`
-            }
-        } else if (freq === "WEEKLY") {
-            if (interval === 1) {
-                repetitionString += ` week`
-            } else {
-                repetitionString += ` weeks`
-            }
-            if (byDay.length > 0) {
-                if (byDay.length === 1) {
-                    repetitionString += ` on ${byDay[0]}`
-                } else {
-                    repetitionString += ` on ${byDay.join(", ")}`
-                }
-            }
-        } else if (freq === "MONTHLY") {
-            if (interval === 1) {
-                repetitionString += ` month`
-            } else {
-                repetitionString += ` months`
-            }
-            if (byDay.length > 0) {
-                if (byDay.length === 1) {
-                    repetitionString += ` on the ${dayOfMonthIntervalOption.find(o => o.value === dayOfMonthInterval)?.label.toLowerCase()} ${daysOfWeek.find(o => o.value === byDay[0])?.label.toLowerCase()}`
-                }
-            }
-            if (byMonthDay.length > 0) {
-                if (byMonthDay.length === 1) {
-                    repetitionString += ` on the ${byMonthDay[0]}`
-                } else {
-                    repetitionString += ` on the ${byMonthDay.join(", ")}`
-                }
-            }
-        } else if (freq === "YEARLY") {
-            if (interval === 1) {
-                repetitionString += ` year`
-            } else {
-                repetitionString += ` years`
-            }
-        }
-        return repetitionString
-    }
+    
 
     useEffect(() => {
         setCustomRepetition(CreateRepeatString(freq, interval, byDay, byMonthDay, dayOfMonthInterval));
@@ -148,7 +102,7 @@ export default function CustomRepeatBuilder({ setCustomRepetition, customRepetit
             {/* Plain English version */}
             <View className="mt-2">
                 <Text className="text-sm text-neutral-600">
-                    {formatToEnglish()}
+                    {formatRepeatStringToEnglish(interval, freq, byDay, byMonthDay, dayOfMonthInterval, dayOfMonthIntervalOption, daysOfWeek)}
                 </Text>
             </View>
 

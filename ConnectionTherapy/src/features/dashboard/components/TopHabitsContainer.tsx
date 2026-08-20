@@ -6,6 +6,7 @@ import { useHabitContext } from "../../habits/HabitContext";
 import { useEffect } from "react";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import ViewOtherInfoButton from "./ViewOtherInfoButton";
 
 export default function TopHabitsContainer() {
     const {todaysTopHabits, reloadTopHabits } = useHabitContext();
@@ -16,13 +17,7 @@ export default function TopHabitsContainer() {
 
     return (
         <View className="flex-1 mt-4">
-            <View className="flex-row items-center justify-between mb-2">
-                <Text className="text-xl font-bold text-neutral-900">Today's Top Habits</Text>
-                <TouchableOpacity onPress={() => router.push("/(tabs)/Habits")} className="flex-row items-center gap-1">
-                    <Text className="text-primary-700 font-medium">View All Habits</Text>
-                    <Ionicons name="chevron-forward" size={18} color="#222222" />
-                </TouchableOpacity>
-            </View>
+            <ViewOtherInfoButton onPress={() => router.push("/(tabs)/Habits")} />
             <View className="gap-y-3">
                 {todaysTopHabits.size > 0 ? (
                     Array.from(todaysTopHabits.values()).map((habit) => (
