@@ -1,30 +1,29 @@
+import { DayOption, repeatString } from "./repeatString";
+
 export function formatRepeatStringToEnglish(
     interval: number,
     freq: string,
     byDay: string[],
     byMonthDay: number[],
     dayOfMonthInterval: "1" | "2" | "3" | "4" | "5" | "-1" | "",
-    dayOfMonthIntervalOption: any[],
-    daysOfWeek: any[]
+    dayOfMonthIntervalOption: DayOption[],
+    daysOfWeek: DayOption[]
 ): string {
-    let repetitionString: string;
-    switch (freq) {
-        case "DAILY":
-            repetitionString = freqDaily(interval);
-            break;
-        case "WEEKLY":
-            repetitionString = freqWeekly(interval, byDay);
-            break;
-        case "MONTHLY":
-            repetitionString = freqMonthly(interval, byDay, byMonthDay, dayOfMonthInterval, dayOfMonthIntervalOption, daysOfWeek);
-            break;
-        case "YEARLY":
-            repetitionString = freqYearly(interval);
-            break;
-        default:
-            repetitionString = "Unknown frequency";
-    }
-    return repetitionString;
+    return repeatString(
+        {
+            freqDaily,
+            freqWeekly,
+            freqMonthly,
+            freqYearly
+        },
+        interval,
+        freq,
+        byDay,
+        byMonthDay,
+        dayOfMonthInterval,
+        dayOfMonthIntervalOption,
+        daysOfWeek
+    );
 }
 
 function freqDaily(interval: number): string {
@@ -32,41 +31,35 @@ function freqDaily(interval: number): string {
 }
 
 function freqWeekly(interval: number, byDay: string[]): string {
-    let repetitionString = `Habit will occur every ${interval} ${interval === 1 ? 'week' : 'weeks'}`;
-    if (byDay.length > 0) {
-        if (byDay.length === 1) {
-            repetitionString += ` on ${byDay[0]}`
-        } else {
-            repetitionString += ` on ${byDay.join(", ")}`
-        }
-    }
-    return repetitionString;
+    const unit = interval === 1 ? 'week' : 'weeks';
+    const dayText = byDay.length > 0 ? ` on ${byDay.join(", ")}` : '';
+    return `Habit will occur every ${interval} ${unit}${dayText}`;
 }
 
 function freqMonthly(
-    interval: number, 
-    byDay: string[], 
-    byMonthDay: number[], 
-    dayOfMonthInterval: "1" | "2" | "3" | "4" | "5" | "-1" | "", 
-    dayOfMonthIntervalOption: any[], daysOfWeek: any[]
+    interval: number,
+    byDay?: string[],
+    byMonthDay?: number[],
+    dayOfMonthInterval?: "1" | "2" | "3" | "4" | "5" | "-1" | "",
+    dayOfMonthIntervalOption?: DayOption[],
+    daysOfWeek?: DayOption[]
 ): string {
-    let repetitionString = `Habit will occur every ${interval} ${interval === 1 ? 'month' : 'months'}`;
-    if (byDay.length > 0) {
-        if (byDay.length === 1) {
-            repetitionString += ` on the ${dayOfMonthIntervalOption.find(o => o.value === dayOfMonthInterval)?.label.toLowerCase()} ${daysOfWeek.find(o => o.value === byDay[0])?.label.toLowerCase()}`
-        }
+    const unit = interval === 1 ? 'month' : 'months';
+    let result = `Habit will occur every ${interval} ${unit}`;
+
+    if (byDay && byDay.length > 0) {
+        const ordinal = dayOfMonthIntervalOption?.find(o => o.value === dayOfMonthInterval)?.label.toLowerCase();
+        const dayName = daysOfWeek?.find(o => o.value === byDay[0])?.label.toLowerCase();
+        result += ` on the ${ordinal} ${dayName}`;
     }
-    if (byMonthDay.length > 0) {
-        if (byMonthDay.length === 1) {
-            repetitionString += ` on the ${byMonthDay[0]}`
-        } else {
-            repetitionString += ` on the ${byMonthDay.join(", ")}`
-        }
+
+    if (byMonthDay && byMonthDay.length > 0) {
+        result += ` on the ${byMonthDay.join(", ")}`;
     }
-    return repetitionString;
+
+    return result;
 }
 
 function freqYearly(interval: number): string {
-    let repetitionString = `Habit will occur every ${interval} ${interval === 1 ? 'year' : 'years'}`;
-    return repetitionString;
+    return `Habit will occur every ${interval} ${interval === 1 ? 'year' : 'years'}`;
 }
