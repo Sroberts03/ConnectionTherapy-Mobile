@@ -3,6 +3,32 @@ import { Platform } from "react-native";
 
 export type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "OPTIONS";
 
+function resolveBackendOrigin(platformOS: typeof Platform.OS = Platform.OS): string {
+    const origin = process.env.EXPO_PUBLIC_BACKEND_ORIGIN;
+    if (!origin) {
+        throw new Error("EXPO_PUBLIC_BACKEND_ORIGIN environment variable is not set");
+    }
+    if (platformOS !== 'android') {
+        return origin;
+    }
+    return origin.replace('127.0.0.1', '10.0.2.2').replace('localhost', '10.0.2.2');
+}
+
+function buildRequestHeaders(needsAuth: boolean, session?: Session): HeadersInit {
+    if (needsAuth && !session) {
+        throw new Error("No session provided for authenticated request");
+    }
+    return {
+        "Content-Type": "application/json",
+        ...(needsAuth ? { "Authorization": `Bearer ${session?.access_token}` } : {}),
+    };
+}
+
+async function parseErrorMessage(response: Response): Promise<string> {
+    const errorData = await response.json();
+    return errorData.body.message;
+}
+
 export default async function HTTPRequest(
     method: HTTPMethod,
     endpoint: string,
@@ -10,30 +36,18 @@ export default async function HTTPRequest(
     session?: Session,
     body?: Object,
 ) {
-    let currentOrigin = process.env.EXPO_PUBLIC_BACKEND_ORIGIN;
-    if (currentOrigin && Platform.OS === 'android') {
-        currentOrigin = currentOrigin.replace('127.0.0.1', '10.0.2.2').replace('localhost', '10.0.2.2');
-    }
+    const origin = resolveBackendOrigin();
+    const headers = buildRequestHeaders(needsAuth, session);
 
-    if (!currentOrigin) {
-        throw new Error("EXPO_PUBLIC_BACKEND_ORIGIN environment variable is not set");
-    }
-    if (needsAuth && !session) {
-        throw new Error("No session provided for authenticated request");
-    }
-    const response = await fetch(`${currentOrigin}/${endpoint}`, {
-        method: method,
-        headers: {
-            "Content-Type": "application/json",
-            ...(needsAuth ? { "Authorization": "Bearer " + session?.access_token } : {})
-        },
-        body: body ? JSON.stringify(body) : undefined
-    })
+    const response = await fetch(`${origin}/${endpoint}`, {
+        method,
+        headers,
+        body: body ? JSON.stringify(body) : undefined,
+    });
 
     if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.body.message);
+        throw new Error(await parseErrorMessage(response));
     }
-    const res = await response.json();
-    return res;
+
+    return response.json();
 }
