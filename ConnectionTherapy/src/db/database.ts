@@ -25,6 +25,10 @@ export async function initializeDatabase(db: SQLiteDatabase) {
         `);
 
         await db.execAsync(`
+            CREATE INDEX IF NOT EXISTS idx_habits_user_id ON habits(user_id);
+        `);
+
+        await db.execAsync(`
             CREATE TABLE IF NOT EXISTS habit_entries (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 habit_id INTEGER NOT NULL REFERENCES habits(id) ON DELETE CASCADE,
@@ -34,6 +38,14 @@ export async function initializeDatabase(db: SQLiteDatabase) {
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
+        `);
+
+        await db.execAsync(`
+            CREATE INDEX IF NOT EXISTS idx_habit_entries_habit_id ON habit_entries(habit_id);
+        `);
+
+        await db.execAsync(`
+            CREATE INDEX IF NOT EXISTS idx_habit_entries_complete_by ON habit_entries(complete_by);
         `);
 
         await db.execAsync(`

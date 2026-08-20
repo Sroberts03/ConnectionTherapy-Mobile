@@ -1,6 +1,5 @@
 import { ConnectionPillar } from "../dashboard.types";
 import { Text, View } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
 import Svg, { Circle } from 'react-native-svg';
 import * as LucideIcons from 'lucide-react-native';
 import PillarAlert from "./PillarAlert";

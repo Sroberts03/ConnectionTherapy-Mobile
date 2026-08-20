@@ -6,6 +6,8 @@ import NewHabit from "./NewHabit"
 import { useState } from "react"
 import ConfirmDeleteHabit from "./ConfirmDeleteHabit"
 import { useHabitContext } from "../HabitContext"
+import { usePillarContext } from "../../dashboard/PillarContext"
+import * as LucideIcons from 'lucide-react-native';
 
 interface HabitPillarContainerProps {
     category: HabitCategory
@@ -14,24 +16,24 @@ interface HabitPillarContainerProps {
 
 export default function HabitPillarContainer({category, date}: HabitPillarContainerProps) {
     const { currentHabits, setHabitError } = useHabitContext();
+    const { pillars } = usePillarContext()
+    const pillar = pillars.get(category)
+    let color = "#B0A69D"
+    let iconName = "Circle"
+    let IconComponent = LucideIcons.Circle
+    if (pillar) {
+        color = pillar.color
+        iconName = pillar.icon.charAt(0).toUpperCase() + pillar.icon.slice(1)
+        IconComponent = (LucideIcons as any)[iconName] || LucideIcons.Circle;
+    }
     const [newHabitVisible, setNewHabitVisible] = useState(false)
     const [editHabitId, setEditHabitId] = useState<number | undefined>(undefined);
     const [deleteHabitId, setDeleteHabitId] = useState<number | undefined>(undefined);
 
-    const getIcon = () => {
-        switch (category) {
-            case HabitCategory.SPIRITUAL: return "leaf-outline"
-            case HabitCategory.PHYSICAL: return "barbell-outline"
-            case HabitCategory.SOCIAL: return "person-outline"
-            case HabitCategory.INTELLECTUAL: return "book-outline"
-            default: return "ellipse-outline"
-        }
-    }
-
     return (
         <View className="bg-white rounded-2xl p-5 shadow-sm border border-neutral-100 mb-4 w-11/12 self-center">
             <View className="flex-row items-center mb-4">
-                <Ionicons name={getIcon()} size={20} color="#0d9488" />
+                <IconComponent size={24} color="#a4a4a4ff" />
                 <Text className="text-lg font-bold text-neutral-800 ml-2 capitalize">{category}</Text>
             </View>
             
@@ -39,7 +41,7 @@ export default function HabitPillarContainer({category, date}: HabitPillarContai
                 {Array.from(currentHabits.values()).filter((habit) => habit.category === category).length === 0 && (
                     <View className="rounded-xl p-5 items-center justify-center">
                         <View className="p-3 mb-3">
-                            <Ionicons name={getIcon()} size={20} color="#a4a4a4ff" />
+                            <IconComponent size={24} color="#a4a4a4ff" />
                         </View>
                         <Text className="text-neutral-400 font-medium ml-1">No habits yet</Text>
                         <Text className="text-sm text-neutral-400 ml-1">Start small to build consistency</Text>

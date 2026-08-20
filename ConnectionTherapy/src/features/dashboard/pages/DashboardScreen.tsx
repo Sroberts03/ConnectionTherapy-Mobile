@@ -25,17 +25,19 @@ export default function DashboardScreen() {
 
     return (
         <ScrollView 
-            className="flex-1 bg-primary-50 mb-8"
+            className="flex-1 bg-primary-50"
             contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 48, paddingBottom: 80 }}
             showsVerticalScrollIndicator={false}
         >
-            <DashboardHeader />
-            <QuoteCard />
-            {loadingPillars ? 
-                <LoadingPillars loadingPillars={loadingPillars} /> : 
-                <ConnectionPillars pillars={pillars} />
-            }
-            <TopHabitsContainer/>
+            <View className="mb-8">
+                <DashboardHeader />
+                <QuoteCard />
+                {loadingPillars ? 
+                    <LoadingPillars loadingPillars={loadingPillars} /> : 
+                    <ConnectionPillars pillars={pillars} />
+                }
+                <TopHabitsContainer/>
+            </View>
         </ScrollView>
     )
 }
