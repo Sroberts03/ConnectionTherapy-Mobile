@@ -71,20 +71,26 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
         try {
             await toggleComplete(id, targetState, db);
             const habit = currentHabits.get(id);
-            if (habit) {
-                habit.isCompleted = targetState;
-                setCurrentHabits(new Map(currentHabits.set(id, habit)));
-            }
-            if (todaysTopHabits.has(id)) {
-                const topHabit = todaysTopHabits.get(id);
-                if (topHabit) {
-                    topHabit.isCompleted = targetState;
-                    setTodaysTopHabits(new Map(todaysTopHabits.set(id, topHabit)));
-                }
-            }
+            habitExists(targetState, id, habit);
+            const topHabit = todaysTopHabits.get(id);
+            habitInTopHabits(targetState, id, topHabit);
             await reloadPillarPercentages()
         } catch (e) {
             setHabitError(e instanceof Error ? e.message : "Failed to toggle complete")
+        }
+    }
+
+    const habitExists = (targetState: boolean, id: number, habit?: Habit) => {
+        if (habit) {
+            habit.isCompleted = targetState;
+            setCurrentHabits(new Map(currentHabits.set(id, habit)));
+        }
+    }
+
+    const habitInTopHabits = (targetState: boolean, id: number, topHabit?: Habit) => {
+        if (topHabit) {
+            topHabit.isCompleted = targetState;
+            setTodaysTopHabits(new Map(todaysTopHabits.set(id, topHabit)));
         }
     }
 
