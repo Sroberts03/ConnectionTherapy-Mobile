@@ -1,14 +1,13 @@
-// useHabitForm.ts
 import { useEffect, useState } from "react";
 import { useSQLiteContext } from "expo-sqlite";
-import { Habit, HabitCategory, HabitDetails } from "../habits.types";
-import { createNewHabit, getHabitDetails, updateHabit } from "../services/habits.service";
-import { CreationError } from "../errors/CreationError";
-import { useAuth } from "../../auth/AuthContext";
-import { parseRepeatString } from "../utils/parseRepeatString";
-import { formatDate } from "../../../utils/dates";
-import { useHabitContext } from "../HabitContext";
-import { newHabitInput } from "../habit.dto";
+import { Habit, HabitCategory, HabitDetails } from "../../habits.types";
+import { createNewHabit, getHabitDetails, updateHabit } from "../../services/habits.service";
+import { CreationError } from "../../errors/CreationError";
+import { useAuth } from "../../../auth/AuthContext";
+import { formatDate } from "../../../../utils/dates";
+import { useHabitContext } from "../../HabitContext";
+import { newHabitInput } from "../../habit.dto";
+import { parseRepeatString } from "../../utils/parseRepeatString";
 
 function habitReturned(
     newHabit: Habit | null,

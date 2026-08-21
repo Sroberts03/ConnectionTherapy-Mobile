@@ -1,5 +1,5 @@
-import { CreationError } from "../errors/CreationError";
-import { Text, View } from "react-native";
+import { Text } from "react-native";
+import { CreationError } from "../../errors/CreationError";
 
 interface ErrorMessageProps {
     error: CreationError | null

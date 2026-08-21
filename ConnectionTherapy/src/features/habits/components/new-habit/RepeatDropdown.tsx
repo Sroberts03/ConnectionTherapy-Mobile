@@ -1,5 +1,5 @@
 import { TouchableOpacity, View, Text} from "react-native";
-import { repeatOptions } from "../utils/getRepeatLabel";
+import { repeatOptions } from "../../utils/getRepeatLabel";
 
 interface RepeatDropdownProps {
     isVisible: boolean;

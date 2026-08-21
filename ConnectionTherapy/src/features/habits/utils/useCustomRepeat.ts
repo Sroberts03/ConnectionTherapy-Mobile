@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { parseCustomByDay, parseCustomByMonthDay, parseCustomDayOfMonthInterval, parseCustomEachOrOnThe, parseCustomFreq, parseCustomInterval } from "./parseRepeatString";
+import { parseCustomByDay, parseCustomByMonthDay, parseCustomDayOfMonthInterval, parseCustomEachOrOnThe, parseCustomFreq, parseCustomInterval } from "./parseCustomRepeatString";
 import CreateRepeatString from "./createRepeatString";
 
 export type Freq = "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";

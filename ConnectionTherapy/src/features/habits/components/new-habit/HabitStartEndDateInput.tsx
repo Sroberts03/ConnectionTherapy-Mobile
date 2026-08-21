@@ -1,12 +1,8 @@
 import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import DateInput from "../../../globalComponents/DateInput";
-import CustomRepeatBuilder from "./custom-repeat/CustomRepeatBuilder";
-import { CreationError } from "../errors/CreationError";
+import DateInput from "../../../../globalComponents/DateInput";
+import { CreationError } from "../../errors/CreationError";
 import CreationErrorMessage from "./CreationError";
-import { getRepeatLabel, repeatOptions } from "../utils/getRepeatLabel";
-import RemoveEndDateButton from "./RemoveEndDateButton";
 import RepeatInfo from "./RepeatInfo";
 
 interface HabitStartEndDateInputProps {

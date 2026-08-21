@@ -1,6 +1,6 @@
 import { TouchableOpacity, Text, View } from "react-native"
-import { HabitCategory } from "../habits.types"
 import { ScrollView } from "react-native-gesture-handler"
+import { HabitCategory } from "../../habits.types"
 
 interface HabitCategorySelectorProps {
     currentCategory: HabitCategory

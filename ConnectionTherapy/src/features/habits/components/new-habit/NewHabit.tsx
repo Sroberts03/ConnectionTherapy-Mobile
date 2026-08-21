@@ -1,13 +1,13 @@
 import { Modal, Text, View, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
-import { HabitCategory } from "../habits.types";
+import { HabitCategory } from "../../habits.types";
 import { Ionicons } from "@expo/vector-icons";
 import HabitNameInput from "./HabitNameInput";
 import HabitDescInput from "./HabitDescInput";
 import HabitDurationInput from "./HabitDurationInput";
-import HabitCategorySelector from "./HabitCategorySelector";
 import HabitStartEndDateInput from "./HabitStartEndDateInput";
 import CreationErrorMessage from "./CreationError";
 import { useHabitForm } from "./NewHabitForm";
+import HabitCategorySelector from "./HabitCategorySelector";
 
 interface NewHabitProps {
     isVisible: boolean

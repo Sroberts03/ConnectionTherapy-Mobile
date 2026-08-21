@@ -1,9 +1,9 @@
 import { TouchableOpacity, View, Text } from "react-native";
-import CustomRepeatBuilder from "./custom-repeat/CustomRepeatBuilder";
+import CustomRepeatBuilder from "../custom-repeat/CustomRepeatBuilder";
 import RemoveEndDateButton from "./RemoveEndDateButton";
-import DateInput from "../../../globalComponents/DateInput";
+import DateInput from "../../../../globalComponents/DateInput";
 import CreationErrorMessage from "./CreationError";
-import { getRepeatLabel, repeatOptions } from "../utils/getRepeatLabel";
+import { getRepeatLabel, repeatOptions } from "../../utils/getRepeatLabel";
 import Ionicons from "@expo/vector-icons/build/Ionicons";
 import RepeatDropdown from "./RepeatDropdown";
 

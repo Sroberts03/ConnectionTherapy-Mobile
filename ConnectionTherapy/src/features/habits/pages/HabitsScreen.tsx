@@ -5,9 +5,9 @@ import { useSQLiteContext } from "expo-sqlite";
 import { Habit } from "../habits.types";
 import ErrorLoading from "../../../globalComponents/ErrorLoading";
 import HabitArea from "../components/HabitArea";
-import DatePicker from "../components/DatePicker";
 import TakeItOneWeekDialog from "../components/TakeItOneWeekDialog";
 import { useHabitContext } from "../HabitContext";
+import DatePicker from "../components/DatePicker";
 
 export default function HabitsScreen() {
     const {
