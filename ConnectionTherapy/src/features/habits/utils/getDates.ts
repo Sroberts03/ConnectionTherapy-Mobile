@@ -7,20 +7,38 @@ export default function getDates( startDate: string, endDate: string | null | un
     twoWeeksOut.setDate(twoWeeksOut.getDate() + 14);
     
     let boundaryEnd = twoWeeksOut;
+    boundaryEnd = addEndDateCheck(boundaryEnd, endDate, twoWeeksOut);
+    occurenceDates = noRepetitionCheck(repetition, start);
+    if (repetitionExists(occurenceDates)) {
+        occurenceDates = getOccuranceDates(start, boundaryEnd, repetition!);
+    }
+    return occurenceDates;
+}
+
+function addEndDateCheck(boundaryEnd: Date, endDate: string | null | undefined, twoWeeksOut: Date = new Date()): Date {
     if (endDate) {
         const providedEnd = new Date(`${endDate}T23:59:59`);
         boundaryEnd = providedEnd < twoWeeksOut ? providedEnd : twoWeeksOut;
     }
+    return boundaryEnd;
+}
 
+function noRepetitionCheck(repetition: string | null | undefined, start: Date): Date[] {
     if (repetition === "None" || !repetition) {
-        occurenceDates = [start]
-    } else {
-        const parsedRule = rrulestr(repetition);
-        const ruleWithStart = new RRule({
-            ...parsedRule.options,
-            dtstart: start,
-        })
-        occurenceDates = ruleWithStart.between(start, boundaryEnd, true)
+        return [start];
     }
-    return occurenceDates;
+    return [];
+}
+
+function getOccuranceDates(start: Date, boundaryEnd: Date, repetition: string): Date[] {
+    const parsedRule = rrulestr(repetition);
+    const ruleWithStart = new RRule({
+        ...parsedRule.options,
+        dtstart: start,
+    })
+    return ruleWithStart.between(start, boundaryEnd, true);
+}
+
+function repetitionExists(occuranceDates: Date[]): boolean {
+    return occuranceDates.length === 0;
 }
