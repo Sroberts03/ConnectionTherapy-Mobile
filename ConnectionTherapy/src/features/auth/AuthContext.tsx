@@ -3,7 +3,6 @@ import { Session, AuthChangeEvent, User } from '@supabase/supabase-js';
 import { OAuthProvider } from './auth.types';
 import { supabase } from '../../supabase/supabase';
 import { loginWithEmail as authServiceLogin, signUpWithEmail as authServiceSignUp, oauthLogin as authServiceOAuthLogin, signOut as authServiceSignOut } from './services/auth.service';
-import userData from './utils/userData';
 
 interface AuthContextType {
   user: User | null;
@@ -32,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { data: { session: currentSession } } = await supabase.auth.getSession();
         setSession(currentSession);
         if (currentSession?.user) {
-          setUser(await userData(currentSession.user));
+          setUser(await currentSession.user);
         } else {
           setUser(null);
         }
@@ -50,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async (_event: AuthChangeEvent, session: Session | null) => {
         setSession(session);
         if (session?.user) {
-          setUser(await userData(session.user));
+          setUser(session.user);
         } else {
           setUser(null);
         }
@@ -69,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(currentSession);
 
     if (currentSession?.user) {
-      setUser(await userData(currentSession.user));
+      setUser(currentSession.user);
       return;
     }
 
