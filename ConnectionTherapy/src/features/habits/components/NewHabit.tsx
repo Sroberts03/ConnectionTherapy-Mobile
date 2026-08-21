@@ -27,7 +27,7 @@ interface NewHabitProps {
 
 export default function NewHabit({ isVisible, onClose, date, category, habitId }: NewHabitProps) {
     const db = useSQLiteContext();
-    const { currentHabits, setCurrentHabits, reloadTopHabits, setHabitError } = useHabitContext();
+    const { reloadTopHabits, setHabitError } = useHabitContext();
     const { user } = useAuth();
     const [name, setName] = useState("")
     const [description, setDescription] = useState<string>("")
