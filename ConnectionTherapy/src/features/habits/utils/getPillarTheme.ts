@@ -1,4 +1,3 @@
-import { ConnectionPillar } from "../../dashboard/dashboard.types";
 import { usePillarContext } from "../../dashboard/PillarContext";
 import { HabitCategory } from "../habits.types"
 import * as LucideIcons from 'lucide-react-native';
