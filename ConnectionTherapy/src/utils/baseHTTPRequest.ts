@@ -14,8 +14,12 @@ function resolveBackendOrigin(platformOS: typeof Platform.OS = Platform.OS): str
     return origin.replace('127.0.0.1', '10.0.2.2').replace('localhost', '10.0.2.2');
 }
 
+function needsAuthAndHasNoSession(needsAuth: boolean, session?: Session): boolean {
+    return needsAuth && !session;
+}
+
 function buildRequestHeaders(needsAuth: boolean, session?: Session): HeadersInit {
-    if (needsAuth && !session) {
+    if (needsAuthAndHasNoSession(needsAuth, session)) {
         throw new Error("No session provided for authenticated request");
     }
     return {

@@ -46,9 +46,7 @@ export function PillarProvider({ children }: { children: React.ReactNode }) {
                 | 'color'
                 | 'icon'
             >[] = await getDashboardPillars(session)
-            if (pillars.length > 0) {
-                setPillars(await getFullPillars(pillars, db))
-            }
+            setPillars(await getFullPillars(pillars, db))
         } catch (error) {
             setPillarError(error instanceof Error ? error.message : "Failed to fetch pillars")
         } finally {
