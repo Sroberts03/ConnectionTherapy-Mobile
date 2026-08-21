@@ -16,9 +16,7 @@ interface HabitPillarContainerProps {
 
 export default function HabitPillarContainer({category, date}: HabitPillarContainerProps) {
     const { currentHabits, setHabitError } = useHabitContext();
-    const { pillars } = usePillarContext()
-    const { color, IconComponent } = getPillarTheme(pillars, category);
-    
+    const { IconComponent } = getPillarTheme(category);
     const [newHabitVisible, setNewHabitVisible] = useState(false)
     const [editHabitId, setEditHabitId] = useState<number | undefined>(undefined);
     const [deleteHabitId, setDeleteHabitId] = useState<number | undefined>(undefined);

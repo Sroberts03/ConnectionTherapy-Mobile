@@ -43,10 +43,11 @@ export default function NewHabit({ isVisible, onClose, date, category, habitId }
 
     useEffect(() => {
         const fetchHabitInfo = async () => {
-            if (!habitId || user == null) return;
+            const userId = userIdExists();
+            if (!habitId) return;
             const habit: HabitDetails = await getHabitDetails(
                 habitId,
-                user.id,
+                userId,
                 db
             )
             const displayString = parseRepeatString(habit.repetition)
@@ -74,8 +75,16 @@ export default function NewHabit({ isVisible, onClose, date, category, habitId }
         }
     }
 
+    const userIdExists = (): string => {
+        if (!user?.id) {
+            throw new Error("User not found. Please log in again.");
+        }
+        return user.id;
+    }
+
     const update = async () => {
-        if (!user?.id || !habitId) return;
+        const userId = userIdExists();
+        if (!habitId) return;
         try {
             const req: newHabitInput = {
                 userCurrentDate: formatDate(date),
@@ -87,65 +96,51 @@ export default function NewHabit({ isVisible, onClose, date, category, habitId }
                 repetition: repetition == "custom" ? customRepetition : repetition,
                 endDate,
                 description,
-                userId: user.id,
+                userId: userId,
                 db
             }
             const updatedHabit = await updateHabit(req);
-            if (updatedHabit) {
-                const newHabits = new Map(currentHabits);
-                newHabits.delete(habitId);
-                newHabits.set(updatedHabit.id, updatedHabit);
-                setCurrentHabits(newHabits);
-            } else {
-                const newHabits = new Map(currentHabits);
-                newHabits.delete(habitId);
-                setCurrentHabits(newHabits);
-            }
-            reset();
+            habitReturnOnUpdate(updatedHabit, habitId);
             reloadTopHabits();
-            onClose();
         } catch (err) {
-            if (err instanceof CreationError) {
-                setCreationError(err);
-            } else {
-                setHabitError(err instanceof Error ? err.message : "Error updating habit");
-                reset();
-                onClose();
-            }
+            creationErrorHandler(err);
         }
+        reset();
+        onClose(); 
     }
 
     const create = async () => {
-        if (!user?.id) return;
+        const userId = userIdExists();
+
+        const req: newHabitInput = {
+            userCurrentDate: formatDate(date),
+            name,
+            duration,
+            category: currentCategory,
+            startDate,
+            repetition: repetition === "custom" ? customRepetition : repetition,
+            endDate,
+            description,
+            userId: userId,
+            db,
+        };
+
         try {
-            const req: newHabitInput = {
-                userCurrentDate: formatDate(date),
-                name,
-                duration,
-                category: currentCategory,
-                startDate,
-                repetition: repetition == "custom" ? customRepetition : repetition,
-                endDate,
-                description,
-                userId: user.id,
-                db
-            }
             const newHabit = await createNewHabit(req);
-            if (newHabit) {
-                setCurrentHabits(new Map([...currentHabits, [newHabit.id, newHabit]]));
-            }
-            reset();
+            habitReturned(newHabit);
             reloadTopHabits();
-            onClose();
         } catch (err) {
-            if (err instanceof CreationError) {
-                setCreationError(err);
-            } else {
-                setHabitError(err instanceof Error ? err.message : "Error creating new habit");
-                reset();
-                onClose();
-            }
+            creationErrorHandler(err);
         }
+        reset();
+        onClose();
+    };
+
+    const creationErrorHandler = (err: any) => {
+        if (err instanceof CreationError) {
+            setCreationError(err);
+        }
+        setHabitError(err instanceof Error ? err.message : "Error creating new habit");
     }
 
     const reset = () => {
@@ -263,4 +258,25 @@ export default function NewHabit({ isVisible, onClose, date, category, habitId }
             </View>
         </Modal>
     )
+}
+
+function habitReturned(newHabit: Habit | null ): void {
+    const { currentHabits, setCurrentHabits } = useHabitContext();
+    if (newHabit) {
+        setCurrentHabits(new Map(currentHabits).set(newHabit.id, newHabit));
+    }
+}
+
+function habitReturnOnUpdate(updatedHabit: Habit | null, habitId: number): void {
+    const { currentHabits, setCurrentHabits } = useHabitContext();
+    if (updatedHabit) {
+        const newHabits = new Map(currentHabits);
+        newHabits.delete(habitId);
+        newHabits.set(updatedHabit.id, updatedHabit);
+        setCurrentHabits(newHabits);
+    } else {
+        const newHabits = new Map(currentHabits);
+        newHabits.delete(habitId);
+        setCurrentHabits(newHabits);
+    }
 }
