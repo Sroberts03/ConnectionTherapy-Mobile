@@ -25,6 +25,35 @@ interface NewHabitProps {
     habitId?: number
 }
 
+function habitReturned(
+    newHabit: Habit | null, 
+    setCurrentHabits: (currentHabits: Map<number, Habit>) => void, 
+    currentHabits: Map<number, Habit> 
+): void {
+    console.log("habitReturned called with newHabit:", newHabit);
+    if (newHabit) {
+        setCurrentHabits(new Map(currentHabits).set(newHabit.id, newHabit));
+    }
+}
+
+function habitReturnOnUpdate(
+    updatedHabit: Habit | null, 
+    setCurrentHabits: (currentHabits: Map<number, Habit>) => void,
+    currentHabits: Map<number, Habit>,
+    habitId: number
+): void {
+    if (updatedHabit) {
+        const newHabits = new Map(currentHabits);
+        newHabits.delete(habitId);
+        newHabits.set(updatedHabit.id, updatedHabit);
+        setCurrentHabits(newHabits);
+    } else {
+        const newHabits = new Map(currentHabits);
+        newHabits.delete(habitId);
+        setCurrentHabits(newHabits);
+    }
+}
+
 export default function NewHabit({ isVisible, onClose, date, category, habitId }: NewHabitProps) {
     const db = useSQLiteContext();
     const { currentHabits, setCurrentHabits } = useHabitContext();
@@ -263,33 +292,4 @@ export default function NewHabit({ isVisible, onClose, date, category, habitId }
             </View>
         </Modal>
     )
-}
-
-function habitReturned(
-    newHabit: Habit | null, 
-    setCurrentHabits: (currentHabits: Map<number, Habit>) => void, 
-    currentHabits: Map<number, Habit> 
-): void {
-    console.log("habitReturned called with newHabit:", newHabit);
-    if (newHabit) {
-        setCurrentHabits(new Map(currentHabits).set(newHabit.id, newHabit));
-    }
-}
-
-function habitReturnOnUpdate(
-    updatedHabit: Habit | null, 
-    setCurrentHabits: (currentHabits: Map<number, Habit>) => void,
-    currentHabits: Map<number, Habit>,
-    habitId: number
-): void {
-    if (updatedHabit) {
-        const newHabits = new Map(currentHabits);
-        newHabits.delete(habitId);
-        newHabits.set(updatedHabit.id, updatedHabit);
-        setCurrentHabits(newHabits);
-    } else {
-        const newHabits = new Map(currentHabits);
-        newHabits.delete(habitId);
-        setCurrentHabits(newHabits);
-    }
 }
