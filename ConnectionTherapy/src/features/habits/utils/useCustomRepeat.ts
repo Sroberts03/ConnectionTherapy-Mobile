@@ -9,9 +9,9 @@ export type DayOfMonthInterval = "1" | "2" | "3" | "4" | "5" | "-1" | "";
 export const FREQ_OPTIONS: Freq[] = ["DAILY", "WEEKLY", "MONTHLY", "YEARLY"];
 
 export const DAYS_OF_WEEK = [
-    { label: "Sun", value: "SU" }, { label: "Mon", value: "MO" }, { label: "Tue", value: "TU" },
-    { label: "Wed", value: "WE" }, { label: "Thu", value: "TH" }, { label: "Fri", value: "FR" },
-    { label: "Sat", value: "SA" },
+    { label: "Sunday", value: "SU", abbr: "Sun" }, { label: "Monday", value: "MO", abbr: "Mon" }, { label: "Tuesday", value: "TU", abbr: "Tue" },
+    { label: "Wednesday", value: "WE", abbr: "Wed" }, { label: "Thursday", value: "TH", abbr: "Thu" }, { label: "Friday", value: "FR", abbr: "Fri" },
+    { label: "Saturday", value: "SA", abbr: "Sat" },
 ];
 
 export const DAY_OF_MONTH_INTERVAL_OPTIONS: { label: string; value: DayOfMonthInterval }[] = [

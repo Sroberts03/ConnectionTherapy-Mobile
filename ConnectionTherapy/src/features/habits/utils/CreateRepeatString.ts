@@ -49,8 +49,9 @@ function freqMonthly(
     return addInterval(repetitionString, interval);
 }
 
-function freqYearly(): string {
-    return addInterval('FREQ=YEARLY', 1);
+
+function freqYearly(interval: number): string {
+    return addInterval('FREQ=YEARLY', interval);
 }
 
 function addInterval(repetitionString: string, interval: number): string {

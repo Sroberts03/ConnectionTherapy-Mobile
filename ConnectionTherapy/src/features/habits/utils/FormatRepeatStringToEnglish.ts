@@ -1,4 +1,5 @@
 import { DayOption, repeatString } from "./repeatString";
+import { DAYS_OF_WEEK } from "./useCustomRepeat";
 
 export function formatRepeatStringToEnglish(
     interval: number,
@@ -32,7 +33,8 @@ function freqDaily(interval: number): string {
 
 function freqWeekly(interval: number, byDay: string[]): string {
     const unit = interval === 1 ? 'week' : 'weeks';
-    const dayText = byDay.length > 0 ? ` on ${byDay.join(", ")}` : '';
+    let days = byDay.map(day => getDayName(day, DAYS_OF_WEEK)).join(", ");
+    let dayText = byDay.length > 0 ? ` on ${days}` : '';
     return `Habit will occur every ${interval} ${unit}${dayText}`;
 }
 
@@ -51,10 +53,6 @@ function freqMonthly(
     return result;
 }
 
-function freqYearly(interval: number): string {
-    return `Habit will occur every ${interval} ${interval === 1 ? 'year' : 'years'}`;
-}
-
 function monthlyByDay(
     result: string, 
     byDay?: string[], 
@@ -64,7 +62,7 @@ function monthlyByDay(
 ): string {
     if (byDay && byDay.length > 0) {
         const ordinal = dayOfMonthIntervalOption?.find(o => o.value === dayOfMonthInterval)?.label.toLowerCase();
-        const dayName = daysOfWeek?.find(o => o.value === byDay[0])?.label.toLowerCase();
+        const dayName = getDayName(byDay[0], daysOfWeek);
         result += ` on the ${ordinal} ${dayName}`;
     }
     return result;
@@ -75,4 +73,12 @@ function monthlyByMonthDay(result: string, byMonthDay?: number[]): string {
         result += ` on the ${byMonthDay.join(", ")}`;
     }
     return result;
+}
+
+function getDayName(day: string, daysOfWeek?: DayOption[]): string {
+    return daysOfWeek?.find(o => o.value === day)?.label || day;
+}
+
+function freqYearly(interval: number): string {
+    return `Habit will occur every ${interval} ${interval === 1 ? 'year' : 'years'}`;
 }

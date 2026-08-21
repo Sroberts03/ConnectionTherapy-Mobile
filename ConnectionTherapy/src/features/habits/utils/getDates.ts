@@ -1,4 +1,5 @@
 import { RRule, rrulestr } from 'rrule';
+import { FREQ_OPTIONS } from './useCustomRepeat';
 
 export default function getDates( startDate: string, endDate: string | null | undefined, repetition: string | null | undefined ) {
     let occurenceDates: Date[] = [];
@@ -31,11 +32,17 @@ function noRepetitionCheck(repetition: string | null | undefined, start: Date): 
 }
 
 function getOccuranceDates(start: Date, boundaryEnd: Date, repetition: string): Date[] {
-    const parsedRule = rrulestr(repetition);
-    const ruleWithStart = new RRule({
-        ...parsedRule.options,
-        dtstart: start,
-    })
+    let ruleWithStart: RRule;
+    try {
+        const parsedRule = rrulestr(repetition);
+        ruleWithStart = new RRule({
+            ...parsedRule.options,
+            dtstart: start,
+        })
+    } catch (error) {
+        console.error("Error parsing repetition string:", error);
+        return [start];
+    }
     return ruleWithStart.between(start, boundaryEnd, true);
 }
 

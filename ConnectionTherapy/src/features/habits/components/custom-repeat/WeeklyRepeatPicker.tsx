@@ -18,7 +18,7 @@ export default function WeeklyRepeatPicker({ byDay, setByDay, isVisible }: Weekl
                 {DAYS_OF_WEEK.map((day) => (
                     <ToggleChip
                         key={day.value}
-                        label={day.label}
+                        label={day.abbr}
                         selected={byDay.includes(day.value)}
                         onPress={() => setByDay(toggleValue(byDay, day.value))}
                     />
