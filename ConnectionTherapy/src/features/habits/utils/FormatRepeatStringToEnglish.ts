@@ -46,20 +46,33 @@ function freqMonthly(
 ): string {
     const unit = interval === 1 ? 'month' : 'months';
     let result = `Habit will occur every ${interval} ${unit}`;
-
-    if (byDay && byDay.length > 0) {
-        const ordinal = dayOfMonthIntervalOption?.find(o => o.value === dayOfMonthInterval)?.label.toLowerCase();
-        const dayName = daysOfWeek?.find(o => o.value === byDay[0])?.label.toLowerCase();
-        result += ` on the ${ordinal} ${dayName}`;
-    }
-
-    if (byMonthDay && byMonthDay.length > 0) {
-        result += ` on the ${byMonthDay.join(", ")}`;
-    }
-
+    result = monthlyByDay(result, byDay, dayOfMonthInterval, dayOfMonthIntervalOption, daysOfWeek);
+    result = monthlyByMonthDay(result, byMonthDay);
     return result;
 }
 
 function freqYearly(interval: number): string {
     return `Habit will occur every ${interval} ${interval === 1 ? 'year' : 'years'}`;
+}
+
+function monthlyByDay(
+    result: string, 
+    byDay?: string[], 
+    dayOfMonthInterval?: "1" | "2" | "3" | "4" | "5" | "-1" | "", 
+    dayOfMonthIntervalOption?: DayOption[], 
+    daysOfWeek?: DayOption[]
+): string {
+    if (byDay && byDay.length > 0) {
+        const ordinal = dayOfMonthIntervalOption?.find(o => o.value === dayOfMonthInterval)?.label.toLowerCase();
+        const dayName = daysOfWeek?.find(o => o.value === byDay[0])?.label.toLowerCase();
+        result += ` on the ${ordinal} ${dayName}`;
+    }
+    return result;
+}
+
+function monthlyByMonthDay(result: string, byMonthDay?: number[]): string {
+    if (byMonthDay && byMonthDay.length > 0) {
+        result += ` on the ${byMonthDay.join(", ")}`;
+    }
+    return result;
 }

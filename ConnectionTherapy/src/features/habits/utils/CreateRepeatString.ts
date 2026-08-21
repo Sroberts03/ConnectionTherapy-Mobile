@@ -44,13 +44,8 @@ function freqMonthly(
     dayOfMonthInterval?: "1" | "2" | "3" | "4" | "5" | "-1" | "",
 ): string {
     let repetitionString = `FREQ=MONTHLY`;
-    if (byMonthDay !== undefined && byMonthDay.length > 0) {
-        repetitionString += `;BYMONTHDAY=${byMonthDay.join(",")}`;
-    }
-    if (byDay !== undefined && byDay.length > 0 && dayOfMonthInterval) {
-        const prefixedDays = byDay.map(day => `${dayOfMonthInterval}${day}`);
-        repetitionString += `;BYDAY=${prefixedDays.join(",")}`;
-    }
+    repetitionString = monthlyByMonthDay(repetitionString, byMonthDay);
+    repetitionString = monthlyByDay(repetitionString, byDay, dayOfMonthInterval);
     return addInterval(repetitionString, interval);
 }
 
@@ -61,6 +56,24 @@ function freqYearly(): string {
 function addInterval(repetitionString: string, interval: number): string {
     if (interval > 1) {
         repetitionString += `;INTERVAL=${interval}`;
+    }
+    return repetitionString;
+}
+
+function monthlyByDay(
+    repetitionString: string,
+    byDay?: string[], 
+    dayOfMonthInterval?: "1" | "2" | "3" | "4" | "5" | "-1" | "") {
+    if (byDay !== undefined && byDay.length > 0 && dayOfMonthInterval) {
+        const prefixedDays = byDay.map(day => `${dayOfMonthInterval}${day}`);
+        repetitionString += `;BYDAY=${prefixedDays.join(",")}`;
+    }
+    return repetitionString;
+}
+
+function monthlyByMonthDay(repetitionString: string, byMonthDay?: number[]): string {
+    if (byMonthDay !== undefined && byMonthDay.length > 0) {
+        repetitionString += `;BYMONTHDAY=${byMonthDay.join(",")}`;
     }
     return repetitionString;
 }

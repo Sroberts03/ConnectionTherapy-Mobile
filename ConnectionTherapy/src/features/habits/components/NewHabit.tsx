@@ -27,6 +27,7 @@ interface NewHabitProps {
 
 export default function NewHabit({ isVisible, onClose, date, category, habitId }: NewHabitProps) {
     const db = useSQLiteContext();
+    const { currentHabits, setCurrentHabits } = useHabitContext();
     const { reloadTopHabits, setHabitError } = useHabitContext();
     const { user } = useAuth();
     const [name, setName] = useState("")
@@ -100,13 +101,13 @@ export default function NewHabit({ isVisible, onClose, date, category, habitId }
                 db
             }
             const updatedHabit = await updateHabit(req);
-            habitReturnOnUpdate(updatedHabit, habitId);
+            habitReturnOnUpdate(updatedHabit, setCurrentHabits, currentHabits, habitId);
             reloadTopHabits();
+            reset();
+        onClose();
         } catch (err) {
             creationErrorHandler(err);
         }
-        reset();
-        onClose(); 
     }
 
     const create = async () => {
@@ -127,20 +128,24 @@ export default function NewHabit({ isVisible, onClose, date, category, habitId }
 
         try {
             const newHabit = await createNewHabit(req);
-            habitReturned(newHabit);
+            console.log("New habit created:", newHabit);
+            habitReturned(newHabit, setCurrentHabits, currentHabits);
             reloadTopHabits();
+            reset();
+            onClose();
         } catch (err) {
             creationErrorHandler(err);
         }
-        reset();
-        onClose();
     };
 
     const creationErrorHandler = (err: any) => {
         if (err instanceof CreationError) {
             setCreationError(err);
+            return;
         }
         setHabitError(err instanceof Error ? err.message : "Error creating new habit");
+        reset();
+        onClose(); 
     }
 
     const reset = () => {
@@ -260,15 +265,23 @@ export default function NewHabit({ isVisible, onClose, date, category, habitId }
     )
 }
 
-function habitReturned(newHabit: Habit | null ): void {
-    const { currentHabits, setCurrentHabits } = useHabitContext();
+function habitReturned(
+    newHabit: Habit | null, 
+    setCurrentHabits: (currentHabits: Map<number, Habit>) => void, 
+    currentHabits: Map<number, Habit> 
+): void {
+    console.log("habitReturned called with newHabit:", newHabit);
     if (newHabit) {
         setCurrentHabits(new Map(currentHabits).set(newHabit.id, newHabit));
     }
 }
 
-function habitReturnOnUpdate(updatedHabit: Habit | null, habitId: number): void {
-    const { currentHabits, setCurrentHabits } = useHabitContext();
+function habitReturnOnUpdate(
+    updatedHabit: Habit | null, 
+    setCurrentHabits: (currentHabits: Map<number, Habit>) => void,
+    currentHabits: Map<number, Habit>,
+    habitId: number
+): void {
     if (updatedHabit) {
         const newHabits = new Map(currentHabits);
         newHabits.delete(habitId);

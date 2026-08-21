@@ -19,17 +19,53 @@ export const DAY_OF_MONTH_INTERVAL_OPTIONS: { label: string; value: DayOfMonthIn
     { label: "Fourth", value: "4" }, { label: "Fifth", value: "5" }, { label: "Last", value: "-1" },
 ];
 
+interface RepeatStringParts {
+    freq: Freq;
+    interval: number;
+    byDay: string[];
+    byMonthDay: number[];
+    dayOfMonthInterval: DayOfMonthInterval;
+    eachOrOnThe: EachOrOnThe;
+}
+
+function getInitialRepeatString(customRepetition?: string): RepeatStringParts {
+   if (!customRepetition) {
+        return {
+            freq: "DAILY",
+            interval: 1,
+            byDay: [],
+            byMonthDay: [],
+            dayOfMonthInterval: "",
+            eachOrOnThe: "Each"
+        };
+    }
+
+    return {
+        freq: parseCustomFreq(customRepetition) as Freq,
+        interval: parseCustomInterval(customRepetition),
+        byDay: parseCustomByDay(customRepetition),
+        byMonthDay: parseCustomByMonthDay(customRepetition),
+        dayOfMonthInterval: parseCustomDayOfMonthInterval(customRepetition),
+        eachOrOnThe: parseCustomEachOrOnThe(customRepetition) as EachOrOnThe
+    };
+}
+
 export function useCustomRepeat(setCustomRepetition: (repetition: string) => void, customRepetition?: string,) {
-    const [freq, setFreq] = useState<Freq>(customRepetition ? parseCustomFreq(customRepetition) as Freq : "DAILY");
-    const [interval, setInterval] = useState<number>(customRepetition ? parseCustomInterval(customRepetition) : 1);
-    const [byDay, setByDay] = useState<string[]>(customRepetition ? parseCustomByDay(customRepetition) : []);
-    const [dayOfMonthInterval, setDayOfMonthInterval] = useState<DayOfMonthInterval>(
-        customRepetition ? parseCustomDayOfMonthInterval(customRepetition) : ""
-    );
-    const [byMonthDay, setByMonthDay] = useState<number[]>(customRepetition ? parseCustomByMonthDay(customRepetition) : []);
-    const [eachOrOnThe, setEachOrOnThe] = useState<EachOrOnThe>(
-        customRepetition ? parseCustomEachOrOnThe(customRepetition) as EachOrOnThe : "Each"
-    );
+    const { 
+        freq: initialFreq, 
+        interval: initialInterval, 
+        byDay: initialByDay, 
+        byMonthDay: initialByMonthDay, 
+        dayOfMonthInterval: initialDayOfMonthInterval,
+        eachOrOnThe: initialEachOrOnThe 
+    } = getInitialRepeatString(customRepetition);
+    
+    const [freq, setFreq] = useState<Freq>(initialFreq);
+    const [interval, setInterval] = useState<number>(initialInterval);
+    const [byDay, setByDay] = useState<string[]>(initialByDay);
+    const [dayOfMonthInterval, setDayOfMonthInterval] = useState<DayOfMonthInterval>(initialDayOfMonthInterval);
+    const [byMonthDay, setByMonthDay] = useState<number[]>(initialByMonthDay);
+    const [eachOrOnThe, setEachOrOnThe] = useState<EachOrOnThe>(initialEachOrOnThe);
 
     useEffect(() => {
             setCustomRepetition(CreateRepeatString(freq, interval, byDay, byMonthDay, dayOfMonthInterval));
@@ -40,5 +76,3 @@ export function useCustomRepeat(setCustomRepetition: (repetition: string) => voi
         freq, interval, byDay, byMonthDay, dayOfMonthInterval, eachOrOnThe
     };
 }
-
-    
