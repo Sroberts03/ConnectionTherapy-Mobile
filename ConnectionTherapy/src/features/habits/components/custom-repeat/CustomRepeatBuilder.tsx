@@ -7,11 +7,12 @@ import MonthlyRepeatOptions, { SegmentedControl } from "./MonthlyRepeatOptions";
 
 
 interface CustomRepeatBuilderProps {
+    isVisible: boolean
     setCustomRepetition: (repetition: string) => void
     customRepetition?: string
 }
 
-export default function CustomRepeatBuilder({ setCustomRepetition, customRepetition }: CustomRepeatBuilderProps) {
+export default function CustomRepeatBuilder({ isVisible, setCustomRepetition, customRepetition }: CustomRepeatBuilderProps) {
     const {
         setFreq, 
         setInterval, 
@@ -35,6 +36,8 @@ export default function CustomRepeatBuilder({ setCustomRepetition, customRepetit
         setByMonthDay([]);
         setEachOrOnThe("Each");
     };
+
+    if (!isVisible) return;
 
     return (
         <View className="mb-5 mt-5 bg-neutral-50 px-2 rounded-lg pb-2 border border-neutral-200">

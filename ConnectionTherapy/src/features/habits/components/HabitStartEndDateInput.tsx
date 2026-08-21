@@ -6,6 +6,8 @@ import CustomRepeatBuilder from "./custom-repeat/CustomRepeatBuilder";
 import { CreationError } from "../errors/CreationError";
 import CreationErrorMessage from "./CreationError";
 import { getRepeatLabel, repeatOptions } from "../utils/getRepeatLabel";
+import RemoveEndDateButton from "./RemoveEndDateButton";
+import RepeatInfo from "./RepeatInfo";
 
 interface HabitStartEndDateInputProps {
     startDate: string
@@ -61,72 +63,20 @@ export default function HabitStartEndDateInput({
             </View>
                 
 
-            {showRepeatInfo ? 
-                <View>
-                    <View className="mb-5">
-                        <Text className="text-sm font-semibold text-neutral-600 mb-2 ml-1">Repeat</Text>
-                        
-                        <TouchableOpacity 
-                            activeOpacity={0.7}
-                            onPress={() => setShowRepeatDropdown(!showRepeatDropdown)}
-                            className={`flex-row items-center justify-between bg-neutral-50 border ${showRepeatDropdown ? 'border-teal-500' : 'border-neutral-200'} rounded-2xl px-4 py-4`}
-                        >
-                            <Text className={`text-base font-medium ${repetition !== "None" ? 'text-teal-700' : 'text-neutral-700'}`}>
-                                {getRepeatLabel(repetition)}
-                            </Text>
-                            <Ionicons name={showRepeatDropdown ? "chevron-up" : "chevron-down"} size={20} color="#9ca3af" />
-                        </TouchableOpacity>
-
-                        {showRepeatDropdown && (
-                            <View className="bg-white border border-neutral-200 rounded-2xl mt-2 overflow-hidden">
-                                {repeatOptions.map((opt, index) => (
-                                    <TouchableOpacity
-                                        key={opt.value}
-                                        onPress={() => {
-                                            setRepetition(opt.value);
-                                            setShowRepeatDropdown(false);
-                                        }}
-                                        className={`px-4 py-4 ${index < repeatOptions.length - 1 ? 'border-b border-neutral-100' : ''} ${repetition === opt.value ? 'bg-teal-50' : ''}`}
-                                    >
-                                        <Text className={`text-base font-medium ${repetition === opt.value ? 'text-teal-700' : 'text-neutral-700'}`}>
-                                            {opt.label}
-                                        </Text>
-                                    </TouchableOpacity>
-                                ))}
-                            </View>
-                        )}
-
-                        {repetition === "custom" ? 
-                            <CustomRepeatBuilder setCustomRepetition={setCustomRepetition} customRepetition={customRepetition} /> 
-                        : null}
-                    </View>
-                    
-                    <View className="mb-5">
-                        <View className="flex-row justify-between items-center">
-                            <Text className="text-sm font-semibold text-neutral-600 mb-2 ml-1">End Date (Optional)</Text>
-                            {endDate !== "" ? (
-                                <TouchableOpacity
-                                    className="items-center"
-                                    onPress={() => setEndDate("")}
-                                >
-                                    <Text className="text-red-600">Remove End Date</Text>
-                                </TouchableOpacity>
-                            ) : null}
-                        </View>
-                        <DateInput
-                            selectedDate={endDate}
-                            setSelectedDate={setEndDate}
-                            showDatePicker={showEndDatePicker}
-                            setShowDatePicker={setShowEndDatePicker}
-                        />
-                        <CreationErrorMessage 
-                            error={creationError}
-                            place="endDate"
-                            className="text-red-500 text-xs font-medium mt-1 mb-2"
-                        />
-                    </View>
-                </View>
-            : null}
+            <RepeatInfo 
+                isVisible={showRepeatInfo}
+                setShowRepeatDropdown={setShowRepeatDropdown}
+                showRepeatDropdown={showRepeatDropdown}
+                repetition={repetition}
+                setRepetition={setRepetition}
+                customRepetition={customRepetition}
+                setCustomRepetition={setCustomRepetition}
+                endDate={endDate}
+                setEndDate={setEndDate}
+                showEndDatePicker={showEndDatePicker}
+                setShowEndDatePicker={setShowEndDatePicker}
+                creationError={creationError}
+            />
         </View>
     );
 }
