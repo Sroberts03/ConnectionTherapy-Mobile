@@ -75,33 +75,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, [supabase]);
 
-  const loginWithEmail = useCallback(async (email: string, password: string) => {
-    setError(null);
+  const validateEmailAndPassword = (email: string, password: string): boolean => {
     if (!email || !password) {
       setError('Please provide email and password');
+      return false;
+    }
+    return true;
+  };
+
+  const handleError = (err: any, defaultMessage: string) => {
+    const message = err instanceof Error ? err.message : defaultMessage;
+    setError(message);
+  };
+
+  const loginWithEmail = useCallback(async (email: string, password: string) => {
+    setError(null);
+    if (!validateEmailAndPassword(email, password)) {
       return;
     }
     try {
       await authServiceLogin(email, password);
       await refreshAuthState();
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Login failed';
-      setError(message);
+      handleError(err, 'Login failed');
     }
   }, [refreshAuthState]);
 
   const signupWithEmail = useCallback(async (email: string, password: string, fullName: string) => {
     setError(null);
-    if (!email || !password || !fullName) {
-      setError('Please provide email, password, and full name');
+    if (!validateEmailAndPassword(email, password)) {
+      return;
+    }
+    if (!fullName) {
+      setError('Please provide a full name');
       return;
     }
     try {
       await authServiceSignUp(email, password, fullName);
       await refreshAuthState();
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Sign up failed';
-      setError(message);
+      handleError(err, 'Sign up failed');
     }
   }, [refreshAuthState]);
 
@@ -111,8 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await authServiceSignOut();
       await refreshAuthState();
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Sign out failed';
-      setError(message);
+      handleError(err, 'Sign out failed');
     }
   }, [refreshAuthState]);
 
@@ -121,8 +133,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await authServiceOAuthLogin(provider);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'OAuth login failed';
-      setError(message);
+      handleError(err, 'OAuth login failed');
     }
   }, []);
 
@@ -132,8 +143,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoadingAuth(true);
       await refreshAuthState();
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Sign up failed';
-      setError(message);
+      handleError(err, 'Sign up failed');
     } finally {
       setLoadingAuth(false);
     }

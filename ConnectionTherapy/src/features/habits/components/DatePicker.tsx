@@ -2,14 +2,24 @@ import { Text, View, TouchableOpacity, Platform } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { useState } from "react"
 import DateTimePicker from '@react-native-community/datetimepicker'
+import BackToTodayButton from "./BackToTodayButton"
 
 interface DatePickerProps {
     date: Date
     setDate: (date: Date) => void
 }
 
+function isToday(today: Date, date: Date): boolean {
+    const isToday = 
+        date.getDate() === today.getDate() &&
+        date.getMonth() === today.getMonth() &&
+        date.getFullYear() === today.getFullYear();
+    return isToday;
+}
+
 export default function DatePicker({date, setDate}: DatePickerProps) {
     const today = new Date();
+    const isTodayFlag: boolean = isToday(today, date);
     const [showPicker, setShowPicker] = useState(false);
 
     const handleValueChange = (event: any, selectedDate: Date) => {
@@ -20,11 +30,6 @@ export default function DatePicker({date, setDate}: DatePickerProps) {
     const handleDismiss = () => {
         setShowPicker(false);
     };
-
-    const isToday = 
-        date.getDate() === today.getDate() &&
-        date.getMonth() === today.getMonth() &&
-        date.getFullYear() === today.getFullYear();
 
     const handlePrevDay = () => {
         const newDate = new Date(date);
@@ -39,12 +44,8 @@ export default function DatePicker({date, setDate}: DatePickerProps) {
     }
 
     const getDisplayText = () => {
-        if (isToday) return "Today";
+        if (isTodayFlag) return "Today";
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    }
-
-    const setToToday = () => {
-        setDate(today);
     }
 
     return (
@@ -80,13 +81,11 @@ export default function DatePicker({date, setDate}: DatePickerProps) {
                 </View>
             )}
             
-            {!isToday && (
-                <View className="flex-row items-center justify-center w-11/12 self-center mt-2">
-                    <TouchableOpacity onPress={setToToday} className="flex-row items-center justify-center bg-neutral-100 rounded-[2rem] px-6 py-4 w-full shadow-sm border border-neutral-100">
-                        <Text className="text-xl font-bold text-neutral-600 ml-4">Back To Today</Text>
-                    </TouchableOpacity>
-                </View>
-            )}
+            <BackToTodayButton
+                isVisible={!isTodayFlag}
+                setDate={setDate}
+                today={today}
+            />
         </View>
     )
 }
