@@ -42,14 +42,14 @@ export default function TabLayout() {
                 name="Habits"
                 options={{
                     title: "Habits",
-                    tabBarIcon: ({ color }) => <Ionicons name="checkbox" size={28} color={color} />,
+                    tabBarIcon: ({ color }) => <Ionicons name="checkmark-circle" size={28} color={color} />,
                 }}
             />
             <Tabs.Screen
-                name="Profile"
+                name="Settings"
                 options={{
-                    title: "Profile",
-                    tabBarIcon: ({ color }) => <Ionicons name="person" size={28} color={color} />,
+                    title: "Settings",
+                    tabBarIcon: ({ color }) => <Ionicons name="settings" size={28} color={color} />,
                 }}
             />
         </Tabs>

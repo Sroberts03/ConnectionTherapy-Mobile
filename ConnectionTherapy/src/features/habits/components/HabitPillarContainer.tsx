@@ -1,12 +1,11 @@
 import { Text, View, TouchableOpacity } from "react-native"
-import { Habit, HabitCategory } from "../habits.types"
+import { HabitCategory } from "../habits.types"
 import HabitCard from "./HabitCard"
 import { Ionicons } from "@expo/vector-icons"
 import NewHabit from "./new-habit/NewHabit"
 import { useState } from "react"
 import ConfirmDeleteHabit from "./ConfirmDeleteHabit"
 import { useHabitContext } from "../HabitContext"
-import { usePillarContext } from "../../dashboard/PillarContext"
 import { getPillarTheme } from "../utils/getPillarTheme"
 
 interface HabitPillarContainerProps {

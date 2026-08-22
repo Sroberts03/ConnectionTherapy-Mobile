@@ -10,10 +10,10 @@ interface ManagerButtonProps {
     bgColor?: string;
 }
 
-export default function ManagerButton({ title, subtitle, onPress, icon, color = "#6366f1", bgColor = "bg-white" }: ManagerButtonProps) {
+export default function ManageButton({ title, subtitle, onPress, icon, color = "#6366f1", bgColor = "bg-white" }: ManagerButtonProps) {
     return (
         <TouchableOpacity 
-            className={`border border-gray-100 rounded-3xl p-4 mb-3 shadow-sm flex-row items-center justify-between ${bgColor}`}
+            className={`border border-gray-100 rounded-3xl p-4 mb-3 flex-row items-center justify-between ${bgColor}`}
             activeOpacity={0.7}
             onPress={onPress}
         >
