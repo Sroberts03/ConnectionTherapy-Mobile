@@ -11,7 +11,7 @@ import { PillarProvider } from "../features/dashboard/PillarContext";
 import { HabitProvider } from "../features/habits/HabitContext";
 
 function IntialLayout() {
-    const { session, error, loadingAuth, user } = useAuth();
+    const { session, loadingAuth, user } = useAuth();
 
     useEffect(() => {
         if (loadingAuth) return;
@@ -37,6 +37,7 @@ function IntialLayout() {
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(journal)" options={{ headerShown: false }} />
         </Stack>
     );
 }

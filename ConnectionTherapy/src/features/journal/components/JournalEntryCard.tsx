@@ -1,12 +1,14 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { JournalEntry } from "../journal.type";
 import { formatDate } from "../../../utils/dates";
+import { useRouter } from "expo-router/build/hooks/useRouter";
 
 interface JournalEntryCardProps {
     journalEntry: JournalEntry;
 }
 
 export default function JournalEntryCard({ journalEntry }: JournalEntryCardProps) {
+    const router = useRouter();
     const formatText = (text: string) => {
         const maxLength = 200;
         if (text.length > maxLength) {
@@ -16,7 +18,10 @@ export default function JournalEntryCard({ journalEntry }: JournalEntryCardProps
     };
     
     return (
-        <TouchableOpacity className="bg-white rounded-2xl border border-neutral-200 mb-4 p-4 shadow-sm">
+        <TouchableOpacity 
+            className="bg-white rounded-2xl border border-neutral-200 mb-4 p-4 shadow-sm"
+            onPress={() => router.push(`/(journal)/view/${journalEntry.id}`)}
+        >
             <View className="rounded-full mb-4">
                 <Text className="text-lg font-bold text-neutral-800">
                     {journalEntry.title}

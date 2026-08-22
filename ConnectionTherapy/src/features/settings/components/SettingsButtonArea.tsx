@@ -23,7 +23,7 @@ export default function SettingsButtonArea() {
     ]
 
     return (
-        <View className={`flex-1 px-4 ${Platform.OS === "ios" ? "mb-24" : "mb-4"}`}>
+        <View className={`flex-1 px-4 mb-16`}>
             <SettingsButtonsContainer
                 title="App Preferences"
                 buttons={accountAndPreferencesbuttons}

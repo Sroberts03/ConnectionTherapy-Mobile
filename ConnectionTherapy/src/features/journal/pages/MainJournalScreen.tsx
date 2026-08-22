@@ -8,14 +8,9 @@ import AddButton from "../../../globalComponents/AddButton";
 
 export default function MainJournalScreen() {
     const { 
-        journalEntries, 
-        setJournalEntries, 
-        queryParam, 
-        setQueryParam, 
+        journalEntries,
         loading, 
-        setLoading,
         error, 
-        setError 
     } = useJournalEntries();
 
     return (
