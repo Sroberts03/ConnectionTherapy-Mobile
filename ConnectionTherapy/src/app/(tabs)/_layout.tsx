@@ -16,7 +16,7 @@ export default function TabLayout() {
                     width: '90%',
                     height: 60,
                     borderRadius: 30,
-                    bottom: 30,
+                    bottom: 20,
                     position: 'absolute',
                     left: '50%',
                     marginLeft: '5%',
@@ -43,6 +43,13 @@ export default function TabLayout() {
                 options={{
                     title: "Habits",
                     tabBarIcon: ({ color }) => <Ionicons name="checkmark-circle" size={28} color={color} />,
+                }}
+            />
+            <Tabs.Screen
+                name="Journal"
+                options={{
+                    title: "Journal",
+                    tabBarIcon: ({ color }) => <Ionicons name="book" size={28} color={color} />,
                 }}
             />
             <Tabs.Screen

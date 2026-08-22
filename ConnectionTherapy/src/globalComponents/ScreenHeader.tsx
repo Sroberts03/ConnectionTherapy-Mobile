@@ -8,7 +8,7 @@ interface ScreenHeaderProps {
 export default function ScreenHeader({ title, subtitle }: ScreenHeaderProps) {
     return (
         <View className="bg-primary-50 border-b border-gray-200">
-            <Text className="text-3xl font-bold text-text tracking-tight text-center">
+            <Text className={`text-3xl font-bold text-text tracking-tight text-center ${!subtitle ? "mb-5" : ""}`}>
                 {title}
             </Text>
             {subtitle && (

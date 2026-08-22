@@ -53,8 +53,19 @@ export async function initializeDatabase(db: SQLiteDatabase) {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id UUID NOT NULL,
                 title TEXT NOT NULL,
-                text TEXT NOT NULL
+                text TEXT NOT NULL,
+                date DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
+        `);
+
+        await db.execAsync(`
+            CREATE INDEX IF NOT EXISTS idx_journal_entries_user_id ON journal_entries(user_id);
+        `);
+
+        await db.execAsync(`
+            CREATE INDEX IF NOT EXISTS idx_journal_entries_date ON journal_entries(date);
         `);
 
         await db.execAsync(`

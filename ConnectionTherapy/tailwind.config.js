@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import { Platform } from "react-native";
+
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],

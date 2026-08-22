@@ -17,7 +17,7 @@ export default function DashBoardHeader() {
     }
     
     return (
-        <View className="mb-8 mt-2">
+        <View className="mb-8">
             <Text className="text-3xl font-bold text-neutral-900 tracking-tight text-center">
                 Good {timeOfDay()}, {getFirstName(user?.user_metadata.display_name)}!
             </Text>

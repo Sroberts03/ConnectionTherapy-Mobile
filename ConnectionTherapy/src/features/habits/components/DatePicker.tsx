@@ -50,7 +50,7 @@ export default function DatePicker({date, setDate}: DatePickerProps) {
 
     return (
         <View>
-            <View className="flex-row items-center justify-between bg-white rounded-[2rem] px-6 py-4 w-11/12 self-center mt-6 shadow-sm border border-neutral-100">
+            <View className="flex-row items-center justify-between bg-white rounded-[2rem] px-6 py-4 w-11/12 self-center shadow-sm border border-neutral-100 mb-4">
                 <TouchableOpacity onPress={handlePrevDay} className="p-2">
                     <Ionicons name="chevron-back" size={24} color="#9ca3af" />
                 </TouchableOpacity>
@@ -68,7 +68,7 @@ export default function DatePicker({date, setDate}: DatePickerProps) {
             </View>
 
             {showPicker && (
-                <View className="bg-white rounded-2xl w-11/12 self-center overflow-hidden shadow-sm border border-neutral-100 smt-2 mt-2" style={{ height: 340 }}>
+                <View className="bg-white rounded-2xl w-11/12 self-center overflow-hidden shadow-sm border border-neutral-100 smt-2 mb-4" style={{ height: 340 }}>
                     <DateTimePicker
                         value={date}
                         mode="date"

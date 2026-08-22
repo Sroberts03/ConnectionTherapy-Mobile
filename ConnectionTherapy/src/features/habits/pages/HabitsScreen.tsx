@@ -1,13 +1,11 @@
-import { Platform, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useEffect, useState } from "react";
-import { getHabits } from "../services/habits.service";
-import { useSQLiteContext } from "expo-sqlite";
-import { Habit } from "../habits.types";
 import ErrorLoading from "../../../globalComponents/ErrorLoading";
 import HabitArea from "../components/HabitArea";
 import TakeItOneWeekDialog from "../components/TakeItOneWeekDialog";
 import { useHabitContext } from "../HabitContext";
 import DatePicker from "../components/DatePicker";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HabitsScreen() {
     const {
@@ -53,24 +51,25 @@ export default function HabitsScreen() {
     
     return (
         <ScrollView 
-            className={`flex-1 bg-primary-50`}
-            contentContainerStyle={{ paddingTop: Platform.OS === "ios" ? 40 : 48 }}
+            className={`bg-primary-50`}
             showsVerticalScrollIndicator={false}
         >
-            <DatePicker
-                date={date}
-                setDate={setDate}
-            />
-            {showTakeItOneWeekDialog ?
-                <TakeItOneWeekDialog /> :
-                <View>
-                    <ErrorLoading error={habitError} loading={habitLoading} />
-                    <HabitArea
-                        date={date}
-                        setError={setHabitError}
-                    />
-                </View>
-            }
+            <SafeAreaView>
+                <DatePicker
+                    date={date}
+                    setDate={setDate}
+                />
+                {showTakeItOneWeekDialog ?
+                    <TakeItOneWeekDialog /> :
+                    <View className="ios:mb-12 android:-mb-8">
+                        <ErrorLoading error={habitError} loading={habitLoading} />
+                        <HabitArea
+                            date={date}
+                            setError={setHabitError}
+                        />
+                    </View>
+                }
+            </SafeAreaView>
         </ScrollView>
     );
 }

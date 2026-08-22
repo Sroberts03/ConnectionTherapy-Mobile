@@ -12,7 +12,7 @@ export default function HabitArea({ date, setError}: HabitAreaProps) {
     const pillars = [HabitCategory.SPIRITUAL, HabitCategory.PHYSICAL, HabitCategory.SOCIAL, HabitCategory.INTELLECTUAL]
     
     return (
-        <View className={Platform.OS === 'ios' ? "mb-24 mt-4" : "mb-4 mt-4"}>
+        <View>
             {pillars.map((pillar) => {
                 return (
                     <HabitPillarContainer
