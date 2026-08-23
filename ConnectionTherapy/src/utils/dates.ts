@@ -20,3 +20,10 @@ export function getStartOfWeek(): string {
     const beginingOfWeek = new Date(today.setDate(diff));
     return formatDate(beginingOfWeek)
 }
+
+export function formatJournalDate(date: string): string {
+    console.log(date);
+    const dateObj = new Date(`${date}T00:00:00`);
+    const options: Intl.DateTimeFormatOptions = {month: 'long', day: 'numeric', year: 'numeric' };
+    return dateObj.toLocaleDateString('en-US', options);
+}

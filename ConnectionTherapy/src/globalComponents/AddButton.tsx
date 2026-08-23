@@ -16,7 +16,7 @@ export default function AddButton({ onPress, containerClassname, isVisible }: Ad
             <Feather 
                 name="plus"
                 size={24}
-                color="#000000"
+                color="#ffffff"
             />
         </TouchableOpacity>
     );

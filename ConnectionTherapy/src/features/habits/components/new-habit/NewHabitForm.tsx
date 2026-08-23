@@ -8,6 +8,7 @@ import { formatDate } from "../../../../utils/dates";
 import { useHabitContext } from "../../HabitContext";
 import { newHabitInput } from "../../habit.dto";
 import { parseRepeatString } from "../../utils/parseRepeatString";
+import { usePillarContext } from "../../../dashboard/PillarContext";
 
 function habitReturned(
     newHabit: Habit | null,
@@ -39,6 +40,7 @@ function todayLocalDateStr(): string {
 export function useHabitForm(date: Date, category: HabitCategory | undefined, habitId: number | undefined, onClose: () => void) {
     const db = useSQLiteContext();
     const { currentHabits, setCurrentHabits, reloadTopHabits, setHabitError } = useHabitContext();
+    const { reloadPillarPercentages } = usePillarContext();
     const { user } = useAuth();
     const localDateStr = todayLocalDateStr();
 
@@ -120,6 +122,7 @@ export function useHabitForm(date: Date, category: HabitCategory | undefined, ha
             const newHabit = await createNewHabit(buildRequest());
             habitReturned(newHabit, setCurrentHabits, currentHabits);
             reloadTopHabits();
+            reloadPillarPercentages();
             closeAndReset();
         } catch (err) {
             creationErrorHandler(err);

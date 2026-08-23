@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { JournalEntry } from "../journal.type";
-import { formatDate } from "../../../utils/dates";
+import { formatJournalDate } from "../../../utils/dates";
 import { useRouter } from "expo-router/build/hooks/useRouter";
 
 interface JournalEntryCardProps {
@@ -16,7 +16,6 @@ export default function JournalEntryCard({ journalEntry }: JournalEntryCardProps
         }
         return text;
     };
-    
     return (
         <TouchableOpacity 
             className="bg-white rounded-2xl border border-neutral-200 mb-4 p-4 shadow-sm"
@@ -36,7 +35,7 @@ export default function JournalEntryCard({ journalEntry }: JournalEntryCardProps
 
             <View className="rounded-full mr-2">
                 <Text className="text-sm text-neutral-500">
-                    {formatDate(new Date(journalEntry.date))}
+                    {formatJournalDate(journalEntry.date)}
                 </Text>
             </View>
         </TouchableOpacity>

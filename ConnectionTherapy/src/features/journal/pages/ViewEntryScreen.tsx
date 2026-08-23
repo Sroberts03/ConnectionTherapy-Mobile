@@ -1,18 +1,20 @@
 import { View, Text, ScrollView } from "react-native";
-import useJournalEntries from "../utils/useJournalEntires";
 import ScreenHeader from "../../../globalComponents/ScreenHeader";
 import BackButton from "../../../globalComponents/BackButton";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { formatDate } from "../../../utils/dates";
 import JournalText from "../components/JournalText";
-import { Scroll } from "lucide-react-native";
+import JournalButtonContainer from "../components/JournalButtonContainer";
+import { useRouter } from "expo-router";
+import { useJournalContext } from "../journal.context";
+import { formatJournalDate } from "../../../utils/dates";
 
 interface ViewEntryScreenProps {
     id: number;
 }
 
 export default function ViewEntryScreen({ id }: ViewEntryScreenProps) {
-    const { journalEntries } = useJournalEntries();
+    const router = useRouter();
+    const { journalEntries } = useJournalContext();
     const journalEntry = journalEntries.get(id);
     if (!journalEntry) return;
 
@@ -24,12 +26,16 @@ export default function ViewEntryScreen({ id }: ViewEntryScreenProps) {
                     <ScreenHeader 
                         title={journalEntry.title} 
                         titleClassName="text-lg font-bold text-center text-text-primary"
-                        subtitle={formatDate(new Date(journalEntry.date))}
+                        subtitle={formatJournalDate(journalEntry.date)}
                     />
                 </View>
                 <ScrollView className="w-full h-full">
                     <JournalText text={journalEntry.text} />
                 </ScrollView>
+                <JournalButtonContainer 
+                    onEditPress={() => {router.push(`(journal)/edit/${id}`)}} 
+                    onDeletePress={() => {}} 
+                />
             </SafeAreaView>
         </View>
     );

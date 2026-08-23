@@ -1,17 +1,25 @@
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import JournalEntryArea from "../components/JournalEntryArea";
-import useJournalEntries from "../utils/useJournalEntires";
 import ErrorLoading from "../../../globalComponents/ErrorLoading";
 import JournalEntryLoading from "../components/JournalEntryLoading";
 import AddButton from "../../../globalComponents/AddButton";
+import { useRouter } from "expo-router/build/hooks/useRouter";
+import { useJournalContext } from "../journal.context";
+import { useEffect } from "react";
 
 export default function MainJournalScreen() {
+    const router = useRouter();
     const { 
         journalEntries,
         loading, 
-        error, 
-    } = useJournalEntries();
+        error,
+        FetchJournalEntries
+    } = useJournalContext();
+
+    useEffect(() => {
+        FetchJournalEntries();
+    }, []);
 
     return (
         <View className={`flex-1 bg-primary-50`}>
@@ -25,8 +33,8 @@ export default function MainJournalScreen() {
                 </SafeAreaView>
             </ScrollView>
             <AddButton
-                onPress={() => console.log("Add button pressed")}
-                containerClassname="absolute ios:bottom-28 android:bottom-4 right-4 bg-primary-500 p-4 rounded-full shadow-lg"
+                onPress={() => router.push(`(journal)/CreateNew`)}
+                containerClassname="absolute ios:bottom-28 android:bottom-4 right-4 bg-primary-500 p-4 rounded-full shadow-sm"
                 isVisible={true}
             />
         </View>
