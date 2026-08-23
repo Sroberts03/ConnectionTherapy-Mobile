@@ -58,23 +58,27 @@ export function JournalProvider({ children }: { children: React.ReactNode }) {
         try {
             let journalEntry: JournalEntry;
             journalEntry = await saveJournalEntryService(entry, user.id, db);
-            const organizedJournalEntries: Map<number, JournalEntry> = organizeEntriesByDate(journalEntry)
+            const organizedJournalEntries: Map<number, JournalEntry> = organizeEntries(journalEntry)
             setJournalEntries(organizedJournalEntries);
         } catch (err) {
             setError(err instanceof Error ? err.message : "An unknown error occurred");
         }
     }
 
-    const organizeEntriesByDate = (newEntry: JournalEntry): Map<number, JournalEntry> => {
-        const organizedEntries = new Map<number, JournalEntry>();
-        organizedEntries.set(newEntry.id, newEntry);
-        journalEntries.forEach((entry) => {
-            if (entry.id !== newEntry.id) {
-                organizedEntries.set(entry.id, entry);
-            }
-        });
+    const organizeEntries = (newEntry: JournalEntry): Map<number, JournalEntry> => {
+        let organizedEntries: Map<number, JournalEntry> = new Map();
+        const entryExists = journalEntries.get(newEntry.id);
+        if (entryExists) {
+            organizedEntries = new Map(journalEntries);
+            organizedEntries.set(newEntry.id, newEntry);
+        } else {
+            organizedEntries.set(newEntry.id, newEntry);
+            journalEntries.forEach((entry, id) => {
+                organizedEntries.set(id, entry);
+            });
+        }
         return organizedEntries;
-    }
+    };
 
     return (
         <JournalContext.Provider value={{
