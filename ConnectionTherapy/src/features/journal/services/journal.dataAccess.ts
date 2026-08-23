@@ -51,3 +51,9 @@ async function getLatestJournalEntryDataAccess(userId: string, db: SQLiteDatabas
         LIMIT 1;`, [userId]);
     return result[0] as JournalEntry;
 }
+
+export async function deleteJournalEntryDataAccess(entryId: number, userId: string, db: SQLiteDatabase): Promise<void> {
+    await db.runAsync(`
+        DELETE FROM journal_entries
+        WHERE id = ? AND user_id = ?;`, [entryId, userId]);
+}

@@ -11,7 +11,6 @@ import { useEffect } from "react";
 export default function MainJournalScreen() {
     const router = useRouter();
     const { 
-        journalEntries,
         loading, 
         error,
         FetchJournalEntries
@@ -28,7 +27,7 @@ export default function MainJournalScreen() {
                     <View className={`flex-1 bg-primary-50 ios:mb-12 android:-mb-`}>
                         <ErrorLoading loading={false} error={error} />
                         <JournalEntryLoading isVisible={loading} />
-                        <JournalEntryArea isVisible={!loading && !error} journalEntries={journalEntries} />
+                        <JournalEntryArea isVisible={!loading && !error} />
                     </View>
                 </SafeAreaView>
             </ScrollView>

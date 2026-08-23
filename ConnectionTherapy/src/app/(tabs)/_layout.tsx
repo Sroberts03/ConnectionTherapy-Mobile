@@ -27,7 +27,7 @@ export default function TabLayout() {
                     elevation: 5,
                 }
             }),
-            tabBarActiveTintColor: '#6366f1',
+            tabBarActiveTintColor: '#5f7a61',
             tabBarInactiveTintColor: '#94a3b8',
             headerShown: false
         }}>

@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { JournalEntry } from "./journal.type";
 import { useSQLiteContext } from "expo-sqlite";
 import { useAuth } from "../auth/AuthContext";
-import { getJournalEntries, saveJournalEntryService } from "./services/journal.service";
+import { deleteJournalEntryService, getJournalEntries, saveJournalEntryService } from "./services/journal.service";
 import { NewJournalEntryDTO } from "./journal.dto";
 import { formatDate } from "../../utils/dates";
 
@@ -17,6 +17,7 @@ interface JournalContextType {
     setError: (error: string) => void;
     FetchJournalEntries: () => Promise<void>;
     saveJournalEntry: (entry: NewJournalEntryDTO) => Promise<void>;
+    deleteEntry: (entryId: number) => Promise<void>;
 }
 
 const JournalContext = createContext<JournalContextType | undefined>(undefined);
@@ -80,6 +81,18 @@ export function JournalProvider({ children }: { children: React.ReactNode }) {
         return organizedEntries;
     };
 
+    const deleteEntry = async (entryId: number) => {
+        if (!user) return;
+        try {
+            await deleteJournalEntryService(entryId, user.id, db);
+            const updatedEntries = new Map(journalEntries);
+            updatedEntries.delete(entryId);
+            setJournalEntries(updatedEntries);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "An unknown error occurred");
+        }
+    };
+
     return (
         <JournalContext.Provider value={{
             journalEntries,
@@ -91,7 +104,8 @@ export function JournalProvider({ children }: { children: React.ReactNode }) {
             error,
             setError,
             saveJournalEntry,
-            FetchJournalEntries: fetchJournalEntries
+            FetchJournalEntries: fetchJournalEntries,
+            deleteEntry
         }}>
             {children}
         </JournalContext.Provider>

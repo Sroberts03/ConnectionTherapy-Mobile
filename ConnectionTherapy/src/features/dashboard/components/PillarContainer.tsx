@@ -60,12 +60,6 @@ export default function PillarContainer({ pillar }: PillarContainerProps) {
                         fill="none"
                         transform={`rotate(-90 ${cx} ${cy})`}
                     />
-                    <Circle
-                        cx={dotX}
-                        cy={dotY}
-                        r={3}
-                        fill={pillar.color}
-                    />
                 </Svg>
                 <View className="absolute inset-0 items-center justify-center">
                     <IconComponent size={28} color="#B0A69D" />

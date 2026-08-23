@@ -6,6 +6,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { formatDate } from "../../../utils/dates";
 import { useAuth } from "../../auth/AuthContext";
 import { useHabitContext } from "../HabitContext";
+import { usePillarContext } from "@features/dashboard/PillarContext";
 
 interface ConfirmDeleteHabitProps {
     isVisible: boolean;
@@ -18,6 +19,7 @@ interface ConfirmDeleteHabitProps {
 export default function ConfirmDeleteHabit({ isVisible, onClose, onConfirm, habitId, date }: ConfirmDeleteHabitProps) {
     const db = useSQLiteContext();
     const { currentHabits, setCurrentHabits, reloadTopHabits, setHabitError } = useHabitContext();
+    const { reloadPillarPercentages } = usePillarContext();
     const { user } = useAuth();
 
     if (habitId === undefined) return null;
@@ -32,6 +34,7 @@ export default function ConfirmDeleteHabit({ isVisible, onClose, onConfirm, habi
             updatedHabits.delete(habitId);
             setCurrentHabits(updatedHabits);
             reloadTopHabits();
+            reloadPillarPercentages();
             onConfirm();
         } catch (e) {
             setHabitError(e instanceof Error ? e.message : "Failed to delete habit")

@@ -7,6 +7,8 @@ import JournalButtonContainer from "../components/JournalButtonContainer";
 import { useRouter } from "expo-router";
 import { useJournalContext } from "../journal.context";
 import { formatJournalDate } from "../../../utils/dates";
+import ConfirmDeleteEntry from "../components/ConfirmDeleteEntry";
+import { useState } from "react";
 
 interface ViewEntryScreenProps {
     id: number;
@@ -16,6 +18,7 @@ export default function ViewEntryScreen({ id }: ViewEntryScreenProps) {
     const router = useRouter();
     const { journalEntries } = useJournalContext();
     const journalEntry = journalEntries.get(id);
+    const [confirmDelteVisible, setConfirmDeleteVisible] = useState(false);
     if (!journalEntry) return;
 
     return (
@@ -34,7 +37,17 @@ export default function ViewEntryScreen({ id }: ViewEntryScreenProps) {
                 </ScrollView>
                 <JournalButtonContainer 
                     onEditPress={() => {router.push(`(journal)/edit/${id}`)}} 
-                    onDeletePress={() => {}} 
+                    onDeletePress={() => setConfirmDeleteVisible(true)} 
+                />
+                <ConfirmDeleteEntry
+                    entryId={id}
+                    isVisible={confirmDelteVisible}
+                    onClose={
+                        () => {
+                            setConfirmDeleteVisible(false)
+                            router.back();
+                        }
+                    }
                 />
             </SafeAreaView>
         </View>

@@ -1,6 +1,6 @@
 import { SQLiteDatabase } from "expo-sqlite";
 import { JournalEntry } from "../journal.type";
-import { createJournalEntryDataAccess, getJournalEntriesDataAccess, updateJournalEntryDataAccess } from "./journal.dataAccess";
+import { createJournalEntryDataAccess, deleteJournalEntryDataAccess, getJournalEntriesDataAccess, updateJournalEntryDataAccess } from "./journal.dataAccess";
 import { NewJournalEntryDTO } from "../journal.dto";
 
 export async function getJournalEntries(userId: string, queryParam: string, db: SQLiteDatabase): Promise<Map<number, JournalEntry>> {
@@ -20,4 +20,8 @@ export async function saveJournalEntryService(entry: NewJournalEntryDTO, userId:
         savedEntry = await createJournalEntryDataAccess(entry, userId, db);
     }
     return savedEntry;
+}
+
+export async function deleteJournalEntryService(entryId: number, userId: string, db: SQLiteDatabase): Promise<void> {
+    await deleteJournalEntryDataAccess(entryId, userId, db);
 }

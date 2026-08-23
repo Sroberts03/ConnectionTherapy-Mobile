@@ -3,13 +3,15 @@ import { JournalEntry } from "../journal.type";
 import JournalEntryCard from "./JournalEntryCard";
 import ScreenHeader from "../../../globalComponents/ScreenHeader";
 import AddButton from "../../../globalComponents/AddButton";
+import { useJournalContext } from "../journal.context";
+import NoJournalEntries from "./NoJournalEntries";
 
 interface JournalEntryAreaProps {
     isVisible: boolean;
-    journalEntries: Map<number, JournalEntry>;
 }
 
-export default function JournalEntryArea({ isVisible, journalEntries }: JournalEntryAreaProps) {
+export default function JournalEntryArea({ isVisible }: JournalEntryAreaProps) {
+    const { journalEntries } = useJournalContext();
     if (!isVisible) return null;
 
     return (
@@ -17,6 +19,7 @@ export default function JournalEntryArea({ isVisible, journalEntries }: JournalE
             <View className="mb-4">
                 <ScreenHeader title="Journal Entries" />
             </View>
+            <NoJournalEntries isVisible={journalEntries.size === 0} />
             {Array.from(journalEntries.values()).map(entry => (
                 <JournalEntryCard key={entry.id} journalEntry={entry} />
             ))}
