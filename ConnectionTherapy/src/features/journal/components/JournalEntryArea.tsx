@@ -2,7 +2,6 @@ import { View, Text } from "react-native";
 import { JournalEntry } from "../journal.type";
 import JournalEntryCard from "./JournalEntryCard";
 import ScreenHeader from "../../../globalComponents/ScreenHeader";
-import AddButton from "../../../globalComponents/AddButton";
 import { useJournalContext } from "../journal.context";
 import NoJournalEntries from "./NoJournalEntries";
 
