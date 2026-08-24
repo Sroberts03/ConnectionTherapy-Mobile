@@ -9,13 +9,20 @@ import { getPillarHabitsDataAccess } from "./dashboard.dataAccess";
 import { getPillarPercent } from "../utils/getPillarPercent";
 
 export async function getDashboardPillars(session: Session): 
-    Promise<Pick<ConnectionPillar, 'id' | 'name' | 'color' | 'icon'>[]> {
+    Promise<Pick<ConnectionPillar, 'id' | 'name' | 'lightColor' | 'darkColor' | 'icon'>[]> {
     const response: GetPillarsRes = await HTTPRequest("GET", "pillar/all", true, session)
-    return response.pillars
+    const pillars = response.pillars.map((pillar) => ({
+        id: pillar.id,
+        name: pillar.name,
+        lightColor: pillar.light_color,
+        darkColor: pillar.dark_color,
+        icon: pillar.icon
+    }))
+    return pillars
 }
 
 export async function getFullPillars(
-    pillars: Pick<ConnectionPillar, 'id' | 'name' | 'color' | 'icon'>[],
+    pillars: Pick<ConnectionPillar, 'id' | 'name' | 'lightColor' | 'darkColor' | 'icon'>[],
     db: SQLiteDatabase
 ): Promise<Map<HabitCategory, ConnectionPillar>> {
     const fullPillars = new Map<HabitCategory, ConnectionPillar>();
