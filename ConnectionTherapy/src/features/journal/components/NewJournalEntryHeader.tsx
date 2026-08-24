@@ -13,12 +13,14 @@ export default function NewJournalEntryHeader({  date, title, setTitle, titleCla
 
     return (
         <View className="bg-primary-50 border-b border-gray-200 w-full">
-            <TextInput
-                value={title}
-                placeholder={title || "Title"}
-                onChangeText={(text) => setTitle(text)}
-                className={titleStyle + "w-full"}
-            />
+            <View className="mb-4">
+                <TextInput
+                    value={title}
+                    placeholder={title || "Title"}
+                    onChangeText={(text) => setTitle(text)}
+                    className={titleStyle + "w-full"}
+                />
+            </View>
             <Text className="text-sm text-center text-neutral-500 mb-4">
                 {date}
             </Text>

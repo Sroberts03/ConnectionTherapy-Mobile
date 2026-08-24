@@ -40,7 +40,7 @@ export default function NewJournalEntry({ id }: NewJournalEntryProps) {
     return (
         <View className="flex-1 items-center justify-center">
             <SafeAreaView className="flex-1 w-full bg-primary-50">
-                <View className="flex-row items-center justify-center relative">
+                <View className="flex-row items-center justify-center relative mb-4">
                     <BackButton className="absolute left-0 top-4 z-10 ml-5" />
                     <NewJournalEntryHeader 
                         title={newTitle}
