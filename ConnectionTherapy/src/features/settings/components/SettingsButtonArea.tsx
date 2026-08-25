@@ -6,7 +6,7 @@ import { SettingButton } from "../settings.types";
 export default function SettingsButtonArea() {
     const accountAndPreferencesbuttons: SettingButton[] = [
         { title: "Notifications", subtitle: "Manage your notifications", onPress: () => console.log("Notification Settings pressed"), icon: "bell" },
-        { title: "Appearance", subtitle: "Customize the app's appearance", onPress: () => console.log("Appearance Settings pressed"), icon: "sun" },
+        //{ title: "Appearance", subtitle: "Customize the app's appearance", onPress: () => console.log("Appearance Settings pressed"), icon: "sun" },
     ]
 
     const legalAndInformationButtons: SettingButton[] = [

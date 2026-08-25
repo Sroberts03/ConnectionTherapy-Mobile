@@ -18,9 +18,6 @@ export default function PillarContainer({ pillar }: PillarContainerProps) {
     
     const cx = size / 2;
     const cy = size / 2;
-    const angleRad = (percentage / 100) * 2 * Math.PI - Math.PI / 2;
-    const dotX = cx + radius * Math.cos(angleRad);
-    const dotY = cy + radius * Math.sin(angleRad);
     const iconName = pillar.icon.charAt(0).toUpperCase() + pillar.icon.slice(1);
     const IconComponent = (LucideIcons as any)[iconName] || LucideIcons.Circle;
 
@@ -52,7 +49,7 @@ export default function PillarContainer({ pillar }: PillarContainerProps) {
                         cx={cx}
                         cy={cy}
                         r={radius}
-                        stroke={pillar.color}
+                        stroke={pillar.lightColor}
                         strokeWidth={strokeWidth}
                         strokeDasharray={`${circumference} ${circumference}`}
                         strokeDashoffset={strokeDashoffset}
@@ -71,7 +68,7 @@ export default function PillarContainer({ pillar }: PillarContainerProps) {
             </Text>
             <Text 
                 className="text-xl font-bold mt-1" 
-                style={{ color: pillar.color }}
+                style={{ color: pillar.lightColor }}
             >
                 {percentage}%
             </Text>

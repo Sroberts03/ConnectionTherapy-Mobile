@@ -14,7 +14,7 @@ export function getPillarTheme(category: HabitCategory): PillarTheme {
     let iconName = "Circle"
     let IconComponent = LucideIcons.Circle
     if (pillar) {
-        color = pillar.color
+        color = pillar.lightColor
         iconName = pillar.icon.charAt(0).toUpperCase() + pillar.icon.slice(1)
         IconComponent = (LucideIcons as any)[iconName] || LucideIcons.Circle;
     }
