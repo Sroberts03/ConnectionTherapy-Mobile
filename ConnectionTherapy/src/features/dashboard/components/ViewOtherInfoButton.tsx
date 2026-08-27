@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router/build/global-state/router";
 import { View, Text, TouchableOpacity } from "react-native";
 
 interface ViewOtherInfoButtonProps {

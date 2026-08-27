@@ -1,6 +1,5 @@
-import { Platform, Text, View } from "react-native"
-import { Habit, HabitCategory } from "../habits.types"
-import { useEffect, useState } from "react"
+import { View } from "react-native"
+import { HabitCategory } from "../habits.types"
 import HabitPillarContainer from "./HabitPillarContainer"
 
 interface HabitAreaProps {
@@ -8,7 +7,7 @@ interface HabitAreaProps {
     setError: (error: string) => void
 }
 
-export default function HabitArea({ date, setError}: HabitAreaProps) {
+export default function HabitArea({ date }: HabitAreaProps) {
     const pillars = [HabitCategory.SPIRITUAL, HabitCategory.PHYSICAL, HabitCategory.SOCIAL, HabitCategory.INTELLECTUAL]
     
     return (

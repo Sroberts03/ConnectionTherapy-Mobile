@@ -43,7 +43,8 @@ export function PillarProvider({ children }: { children: React.ReactNode }) {
                 ConnectionPillar,
                 | 'id'
                 | 'name'
-                | 'color'
+                | 'lightColor'
+                | 'darkColor'
                 | 'icon'
             >[] = await getDashboardPillars(session)
             setPillars(await getFullPillars(pillars, db))

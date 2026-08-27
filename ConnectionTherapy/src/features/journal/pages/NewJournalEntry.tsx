@@ -4,7 +4,7 @@ import { JournalEntry } from "../journal.type";
 import { useState } from "react";
 import { useJournalContext } from "../journal.context";
 import { getJournalEntryById, getJournalTitleTextAndDate,  } from "../utils/NewJournalEntryHelpers";
-import { formatDate, formatJournalDate } from "../../../utils/dates";
+import { formatJournalDate } from "../../../utils/dates";
 import JournalTextEntry from "../components/JournalTextEntry";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NewJournalEntryDTO } from "../journal.dto";
@@ -24,13 +24,25 @@ export default function NewJournalEntry({ id }: NewJournalEntryProps) {
     const [newTitle, setNewTitle] = useState(title);
     const [newText, setNewText] = useState(text);
 
+    const createNewEntry = (): NewJournalEntryDTO => {
+        if (journalEntry?.id === undefined) {
+            return {
+                title: newTitle,
+                text: newText,
+                date: date,
+            };
+        } else {
+            return {
+                id: journalEntry.id,
+                title: newTitle,
+                text: newText,
+                date: date,
+            };
+        }
+    };
+
     const handleSave = async () => { 
-        const newEntry: NewJournalEntryDTO = {
-            id: journalEntry?.id,
-            title: newTitle,
-            text: newText,
-            date: date,
-        };
+        const newEntry: NewJournalEntryDTO = createNewEntry();
         await saveJournalEntry(newEntry);
         if (!error) {
             router.back();

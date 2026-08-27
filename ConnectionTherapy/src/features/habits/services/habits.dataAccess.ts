@@ -86,7 +86,7 @@ async function getHabitInstanceDataAccess(id: number, db: SQLiteDatabase): Promi
             FROM habit_entries he
             JOIN habits h on he.habit_id = h.id
             WHERE he.id = ?`, [id])
-    return result[0];
+    return result[0]!;
 }
 
 export async function getHabitDetailsDataAccess(
@@ -107,7 +107,7 @@ export async function getHabitDetailsDataAccess(
             FROM habit_entries he
             JOIN habits h on he.habit_id = h.id
             WHERE he.id = ?`, [habitId])
-    return result[0];
+    return result[0]!;
 }
 
 export async function createHabitInstanceDataAccess(
@@ -150,7 +150,6 @@ export async function updateHabitDataAccess(
     repetition: string,
     endDate: string,
     description: string,
-    userId: string,
     db: SQLiteDatabase,
 ): Promise<void> {
     await db.runAsync(`
@@ -174,7 +173,7 @@ export async function getHabitIdFromInstanceIdDataAccess(habitInstanceId: number
                 habit_id as habitId
             FROM habit_entries
             WHERE id = ?`, [habitInstanceId])
-    return result[0].habitId;
+    return result[0]?.habitId!;
 }
 
 export async function deleteHabitInstancesDataAccess(habitId: number, today: string, db: SQLiteDatabase) {
@@ -191,7 +190,7 @@ export async function deleteHabitInstanceDataAccess(habitInstanceId: number, db:
     `, [habitInstanceId])
 }
 
-async function markHabitInactiveDataAccess(habitId: number, db: SQLiteDatabase) {
+export async function markHabitInactiveDataAccess(habitId: number, db: SQLiteDatabase) {
     await db.runAsync(`
         UPDATE habits
         SET is_active = 0

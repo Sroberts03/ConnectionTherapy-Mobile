@@ -19,7 +19,7 @@ export default function DashBoardHeader() {
     return (
         <View className="mb-8">
             <Text className="text-3xl font-bold text-neutral-900 tracking-tight text-center">
-                Good {timeOfDay()}, {getFirstName(user?.user_metadata.display_name)}!
+                Good {timeOfDay()}, {getFirstName(user?.user_metadata["display_name"])}!
             </Text>
             <Text className="text-neutral-600 text-base mt-3 leading-relaxed text-center">
                 Your resilience is a quiet, powerful force. Take this moment to ground yourself.

@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Text, Platform } from "react-native";
+import { View } from "react-native";
 import { signOut } from "../../auth/services/auth.service";
 import SettingsButtonsContainer from "./SettingsButtonsContainer";
 import { SettingButton } from "../settings.types";

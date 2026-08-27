@@ -1,5 +1,4 @@
 import { RRule, rrulestr } from 'rrule';
-import { FREQ_OPTIONS } from './useCustomRepeat';
 
 export default function getDates( startDate: string, endDate: string | null | undefined, repetition: string | null | undefined ) {
     let occurenceDates: Date[] = [];

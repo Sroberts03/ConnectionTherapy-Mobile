@@ -1,5 +1,4 @@
-import { View, ScrollView, Text } from "react-native";
-import { useAuth } from "../../auth/AuthContext";
+import { View, ScrollView } from "react-native";
 import SettingsButtonArea from "../components/SettingsButtonArea";
 import SettingsHeader from "../components/SettingsHeader";
 

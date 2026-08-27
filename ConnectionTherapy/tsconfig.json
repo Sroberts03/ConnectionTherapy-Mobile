@@ -8,6 +8,15 @@
       "@features/*": ["src/features/*"],
       "@components/*": ["src/components/*"],
       "@utils/*": ["src/utils/*"]
-    }
+    },
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowUnusedLabels": false,
+    "noUncheckedSideEffectImports": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false,
+    "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "exactOptionalPropertyTypes": true,
   }
 }

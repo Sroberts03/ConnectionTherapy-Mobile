@@ -1,7 +1,6 @@
 import { View } from "react-native";
 import JournalButton from "./JournalButton";
 import { useState } from "react";
-import { useRouter } from "expo-router/build/hooks/useRouter";
 
 interface JournalButtonContainerProps {
     onEditPress: () => void;

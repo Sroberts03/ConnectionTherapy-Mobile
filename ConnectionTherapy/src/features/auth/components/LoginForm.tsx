@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useAuth } from "../AuthContext";
 import GlobalErrorDisplay from "../../../globalComponents/GlobalErrorDisplay";
 import EmailPasswordInput from "./EmailPasswordInput";

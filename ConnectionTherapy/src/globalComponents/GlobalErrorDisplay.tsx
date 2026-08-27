@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Text } from "react-native";
+import { View, Text } from "react-native";
 
 type GlobalErrorDisplayProps = {
     error: string;

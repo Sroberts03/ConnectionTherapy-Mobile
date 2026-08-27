@@ -62,7 +62,7 @@ function monthlyByDay(
 ): string {
     if (byDay && byDay.length > 0) {
         const ordinal = dayOfMonthIntervalOption?.find(o => o.value === dayOfMonthInterval)?.label.toLowerCase();
-        const dayName = getDayName(byDay[0], daysOfWeek);
+        const dayName = getDayName(byDay[0]!, daysOfWeek);
         result += ` on the ${ordinal} ${dayName}`;
     }
     return result;

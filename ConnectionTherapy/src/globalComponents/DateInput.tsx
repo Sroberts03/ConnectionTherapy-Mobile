@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Text, Platform } from "react-native"
+import { View, TouchableOpacity, Text } from "react-native"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { Ionicons } from "@expo/vector-icons"
 import { getDateInputStyle } from "../utils/getDateInputstyle"
@@ -18,7 +18,7 @@ export default function DateInput({ selectedDate, setSelectedDate, showDatePicke
         chevronIconColor, 
         chevron 
     } = getDateInputStyle(showDatePicker);
-    
+
     let safeDate = new Date();
     if (selectedDate !== "") {
         const parts = selectedDate.split('-');

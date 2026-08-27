@@ -10,7 +10,7 @@ interface AlertTextProps {
 }
 
 export default function AlertText({ pillar, isVisible, onClose }: AlertTextProps) {
-    const { danger, concern, name } = pillar;
+    const { danger, name } = pillar;
     if (!isVisible) return null;
     const { iconName, iconColor, bgColor, title, text } = getAlertTheme(danger, name);
     

@@ -9,20 +9,38 @@ interface SettingsButtonsContainerProps {
 }
 
 export default function SettingsButtonsContainer({ buttons, title, className }: SettingsButtonsContainerProps) {
-    return (
-        <View className={className ? className : "mb-2 mt-4"}>
-            <View className="ml-2">
-                <Text className="text-md font-semibold mb-4">{title}</Text>
-            </View>
-            {buttons.map((button, index) => (
+    const getSettingsButton = (button: SettingButton) => {
+        if (button.color) {
+            return (
                 <ManageButton
-                    key={index}
                     title={button.title}
                     subtitle={button.subtitle}
                     onPress={button.onPress}
                     color={button.color}
                     icon={button.icon}
                 />
+            );
+        } else {
+            return (
+                <ManageButton
+                    title={button.title}
+                    subtitle={button.subtitle}
+                    onPress={button.onPress}
+                    icon={button.icon}
+                />
+            );
+        }
+    }
+    
+    return (
+        <View className={className ? className : "mb-2 mt-4"}>
+            <View className="ml-2">
+                <Text className="text-md font-semibold mb-4">{title}</Text>
+            </View>
+            {buttons.map((button, index) => (
+                <View key={index} className="mb-2">
+                    {getSettingsButton(button)}
+                </View>
             ))}
         </View>
     );

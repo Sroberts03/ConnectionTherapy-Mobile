@@ -4,7 +4,6 @@ import { useSQLiteContext } from "expo-sqlite";
 import { useAuth } from "../auth/AuthContext";
 import { deleteJournalEntryService, getJournalEntries, saveJournalEntryService } from "./services/journal.service";
 import { NewJournalEntryDTO } from "./journal.dto";
-import { formatDate } from "../../utils/dates";
 
 interface JournalContextType {
     journalEntries: Map<number, JournalEntry>;

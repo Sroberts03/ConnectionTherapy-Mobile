@@ -4,7 +4,7 @@ import { Platform } from "react-native";
 export type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "OPTIONS";
 
 function resolveBackendOrigin(platformOS: typeof Platform.OS = Platform.OS): string {
-    const origin = process.env.EXPO_PUBLIC_BACKEND_ORIGIN;
+    const origin = process.env[ 'EXPO_PUBLIC_BACKEND_ORIGIN' ];
     if (!origin) {
         throw new Error("EXPO_PUBLIC_BACKEND_ORIGIN environment variable is not set");
     }
@@ -33,6 +33,24 @@ async function parseErrorMessage(response: Response): Promise<string> {
     return errorData.body.message;
 }
 
+function createRequest(method: HTTPMethod, headers: HeadersInit, body?: Object): {
+    method: HTTPMethod;
+    headers: HeadersInit;
+    body?: string;
+} {
+    if (body) {
+        return {
+            method,
+            headers,
+            body: JSON.stringify(body),
+        };
+    }
+    return {
+        method,
+        headers,
+    };
+}
+
 export default async function HTTPRequest(
     method: HTTPMethod,
     endpoint: string,
@@ -42,12 +60,9 @@ export default async function HTTPRequest(
 ) {
     const origin = resolveBackendOrigin();
     const headers = buildRequestHeaders(needsAuth, session);
-
-    const response = await fetch(`${origin}/${endpoint}`, {
-        method,
-        headers,
-        body: body ? JSON.stringify(body) : undefined,
-    });
+    const request = createRequest(method, headers, body);
+    
+    const response = await fetch(`${origin}/${endpoint}`, request);
 
     if (!response.ok) {
         throw new Error(await parseErrorMessage(response));

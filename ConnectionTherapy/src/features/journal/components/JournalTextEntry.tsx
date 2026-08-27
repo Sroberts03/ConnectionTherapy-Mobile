@@ -1,4 +1,4 @@
-import { TextInput, View, Text } from "react-native";
+import { TextInput, View } from "react-native";
 
 interface JournalTextEntryProps {
     text: string;

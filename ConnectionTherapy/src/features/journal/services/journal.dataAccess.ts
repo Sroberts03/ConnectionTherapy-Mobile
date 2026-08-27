@@ -1,7 +1,6 @@
 import { SQLiteDatabase } from "expo-sqlite";
 import { JournalEntry } from "../journal.type";
 import { NewJournalEntryDTO } from "../journal.dto";
-import { formatDate } from "../../../utils/dates";
 
 export async function getJournalEntriesDataAccess(userId: string, queryParam: string, db: SQLiteDatabase): Promise<JournalEntry[]> {
     const result = await db.getAllAsync(`
@@ -14,7 +13,7 @@ export async function getJournalEntriesDataAccess(userId: string, queryParam: st
 }
 
 export async function createJournalEntryDataAccess(entry: NewJournalEntryDTO, userId: string, db: SQLiteDatabase): Promise<JournalEntry> {
-    const result = await db.runAsync(`
+    await db.runAsync(`
         INSERT INTO journal_entries (user_id, title, text, date)
         VALUES (?, ?, ?, ?)
         RETURNING id, title, text, date;`, [userId, entry.title, entry.text, entry.date]);

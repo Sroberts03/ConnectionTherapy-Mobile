@@ -1,5 +1,4 @@
 import { HabitCategory } from "@features/habits/habits.types";
-import { ConnectionPillar } from "./dashboard.types";
 
 export interface GetPillarsRes {
     pillars: {

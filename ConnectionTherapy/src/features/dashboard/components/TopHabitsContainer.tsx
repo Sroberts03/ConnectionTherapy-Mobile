@@ -1,11 +1,8 @@
-import { Text, TouchableOpacity, View } from "react-native"
-import { useAuth } from "../../auth/AuthContext";
-import { useSQLiteContext } from "expo-sqlite";
+import { Text, View } from "react-native"
 import HabitCard from "../../habits/components/HabitCard";
 import { useHabitContext } from "../../habits/HabitContext";
 import { useEffect } from "react";
 import { router } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import ViewOtherInfoButton from "./ViewOtherInfoButton";
 
 export default function TopHabitsContainer() {

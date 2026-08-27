@@ -1,5 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
-
 interface DateInputStyle {
     mainButtonClass: string;
     calendarIconColor: string;

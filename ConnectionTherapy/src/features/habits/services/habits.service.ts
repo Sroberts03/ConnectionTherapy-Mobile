@@ -10,6 +10,7 @@ import {
     getHabitIdFromInstanceIdDataAccess, 
     getHabitsDataAccess, 
     markHabitCompleteDataAccess, 
+    markHabitInactiveDataAccess, 
     markHabitIncompleteDataAccess, 
     updateHabitDataAccess, 
     userOwnsHabitDataAccess 
@@ -107,7 +108,6 @@ export async function updateHabit(
         req.repetition,
         req.endDate,
         req.description,
-        req.userId,
         req.db
     );
     await deleteHabitInstancesDataAccess(habitId, getToday(), req.db);
@@ -161,5 +161,6 @@ export async function deleteHabit(
     } else if (type === "future") {
         const habitId = await getHabitIdFromInstanceIdDataAccess(habitInstanceId, db);
         await deleteHabitInstancesDataAccess(habitId, userCurrentDate, db);
+        await markHabitInactiveDataAccess(habitId, db);
     }
 }

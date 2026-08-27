@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { formatRepeatStringToEnglish } from "../../utils/FormatRepeatStringToEnglish";
 import { DAY_OF_MONTH_INTERVAL_OPTIONS, DAYS_OF_WEEK, FREQ_OPTIONS, useCustomRepeat } from "../../utils/useCustomRepeat";

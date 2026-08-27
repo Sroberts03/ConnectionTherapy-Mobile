@@ -1,5 +1,5 @@
 import { SQLiteDatabase } from "expo-sqlite";
-import { Habit, HabitCategory } from "../../habits/habits.types";
+import { Habit } from "../../habits/habits.types";
 
 export async function getPillarHabitsDataAccess(
     pillarName: string,

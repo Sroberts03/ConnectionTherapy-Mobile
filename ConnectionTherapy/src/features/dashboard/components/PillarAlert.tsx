@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { Text, Touchable, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { ConnectionPillar } from "../dashboard.types";
 import AlertText from "./AlertText";
 

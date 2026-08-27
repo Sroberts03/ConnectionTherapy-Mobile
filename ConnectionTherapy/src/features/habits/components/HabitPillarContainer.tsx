@@ -69,13 +69,12 @@ export default function HabitPillarContainer({category, date}: HabitPillarContai
                 onClose={() => setEditHabitId(undefined)}
                 category={category}
                 date={date}
-                habitId={editHabitId}
             />
             <ConfirmDeleteHabit
                 isVisible={deleteHabitId != undefined}
                 onClose={() => setDeleteHabitId(undefined)}
                 onConfirm={() => setDeleteHabitId(undefined)}
-                habitId={deleteHabitId}
+                habitId={deleteHabitId!}
                 date={date}
             />
         </View>

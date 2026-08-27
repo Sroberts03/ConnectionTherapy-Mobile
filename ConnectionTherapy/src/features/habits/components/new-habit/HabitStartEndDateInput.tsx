@@ -65,7 +65,7 @@ export default function HabitStartEndDateInput({
                 showRepeatDropdown={showRepeatDropdown}
                 repetition={repetition}
                 setRepetition={setRepetition}
-                customRepetition={customRepetition}
+                customRepetition={customRepetition ? customRepetition : ""}
                 setCustomRepetition={setCustomRepetition}
                 endDate={endDate}
                 setEndDate={setEndDate}

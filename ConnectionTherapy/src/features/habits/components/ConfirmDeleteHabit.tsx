@@ -1,5 +1,4 @@
 import { Modal, Text, View, TouchableOpacity } from "react-native";
-import { Habit } from "../habits.types";
 import { Ionicons } from "@expo/vector-icons";
 import { deleteHabit } from "../services/habits.service";
 import { useSQLiteContext } from "expo-sqlite";

@@ -1,5 +1,5 @@
 import { formatRepeatStringToEnglish } from "../../../../src/features/habits/utils/FormatRepeatStringToEnglish";
-import { DAY_OF_MONTH_INTERVAL_OPTIONS, DAYS_OF_WEEK, FREQ_OPTIONS, useCustomRepeat } from "../../../../src/features/habits/utils/useCustomRepeat";
+import { DAY_OF_MONTH_INTERVAL_OPTIONS, DAYS_OF_WEEK } from "../../../../src/features/habits/utils/useCustomRepeat";
 
 describe("formatRepeatStringToEnglish", () => {
     it("formats a daily recurrence string with an interval", () => {

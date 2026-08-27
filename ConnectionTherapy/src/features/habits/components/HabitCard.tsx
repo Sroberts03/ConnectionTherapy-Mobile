@@ -1,5 +1,5 @@
 import { Habit } from "../habits.types"
-import { View, Text, TouchableOpacity, Alert } from "react-native"
+import { View, Text, TouchableOpacity } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { getPillarTheme } from "../utils/getPillarTheme";

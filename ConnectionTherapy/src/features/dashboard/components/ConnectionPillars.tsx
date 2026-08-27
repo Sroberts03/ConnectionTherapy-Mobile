@@ -1,8 +1,7 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 import { ConnectionPillar } from "../dashboard.types";
 import { HabitCategory } from "../../habits/habits.types";
 import PillarContainer from "./PillarContainer";
-import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import ViewOtherInfoButton from "./ViewOtherInfoButton";
 

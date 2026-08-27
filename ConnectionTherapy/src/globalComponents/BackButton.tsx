@@ -1,9 +1,9 @@
 import { Feather } from "@expo/vector-icons";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 
 interface Props {
-    className?: string;
+    className: string;
 }
 export default function BackButton({ className }: Props) {
     return (

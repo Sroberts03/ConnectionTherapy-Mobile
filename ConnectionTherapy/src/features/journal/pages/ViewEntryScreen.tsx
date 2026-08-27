@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import ScreenHeader from "../../../globalComponents/ScreenHeader";
 import BackButton from "../../../globalComponents/BackButton";
 import { SafeAreaView } from "react-native-safe-area-context";

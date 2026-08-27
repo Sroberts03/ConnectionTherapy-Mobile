@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, Platform } from "react-native"
+import { Text, View, TouchableOpacity } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { useState } from "react"
 import DateTimePicker from '@react-native-community/datetimepicker'
@@ -22,7 +22,7 @@ export default function DatePicker({date, setDate}: DatePickerProps) {
     const isTodayFlag: boolean = isToday(today, date);
     const [showPicker, setShowPicker] = useState(false);
 
-    const handleValueChange = (event: any, selectedDate: Date) => {
+    const handleValueChange = (_event: any, selectedDate: Date) => {
         setDate(selectedDate);
         setShowPicker(false);
     };

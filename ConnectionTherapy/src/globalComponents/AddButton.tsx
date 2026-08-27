@@ -1,9 +1,9 @@
 import { Feather } from "@expo/vector-icons";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 
 interface AddButtonProps {
     onPress: () => void;
-    containerClassname?: string;
+    containerClassname: string;
     isVisible?: boolean;
 }
 
