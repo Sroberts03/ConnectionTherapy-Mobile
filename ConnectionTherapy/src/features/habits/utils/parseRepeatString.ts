@@ -11,6 +11,6 @@ export function parseRepeatString(repeatString: string): string {
         ["FREQ=MONTHLY;INTERVAL=6", "Every 6 months"],
         ["FREQ=YEARLY", "Yearly"]
     ])
-
+    
     return repeatOptions.get(repeatString) || "custom";
 }

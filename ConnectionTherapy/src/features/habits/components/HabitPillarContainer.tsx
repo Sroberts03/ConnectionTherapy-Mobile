@@ -20,6 +20,29 @@ export default function HabitPillarContainer({category, date}: HabitPillarContai
     const [editHabitId, setEditHabitId] = useState<number | undefined>(undefined);
     const [deleteHabitId, setDeleteHabitId] = useState<number | undefined>(undefined);
 
+    const getNewHabitComponent = () => {
+        if (editHabitId != undefined) {
+            return (
+                <NewHabit
+                    isVisible={editHabitId != undefined}
+                    onClose={() => setEditHabitId(undefined)}
+                    category={category}
+                    date={date}
+                    habitId={editHabitId}
+                />
+            )
+        } else {
+            return (
+                <NewHabit
+                    isVisible={newHabitVisible}
+                    onClose={() => setNewHabitVisible(false)}
+                    category={category}
+                    date={date}
+                />
+            )
+        }
+    }
+
     return (
         <View className="bg-white rounded-2xl p-5 shadow-sm border border-neutral-100 mb-4 w-11/12 self-center">
             <View className="flex-row items-center mb-4">
@@ -58,18 +81,10 @@ export default function HabitPillarContainer({category, date}: HabitPillarContai
                 <Text className="text-neutral-400 font-medium ml-1">Add habit</Text>
             </TouchableOpacity>
 
-            <NewHabit 
-                isVisible={newHabitVisible}
-                onClose={() => setNewHabitVisible(false)}
-                category={category}
-                date={date}
-            />
-            <NewHabit
-                isVisible={editHabitId != undefined}
-                onClose={() => setEditHabitId(undefined)}
-                category={category}
-                date={date}
-            />
+            <View>
+                {getNewHabitComponent()}
+            </View>
+            
             <ConfirmDeleteHabit
                 isVisible={deleteHabitId != undefined}
                 onClose={() => setDeleteHabitId(undefined)}

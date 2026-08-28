@@ -4,7 +4,7 @@ import RemoveEndDateButton from "./RemoveEndDateButton";
 import DateInput from "../../../../globalComponents/DateInput";
 import CreationErrorMessage from "./CreationError";
 import { getRepeatLabel } from "../../utils/getRepeatLabel";
-import Ionicons from "@expo/vector-icons/build/Ionicons";
+import { Ionicons } from "@expo/vector-icons";
 import RepeatDropdown from "./RepeatDropdown";
 
 interface RepeatInfoProps {
@@ -37,6 +37,24 @@ export default function RepeatInfo({
     creationError
 }: RepeatInfoProps) {
     if (!isVisible) return null;
+    
+    const getCustomRepeatBuilder = () => {
+        if (!customRepetition) {
+            return (
+                <CustomRepeatBuilder 
+                    isVisible={repetition === 'custom'}
+                    setCustomRepetition={setCustomRepetition} 
+                />
+            )
+        }
+        return (
+            <CustomRepeatBuilder 
+                isVisible={repetition === 'custom'}
+                setCustomRepetition={setCustomRepetition} 
+                customRepetition={customRepetition}
+            />
+        )
+    }
 
     return (
         <View>
@@ -61,11 +79,9 @@ export default function RepeatInfo({
                     setRepetition={setRepetition}
                 />
 
-                <CustomRepeatBuilder 
-                    isVisible={repetition === "custom"} 
-                    setCustomRepetition={setCustomRepetition} 
-                    customRepetition={customRepetition ? customRepetition : ""} 
-                /> 
+                <View>
+                    {getCustomRepeatBuilder()}
+                </View>
             
             </View>
             
