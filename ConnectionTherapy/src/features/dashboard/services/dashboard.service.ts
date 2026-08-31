@@ -1,5 +1,4 @@
 import { Session } from "@supabase/supabase-js";
-import HTTPRequest from "../../../utils/baseHTTPRequest";
 import { ConnectionPillar } from "../dashboard.types";
 import { SQLiteDatabase } from "expo-sqlite";
 import { HabitCategory } from "../../habits/habits.types";
@@ -7,10 +6,14 @@ import { GetPillarsRes } from "../dashboard.dto";
 import { getStartOfWeek, getToday } from "../../../utils/dates";
 import { getPillarHabitsDataAccess } from "./dashboard.dataAccess";
 import { getPillarPercent } from "../utils/getPillarPercent";
+import HTTPRequest from "@utils/HTTPRequest";
 
 export async function getDashboardPillars(session: Session): 
-    Promise<Pick<ConnectionPillar, 'id' | 'name' | 'lightColor' | 'darkColor' | 'icon'>[]> {
-    const response: GetPillarsRes = await HTTPRequest("GET", "pillar/all", true, session)
+    Promise<Pick<ConnectionPillar, 'id' | 'name' | 'lightColor' | 'darkColor' | 'icon'>[]> 
+{
+    const httpRequest = new HTTPRequest();
+    const response: GetPillarsRes = await httpRequest.SetEndpoint("pillar/all").NeedsAuth(session).Get().Send();
+    
     const pillars = response.pillars.map((pillar) => ({
         id: pillar.id,
         name: pillar.name,
