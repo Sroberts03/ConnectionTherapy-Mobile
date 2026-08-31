@@ -1,17 +1,20 @@
+import { HabitCategory } from "@src/features/habits/habits.types";
 import { sql } from "drizzle-orm";
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
+
+//after editing run npx drizzle-kit generate
 
 export const habits = sqliteTable("habits", {
     id: int("id").primaryKey({ autoIncrement: true }),
     user_id: text("user_id").notNull(),
     name: text("name").notNull(),
     description: text("description"),
-    duration: text("duration"),
-    category: text("category").notNull(),
+    duration: text("duration").notNull(),
+    category: text("category").$type<HabitCategory>().notNull(),
     frequency: text("frequency").notNull(),
     start_date: text("start_date").notNull(),
     end_date: text("end_date"),
-    is_active: int("is_active").default(1).notNull(),
+    is_active: int("is_active", { mode: "boolean" }).default(true).notNull(),
     created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),
     updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`)
 });
@@ -19,7 +22,7 @@ export const habits = sqliteTable("habits", {
 export const habit_entries = sqliteTable("habit_entries", {
     id: int("id").primaryKey({ autoIncrement: true }),
     habit_id: int("habit_id").notNull().references(() => habits.id, { onDelete: "cascade" }),
-    is_completed: int("is_completed").default(0).notNull(),
+    is_completed: int("is_completed", { mode: "boolean" }).default(false).notNull(),
     complete_by: text("complete_by").notNull(),
     completed_at: text("completed_at"),
     created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),

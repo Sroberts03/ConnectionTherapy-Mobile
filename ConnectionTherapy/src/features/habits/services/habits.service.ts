@@ -1,4 +1,3 @@
-import { SQLiteDatabase } from "expo-sqlite";
 import { Habit, HabitCategory, HabitDetails } from "../habits.types";
 
 import { 
@@ -23,11 +22,10 @@ import { newHabitInput } from "../habit.dto";
 export async function getHabits(
     date: Date,
     userId: string,
-    db: SQLiteDatabase,
     maxHabits: "all" | number = "all"
 ): Promise<Habit[]> {
     const formattedDate = formatDate(date);
-    return getHabitsDataAccess(formattedDate, userId, db, maxHabits);
+    return getHabitsDataAccess(formattedDate, userId, maxHabits);
 }
 
 function validateHabitInput(
@@ -45,10 +43,9 @@ function validateHabitInput(
 async function assertUserOwnsHabit(
     habitInstanceId: number,
     userId: string,
-    db: SQLiteDatabase,
     message: string = "You can not update this habit",
 ): Promise<void> {
-    const isAllowedToUpdate = await userOwnsHabitDataAccess(habitInstanceId, userId, db);
+    const isAllowedToUpdate = await userOwnsHabitDataAccess(habitInstanceId, userId);
     if (!isAllowedToUpdate) {
         throw new Error(message);
     }
@@ -57,13 +54,12 @@ async function assertUserOwnsHabit(
 export async function toggleComplete(
     habitId: number,
     isComplete: boolean,
-    db: SQLiteDatabase
 ): Promise<void> {
     const formattedDate = getToday();
     if (isComplete) {
-        await markHabitCompleteDataAccess(habitId, formattedDate, db);
+        await markHabitCompleteDataAccess(habitId, formattedDate);
     } else {
-        await markHabitIncompleteDataAccess(habitId, formattedDate, db);
+        await markHabitIncompleteDataAccess(habitId, formattedDate);
     }
 }
 
@@ -81,10 +77,9 @@ export async function createNewHabit (
         req.endDate,
         req.description,
         req.userId,
-        req.db
     );
 
-    return createInstances(req.userCurrentDate, occurenceDates, habitId, req.db);
+    return createInstances(req.userCurrentDate, occurenceDates, habitId);
 }
 
 export async function updateHabit(
@@ -95,9 +90,9 @@ export async function updateHabit(
     }
     const occurenceDates = validateHabitInput(req.name, req.duration, req.category, req.startDate, req.endDate, req.repetition);
 
-    await assertUserOwnsHabit(req.habitInstanceId, req.userId, req.db);
+    await assertUserOwnsHabit(req.habitInstanceId, req.userId);
 
-    const habitId = await getHabitIdFromInstanceIdDataAccess(req.habitInstanceId, req.db);
+    const habitId = await getHabitIdFromInstanceIdDataAccess(req.habitInstanceId);
 
     await updateHabitDataAccess(
         habitId,
@@ -108,23 +103,21 @@ export async function updateHabit(
         req.repetition,
         req.endDate,
         req.description,
-        req.db
     );
-    await deleteHabitInstancesDataAccess(habitId, getToday(), req.db);
+    await deleteHabitInstancesDataAccess(habitId, getToday());
 
-    return createInstances(req.userCurrentDate, occurenceDates, habitId, req.db);
+    return createInstances(req.userCurrentDate, occurenceDates, habitId);
 }
 
 export async function getHabitDetails(
     habitId: number,
     userId: string,
-    db: SQLiteDatabase
 ): Promise<HabitDetails> {
-    const userCanGetHabit = await userOwnsHabitDataAccess(habitId, userId, db);
+    const userCanGetHabit = await userOwnsHabitDataAccess(habitId, userId);
     if (!userCanGetHabit) {
         throw new Error("User does not own this habit");
     }
-    const habit = await getHabitDetailsDataAccess(habitId, db);
+    const habit = await getHabitDetailsDataAccess(habitId);
     if (!habit) {
         throw new Error("Habit not found");
     }
@@ -135,11 +128,10 @@ async function createInstances(
     userCurrentDate: string,
     occurenceDates: Date[], 
     habitId: number, 
-    db: SQLiteDatabase
 ): Promise<Habit | null> {
     let returnInstance: Habit | null = null;
     for (const date of occurenceDates) {
-        const instance = await createHabitInstanceDataAccess(formatDate(date), habitId, db);
+        const instance = await createHabitInstanceDataAccess(formatDate(date), habitId);
         if (formatDate(date) === userCurrentDate) {
             returnInstance = instance;
         }
@@ -152,15 +144,14 @@ export async function deleteHabit(
     habitInstanceId: number,
     userId: string,
     userCurrentDate: string,
-    db: SQLiteDatabase
 ) {
-    await assertUserOwnsHabit(habitInstanceId, userId, db, "You can not delete this habit");
+    await assertUserOwnsHabit(habitInstanceId, userId, "You can not delete this habit");
 
     if (type === "single") {
-        await deleteHabitInstanceDataAccess(habitInstanceId, db);
+        await deleteHabitInstanceDataAccess(habitInstanceId);
     } else if (type === "future") {
-        const habitId = await getHabitIdFromInstanceIdDataAccess(habitInstanceId, db);
-        await deleteHabitInstancesDataAccess(habitId, userCurrentDate, db);
-        await markHabitInactiveDataAccess(habitId, db);
+        const habitId = await getHabitIdFromInstanceIdDataAccess(habitInstanceId);
+        await deleteHabitInstancesDataAccess(habitId, userCurrentDate);
+        await markHabitInactiveDataAccess(habitId);
     }
 }

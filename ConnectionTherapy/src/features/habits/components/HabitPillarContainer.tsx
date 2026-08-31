@@ -21,10 +21,10 @@ export default function HabitPillarContainer({category, date}: HabitPillarContai
     const [deleteHabitId, setDeleteHabitId] = useState<number | undefined>(undefined);
 
     const getNewHabitComponent = () => {
-        if (editHabitId != undefined) {
+        if (editHabitId !== undefined) {
             return (
                 <NewHabit
-                    isVisible={editHabitId != undefined}
+                    isVisible={editHabitId !== undefined}
                     onClose={() => setEditHabitId(undefined)}
                     category={category}
                     date={date}
@@ -86,7 +86,7 @@ export default function HabitPillarContainer({category, date}: HabitPillarContai
             </View>
             
             <ConfirmDeleteHabit
-                isVisible={deleteHabitId != undefined}
+                isVisible={deleteHabitId !== undefined}
                 onClose={() => setDeleteHabitId(undefined)}
                 onConfirm={() => setDeleteHabitId(undefined)}
                 habitId={deleteHabitId!}

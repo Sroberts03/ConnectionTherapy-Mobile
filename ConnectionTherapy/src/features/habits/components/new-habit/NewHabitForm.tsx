@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useSQLiteContext } from "expo-sqlite";
 import { Habit, HabitCategory, HabitDetails } from "../../habits.types";
 import { createNewHabit, getHabitDetails, updateHabit } from "../../services/habits.service";
 import { CreationError } from "../../errors/CreationError";
@@ -38,20 +37,19 @@ function todayLocalDateStr(): string {
 }
 
 export function useHabitForm(date: Date, category: HabitCategory | undefined, habitId: number | undefined, onClose: () => void) {
-    const db = useSQLiteContext();
     const { currentHabits, setCurrentHabits, reloadTopHabits, setHabitError } = useHabitContext();
     const { reloadPillarPercentages } = usePillarContext();
     const { user } = useAuth();
     const localDateStr = todayLocalDateStr();
 
     const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
+    const [description, setDescription] = useState<string | null>(null);
     const [duration, setDuration] = useState("");
     const [currentCategory, setCurrentCategory] = useState<HabitCategory>(category || HabitCategory.PHYSICAL);
     const [repetition, setRepetition] = useState("None");
     const [customRepetition, setCustomRepetition] = useState("");
     const [startDate, setStartDate] = useState(localDateStr);
-    const [endDate, setEndDate] = useState("");
+    const [endDate, setEndDate] = useState<string | null>(null);
     const [creationError, setCreationError] = useState<CreationError | null>(null);
 
     const reset = () => {
@@ -87,7 +85,7 @@ export function useHabitForm(date: Date, category: HabitCategory | undefined, ha
 
     const loadHabitIntoForm = async (id: number) => {
         const userId = userIdExists();
-        const habit: HabitDetails = await getHabitDetails(id, userId, db);
+        const habit: HabitDetails = await getHabitDetails(id, userId);
         const isCustom = parseRepeatString(habit.repetition) === 'custom';
 
         setName(habit.name);
@@ -114,7 +112,6 @@ export function useHabitForm(date: Date, category: HabitCategory | undefined, ha
         endDate,
         description,
         userId: userIdExists(),
-        db,
     });
 
     const create = async () => {

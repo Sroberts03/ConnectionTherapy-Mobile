@@ -1,7 +1,6 @@
 import { Modal, Text, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { deleteHabit } from "../services/habits.service";
-import { useSQLiteContext } from "expo-sqlite";
 import { formatDate } from "../../../utils/dates";
 import { useAuth } from "../../auth/AuthContext";
 import { useHabitContext } from "../HabitContext";
@@ -16,7 +15,6 @@ interface ConfirmDeleteHabitProps {
 }
 
 export default function ConfirmDeleteHabit({ isVisible, onClose, onConfirm, habitId, date }: ConfirmDeleteHabitProps) {
-    const db = useSQLiteContext();
     const { currentHabits, setCurrentHabits, reloadTopHabits, setHabitError } = useHabitContext();
     const { reloadPillarPercentages } = usePillarContext();
     const { user } = useAuth();
@@ -28,7 +26,7 @@ export default function ConfirmDeleteHabit({ isVisible, onClose, onConfirm, habi
     const handleDelete = async (type: 'future' | 'single') => {
         if (!user) return;
         try {
-            await deleteHabit(type, habitId, user.id, formatDate(date), db);
+            await deleteHabit(type, habitId, user.id, formatDate(date));
             const updatedHabits = new Map(currentHabits);
             updatedHabits.delete(habitId);
             setCurrentHabits(updatedHabits);

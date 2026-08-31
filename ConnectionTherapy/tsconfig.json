@@ -5,6 +5,7 @@
     "types": ["jest"],
     "baseUrl": ".",
     "paths": {
+      "@src/*": ["src/*"],
       "@features/*": ["src/features/*"],
       "@components/*": ["src/components/*"],
       "@utils/*": ["src/utils/*"]

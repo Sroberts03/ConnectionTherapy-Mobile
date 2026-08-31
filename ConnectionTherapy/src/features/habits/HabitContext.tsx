@@ -1,6 +1,5 @@
 import { createContext, useContext, useState } from "react";
 import { Habit } from "./habits.types";
-import { useSQLiteContext } from "expo-sqlite";
 import { useAuth } from "../auth/AuthContext";
 import { getHabits, toggleComplete } from "./services/habits.service";
 import { usePillarContext } from "../dashboard/PillarContext";
@@ -30,7 +29,6 @@ export function useHabitContext() {
 }
 
 export function HabitProvider({ children }: { children: React.ReactNode }) {
-    const db = useSQLiteContext();
     const { user } = useAuth();
     const { reloadPillarPercentages } = usePillarContext()
     const [todaysTopHabits, setTodaysTopHabits] = useState(new Map<number, Habit>());
@@ -42,7 +40,7 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
         if (!user) return;
         setHabitLoading(true);
         try {
-            const habits: Habit[] = await getHabits(new Date(), user.id, db, 5);
+            const habits: Habit[] = await getHabits(new Date(), user.id, 5);
             setTodaysTopHabits(new Map(habits.map(habit => [habit.id, habit])));
         } catch (error) {
             setHabitError(error instanceof Error ? error.message : "Unknown error");
@@ -57,7 +55,7 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
         }
         setHabitLoading(true)
         try {
-            const habits: Habit[] = await getHabits(date, user.id, db)
+            const habits: Habit[] = await getHabits(date, user.id)
             setCurrentHabits(new Map(habits.map(habit => [habit.id, habit])))
         } catch (error) {
             setHabitError(error instanceof Error ? error.message : "Unknown error")
@@ -69,7 +67,7 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
     const toggleHabitComplete = async (id: number, isCompleted: boolean) => {
         const targetState = !isCompleted;
         try {
-            await toggleComplete(id, targetState, db);
+            await toggleComplete(id, targetState);
             const habit = currentHabits.get(id);
             habitExists(targetState, id, habit);
             const topHabit = todaysTopHabits.get(id);

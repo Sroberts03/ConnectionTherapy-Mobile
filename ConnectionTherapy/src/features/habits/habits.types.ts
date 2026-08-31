@@ -8,21 +8,21 @@ export enum HabitCategory {
 export interface Habit {
     id: number
     name: string
-    description: string
+    description: string | null
     duration: string
     category: HabitCategory
     isCompleted: boolean
-    completedOn: string
+    completedOn: string | null
 }
 
 export interface HabitDetails {
     id: number
     name: string
-    description: string
+    description: string | null
     duration: string
     category: HabitCategory
     repetition: string
     startDate: string
-    endDate: string
+    endDate: string | null
 }
     
