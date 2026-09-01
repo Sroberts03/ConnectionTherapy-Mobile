@@ -48,22 +48,18 @@ export default class HTTPRequest {
         return this;
     }
 
-    Post<httpBody extends object>(body: httpBody) {
+    Post<httpBody extends object>(body?: httpBody) {
         this.HttpReq.Method = 'POST';
-        this.HttpReq.Body = body;
-        if (this.HttpReq.Body === undefined) {
-            console.log("POST request requires a body");
-            throw new Error("An error occured while processing your request. Please try again later.");
+        if (body !== undefined) {        
+            this.HttpReq.Body = body;
         }
         return this;
     }
 
-    Put<httpBody extends object>(body: httpBody) {
+    Put<httpBody extends object>(body?: httpBody) {
         this.HttpReq.Method = 'PUT';
-        this.HttpReq.Body = body;
-        if (this.HttpReq.Body === undefined) {
-            console.log("PUT request requires a body");
-            throw new Error("An error occured while processing your request. Please try again later.");
+        if (body !== undefined) {
+            this.HttpReq.Body = body;
         }
         return this;
     }
@@ -73,7 +69,7 @@ export default class HTTPRequest {
         return this;
     }
 
-    async Send() {
+    async Send<T>(): Promise<T> {
         const requestOptions: RequestInit = this.createRequestOptions();
         const response = await fetch(`${this.backendOrigin}/${this.HttpReq.Endpoint}`, requestOptions);
         if (!response.ok) {

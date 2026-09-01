@@ -4,6 +4,6 @@ import HTTPRequest from "@utils/HTTPRequest";
 
 export async function getRandomQuote() : Promise<Quote> {
     const httpRequest = new HTTPRequest();
-    let res: GetRandomeQuoteRes = await httpRequest.SetEndpoint("quote/").Get().Send();
+    let res: GetRandomeQuoteRes = await httpRequest.SetEndpoint("quote/").Get().Send<GetRandomeQuoteRes>();
     return res.quote;
 }

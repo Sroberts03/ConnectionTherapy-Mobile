@@ -12,7 +12,7 @@ export async function getDashboardPillars(session: Session):
     Promise<Pick<ConnectionPillar, 'id' | 'name' | 'lightColor' | 'darkColor' | 'icon'>[]> 
 {
     const httpRequest = new HTTPRequest();
-    const response: GetPillarsRes = await httpRequest.SetEndpoint("pillar/all").NeedsAuth(session).Get().Send();
+    const response: GetPillarsRes = await httpRequest.SetEndpoint("pillar/all").NeedsAuth(session).Get().Send<GetPillarsRes>();
     
     const pillars = response.pillars.map((pillar) => ({
         id: pillar.id,
