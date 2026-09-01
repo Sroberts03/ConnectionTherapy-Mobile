@@ -34,7 +34,7 @@ export const journal_entries = sqliteTable("journal_entries", {
     user_id: text("user_id").notNull(),
     title: text("title").notNull(),
     text: text("text").notNull(),
-    date: text("date").default(sql`CURRENT_TIMESTAMP`),
+    date: text("date").default(sql`CURRENT_TIMESTAMP`).notNull(),
     created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),
     updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`)
 });

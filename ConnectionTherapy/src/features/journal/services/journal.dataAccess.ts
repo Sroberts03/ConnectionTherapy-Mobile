@@ -1,58 +1,93 @@
-import { SQLiteDatabase } from "expo-sqlite";
 import { JournalEntry } from "../journal.type";
 import { NewJournalEntryDTO } from "../journal.dto";
+import { eq, and, like, desc, sql } from "drizzle-orm";
+import { journal_entries } from "@src/db/schema";
+import { db } from "@src/db/index";
 
-export async function getJournalEntriesDataAccess(userId: string, queryParam: string, db: SQLiteDatabase): Promise<JournalEntry[]> {
-    const result = await db.getAllAsync(`
-        SELECT 
-            id, title, text, date
-        FROM journal_entries
-        WHERE user_id = ? AND title LIKE ?
-        ORDER BY created_at DESC;`, [userId, `%${queryParam}%`]); 
-    return result as JournalEntry[];
+export async function getJournalEntriesDataAccess(
+    userId: string, 
+    queryParam: string
+): Promise<JournalEntry[]> {
+    const result = await db
+        .select({
+            id: journal_entries.id,
+            title: journal_entries.title,
+            text: journal_entries.text,
+            date: journal_entries.date
+        })
+        .from(journal_entries)
+        .where(
+            and(
+                eq(journal_entries.user_id, userId),
+                like(journal_entries.title, `%${queryParam}%`)
+            )
+        )
+        .orderBy(desc(journal_entries.created_at));
+
+    return result;
 }
 
-export async function createJournalEntryDataAccess(entry: NewJournalEntryDTO, userId: string, db: SQLiteDatabase): Promise<JournalEntry> {
-    await db.runAsync(`
-        INSERT INTO journal_entries (user_id, title, text, date)
-        VALUES (?, ?, ?, ?)
-        RETURNING id, title, text, date;`, [userId, entry.title, entry.text, entry.date]);
-    const newEntry = await getLatestJournalEntryDataAccess(userId, db);
-    return newEntry;
+export async function createJournalEntryDataAccess(
+    entry: NewJournalEntryDTO, 
+    userId: string
+): Promise<JournalEntry> {
+    const result = await db.insert(journal_entries)
+        .values({
+            user_id: userId,
+            title: entry.title,
+            text: entry.text,
+            date: entry.date
+        })
+        .returning({
+            id: journal_entries.id,
+            title: journal_entries.title,
+            text: journal_entries.text,
+            date: journal_entries.date
+        });
+
+    return result[0]!;
 }
 
-export async function updateJournalEntryDataAccess(entry: NewJournalEntryDTO, userId: string, db: SQLiteDatabase): Promise<JournalEntry> {
+export async function updateJournalEntryDataAccess(
+    entry: NewJournalEntryDTO, 
+    userId: string
+): Promise<JournalEntry> {
     if (!entry.id) {
         throw new Error("Entry ID is required for updating a journal entry.");
     }
-    await db.runAsync(`
-        UPDATE journal_entries
-        SET title = ?, text = ?, date = ?, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ? AND user_id = ?
-        `, [entry.title, entry.text, entry.date, entry.id, userId]);
-    return await getJournalEntryByIdDataAccess(entry.id!, userId, db);
+
+    const result = await db.update(journal_entries)
+        .set({
+            title: entry.title,
+            text: entry.text,
+            date: entry.date,
+            updated_at: sql`CURRENT_TIMESTAMP`
+        })
+        .where(
+            and(
+                eq(journal_entries.id, entry.id),
+                eq(journal_entries.user_id, userId)
+            )
+        )
+        .returning({
+            id: journal_entries.id,
+            title: journal_entries.title,
+            text: journal_entries.text,
+            date: journal_entries.date
+        });
+
+    return result[0]!;
 }
 
-async function getJournalEntryByIdDataAccess(entryId: number, userId: string, db: SQLiteDatabase): Promise<JournalEntry> {
-    const result = await db.getAllAsync(`
-        SELECT id, title, text, date
-        FROM journal_entries
-        WHERE id = ? AND user_id = ?;`, [entryId, userId]);
-    return result[0] as JournalEntry;
-}
-
-async function getLatestJournalEntryDataAccess(userId: string, db: SQLiteDatabase): Promise<JournalEntry> {
-    const result = await db.getAllAsync(`
-        SELECT id, title, text, date
-        FROM journal_entries
-        WHERE user_id = ?
-        ORDER BY id DESC
-        LIMIT 1;`, [userId]);
-    return result[0] as JournalEntry;
-}
-
-export async function deleteJournalEntryDataAccess(entryId: number, userId: string, db: SQLiteDatabase): Promise<void> {
-    await db.runAsync(`
-        DELETE FROM journal_entries
-        WHERE id = ? AND user_id = ?;`, [entryId, userId]);
+export async function deleteJournalEntryDataAccess(
+    entryId: number, 
+    userId: string
+): Promise<void> {
+    await db.delete(journal_entries)
+        .where(
+            and(
+                eq(journal_entries.id, entryId),
+                eq(journal_entries.user_id, userId)
+            )
+        );
 }

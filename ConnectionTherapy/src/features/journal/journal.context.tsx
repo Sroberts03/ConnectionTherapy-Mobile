@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { JournalEntry } from "./journal.type";
-import { useSQLiteContext } from "expo-sqlite";
 import { useAuth } from "../auth/AuthContext";
 import { deleteJournalEntryService, getJournalEntries, saveJournalEntryService } from "./services/journal.service";
 import { NewJournalEntryDTO } from "./journal.dto";
@@ -30,7 +29,6 @@ export function useJournalContext() {
 }
 
 export function JournalProvider({ children }: { children: React.ReactNode }) {
-    const db = useSQLiteContext();
     const { user } = useAuth();
     const [journalEntries, setJournalEntries] = useState<Map<number, JournalEntry>>(new Map());
     const [queryParam, setQueryParam] = useState<string>("");
@@ -44,7 +42,7 @@ export function JournalProvider({ children }: { children: React.ReactNode }) {
     const fetchJournalEntries = async () => {
         if (!user) return;
         try {
-            const entries: Map<number, JournalEntry> = await getJournalEntries(user.id, queryParam, db);
+            const entries: Map<number, JournalEntry> = await getJournalEntries(user.id, queryParam);
             setJournalEntries(entries);
         } catch (err) {
             setError(err instanceof Error ? err.message : "An unknown error occurred");
@@ -57,7 +55,7 @@ export function JournalProvider({ children }: { children: React.ReactNode }) {
         if (!user) return;
         try {
             let journalEntry: JournalEntry;
-            journalEntry = await saveJournalEntryService(entry, user.id, db);
+            journalEntry = await saveJournalEntryService(entry, user.id);
             const organizedJournalEntries: Map<number, JournalEntry> = organizeEntries(journalEntry)
             setJournalEntries(organizedJournalEntries);
         } catch (err) {
@@ -83,7 +81,7 @@ export function JournalProvider({ children }: { children: React.ReactNode }) {
     const deleteEntry = async (entryId: number) => {
         if (!user) return;
         try {
-            await deleteJournalEntryService(entryId, user.id, db);
+            await deleteJournalEntryService(entryId, user.id);
             const updatedEntries = new Map(journalEntries);
             updatedEntries.delete(entryId);
             setJournalEntries(updatedEntries);

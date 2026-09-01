@@ -1,25 +1,30 @@
-import { SQLiteDatabase } from "expo-sqlite";
 import { Habit } from "../../habits/habits.types";
+import { db } from "@src/db/index";
+import { eq, and, between, sql } from "drizzle-orm";
+import { habits, habit_entries } from "@src/db/schema";
 
 export async function getPillarHabitsDataAccess(
     pillarName: string,
     startOfWeek: string,
     today: string,
-    db: SQLiteDatabase
 ): Promise<Habit[]> {
-    const habits = await db.getAllAsync<Habit>(`
-            SELECT
-                he.id,
-                h.name,
-                h.description,
-                h.duration,
-                h.category,
-                he.is_completed as isCompleted,
-                he.completed_at as completedOn
-            FROM habit_entries he
-            JOIN habits h on he.habit_id = h.id
-            WHERE he.complete_by BETWEEN ? AND ?
-            and LOWER(h.category) = LOWER(?)`,
-            [startOfWeek, today, pillarName]);    
-    return habits;
+    const fetchedHabits = await db
+    .select({
+        id: habit_entries.id,
+        name: habits.name,
+        description: habits.description,
+        duration: habits.duration,
+        category: habits.category,
+        isCompleted: habit_entries.is_completed,
+        completedOn: habit_entries.completed_at
+    })
+    .from(habit_entries)
+    .innerJoin(habits, eq(habit_entries.habit_id, habits.id))
+    .where(
+        and(
+            between(habit_entries.complete_by, startOfWeek, today),
+            sql`LOWER(${habits.category}) = LOWER(${pillarName})`
+        )
+    );
+    return fetchedHabits;
 }

@@ -15,6 +15,13 @@
       "when": 1788218863758,
       "tag": "0001_dazzling_colleen_wing",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1788222069997,
+      "tag": "0002_same_rictor",
+      "breakpoints": true
     }
   ]
 }
