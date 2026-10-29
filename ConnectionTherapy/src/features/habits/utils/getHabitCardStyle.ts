@@ -41,3 +41,9 @@ export function getHabitCardStyle(isCompleted: boolean, color: string): HabitCar
         checkIconColor: color,
     };
 }
+
+// A description that only repeats the name adds nothing to the card
+export function shouldShowDescription(name: string, description: string | null): boolean {
+    if (!description) return false;
+    return description.trim().toLowerCase() !== name.trim().toLowerCase();
+}

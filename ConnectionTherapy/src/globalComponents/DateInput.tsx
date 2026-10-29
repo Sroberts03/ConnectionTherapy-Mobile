@@ -2,6 +2,7 @@ import { View, TouchableOpacity, Text } from "react-native"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { Ionicons } from "@expo/vector-icons"
 import { getDateInputStyle } from "../utils/getDateInputstyle"
+import { formatDate, parseDateString } from "../utils/dates"
 
 interface DateInputProps {
     selectedDate: string | null
@@ -20,18 +21,10 @@ export default function DateInput({ selectedDate, setSelectedDate, showDatePicke
         chevron 
     } = getDateInputStyle(showDatePicker);
 
-    let safeDate = new Date();
-    if (selectedDate) {
-        const parts = selectedDate.split('-');
-        safeDate = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
-    }
-
-    const formattedDate = safeDate.toLocaleDateString("en-US", { 
-        weekday: "short", 
-        month: "short", 
-        day: "numeric", 
-        year: "numeric" 
-    });
+    const safeDate = parseDateString(selectedDate);
+    const label = selectedDate
+        ? safeDate.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" })
+        : placeholder;
 
     return (
         <View>
@@ -43,7 +36,7 @@ export default function DateInput({ selectedDate, setSelectedDate, showDatePicke
                 <View className="flex-row items-center">
                     <Ionicons name="calendar-outline" size={20} color={calendarIconColor} />
                     <Text className={selectedDate ? dateTextClass : "text-base font-medium ml-3 text-neutral-500"}>
-                        {selectedDate ? formattedDate : placeholder}
+                        {label}
                     </Text>
                 </View>
                 <Ionicons name={chevron} size={20} color={chevronIconColor} />
@@ -55,12 +48,7 @@ export default function DateInput({ selectedDate, setSelectedDate, showDatePicke
                         value={safeDate}
                         accentColor="#4f6650"
                         onValueChange={(_event, date) => { 
-                            if (date) {
-                                const y = date.getFullYear();
-                                const m = String(date.getMonth() + 1).padStart(2, '0');
-                                const d = String(date.getDate()).padStart(2, '0');
-                                setSelectedDate(`${y}-${m}-${d}`);
-                            }
+                            if (date) setSelectedDate(formatDate(date));
                             setShowDatePicker(false);
                         }}
                     />  

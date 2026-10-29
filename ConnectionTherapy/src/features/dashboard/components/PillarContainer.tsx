@@ -1,10 +1,8 @@
 import { ConnectionPillar } from "../dashboard.types";
 import { Text, TouchableOpacity, View } from "react-native";
-import { useRouter } from "expo-router";
 import Svg, { Circle } from 'react-native-svg';
-import * as LucideIcons from 'lucide-react-native';
 import PillarAlert from "./PillarAlert";
-import { getPillarStatus } from "../utils/getPillarStatus";
+import { usePillarDisplay } from "../utils/usePillarDisplay";
 
 interface PillarContainerProps {
     pillar: ConnectionPillar
@@ -20,18 +18,14 @@ export default function PillarContainer({ pillar }: PillarContainerProps) {
     
     const cx = size / 2;
     const cy = size / 2;
-    const iconName = pillar.icon.charAt(0).toUpperCase() + pillar.icon.slice(1);
-    const IconComponent = (LucideIcons as any)[iconName] || LucideIcons.Circle;
-    const router = useRouter();
-    const { hasScore, label } = getPillarStatus(pillar);
-    const statusSpoken = hasScore ? `${percentage}% this week` : label.toLowerCase();
+    const { IconComponent, name, hasScore, label, detail, openHabits } = usePillarDisplay(pillar);
 
     return (
         <TouchableOpacity 
             activeOpacity={0.7}
-            onPress={() => router.push("/(tabs)/Habits")}
+            onPress={openHabits}
             accessibilityRole="button"
-            accessibilityLabel={`${pillar.name} pillar, ${statusSpoken}. View habits`}
+            accessibilityLabel={`${name} pillar this week. ${detail}. View habits`}
             className="bg-white rounded-xl border border-neutral-200 items-center justify-center w-[48%] h-[150px]"
             style={{
                 shadowColor: '#000',
@@ -52,7 +46,7 @@ export default function PillarContainer({ pillar }: PillarContainerProps) {
                         r={radius}
                         stroke="#e5e2dc"
                         strokeWidth={strokeWidth}
-                        {...(hasScore ? {} : { strokeDasharray: "3 6" })}
+                        strokeDasharray={hasScore ? "1 0" : "3 6"}
                         fill="none"
                     />
                     <Circle
@@ -74,18 +68,12 @@ export default function PillarContainer({ pillar }: PillarContainerProps) {
             </View>
 
             <Text className="text-neutral-700 font-semibold mt-4 text-[13px]">
-                {pillar.name.charAt(0).toUpperCase() + pillar.name.slice(1)}
+                {name}
             </Text>
             {/* Colour lives in the ring; the number stays calm. No number until there's a day to count */}
-            {hasScore ? (
-                <Text className="text-xl font-bold mt-1 text-neutral-900">
-                    {label}
-                </Text>
-            ) : (
-                <Text className="text-sm font-medium mt-2 text-neutral-500">
-                    {label}
-                </Text>
-            )}
+            <Text className={hasScore ? "text-xl font-bold mt-1 text-neutral-900" : "text-sm font-medium mt-2 text-neutral-500"}>
+                {label}
+            </Text>
         </TouchableOpacity>
     )
 }

@@ -1,14 +1,13 @@
 import { Session } from "@supabase/supabase-js";
 import { Platform } from "react-native";
 
-type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE" | "NOT_SET";
+type HTTPMethod = "GET" | "NOT_SET";
 
 type HttpRequestType = {
     Method: HTTPMethod;
     Endpoint: string;
     NeedsAuth: boolean;
     Session?: Session;
-    Body?: object;
 }
 
 export default class HTTPRequest {
@@ -32,6 +31,8 @@ export default class HTTPRequest {
         };
     }
 
+    // Called through the builder chain, which fallow can't follow
+    // fallow-ignore-next-line unused-class-member
     NeedsAuth(session: Session) {
         this.HttpReq.NeedsAuth = true;
         this.HttpReq.Session = session;
@@ -43,32 +44,15 @@ export default class HTTPRequest {
         return this;
     }
 
+    // Called through the builder chain, which fallow can't follow
+    // fallow-ignore-next-line unused-class-member
     Get() {
         this.HttpReq.Method = 'GET';
         return this;
     }
 
-    Post<httpBody extends object>(body?: httpBody) {
-        this.HttpReq.Method = 'POST';
-        if (body !== undefined) {        
-            this.HttpReq.Body = body;
-        }
-        return this;
-    }
-
-    Put<httpBody extends object>(body?: httpBody) {
-        this.HttpReq.Method = 'PUT';
-        if (body !== undefined) {
-            this.HttpReq.Body = body;
-        }
-        return this;
-    }
-
-    Delete() {
-        this.HttpReq.Method = 'DELETE';
-        return this;
-    }
-
+    // Called through the builder chain, which fallow can't follow
+    // fallow-ignore-next-line unused-class-member
     async Send<T>(): Promise<T> {
         const requestOptions: RequestInit = this.createRequestOptions();
         const response = await fetch(`${this.backendOrigin}/${this.HttpReq.Endpoint}`, requestOptions);
@@ -106,7 +90,6 @@ export default class HTTPRequest {
         return {
             method: this.HttpReq.Method,
             headers: headers,
-            ...(this.HttpReq.Body ? { body: JSON.stringify(this.HttpReq.Body) } : {}),
         };
     }
 }

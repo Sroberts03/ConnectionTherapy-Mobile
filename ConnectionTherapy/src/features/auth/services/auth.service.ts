@@ -25,7 +25,8 @@ export async function signUpWithEmail(email: string, password: string, fullName:
 }
 
 export async function oauthLogin(provider: OAuthProvider) {
-    console.log("authLogin not set up yet")
+    // Surfaces through AuthContext's error state instead of failing silently
+    throw new Error(`Signing in with ${provider} isn't available yet.`);
 }
 
 export async function signOut() {

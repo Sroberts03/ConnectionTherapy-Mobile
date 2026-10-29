@@ -33,7 +33,7 @@ function validateHabitInput(
     duration: string,
     category: HabitCategory,
     startDate: string,
-    endDate: string,
+    endDate: string | null,
     repetition: string,
 ): Date[] {
     creationValidation(name, duration, category, startDate, endDate);

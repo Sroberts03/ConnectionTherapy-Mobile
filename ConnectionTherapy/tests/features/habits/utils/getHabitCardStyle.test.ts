@@ -1,4 +1,4 @@
-import { getHabitCardStyle } from "../../../../src/features/habits/utils/getHabitCardStyle";
+import { getHabitCardStyle, shouldShowDescription } from "../../../../src/features/habits/utils/getHabitCardStyle";
 
 describe("getHabitCardStyle", () => {
     it("returns the correct style for a completed habit", () => {
@@ -31,5 +31,18 @@ describe("getHabitCardStyle", () => {
             checkIconName: "ellipse-outline",
             checkIconColor: "blue",
         });
+    });
+});
+describe("shouldShowDescription", () => {
+    it("hides a missing description", () => {
+        expect(shouldShowDescription("Walk", null)).toBe(false);
+    });
+
+    it("hides a description that just repeats the name", () => {
+        expect(shouldShowDescription("Walk", " walk ")).toBe(false);
+    });
+
+    it("shows a description that adds something", () => {
+        expect(shouldShowDescription("Walk", "Around the block after lunch")).toBe(true);
     });
 });

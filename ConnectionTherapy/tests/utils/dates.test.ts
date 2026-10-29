@@ -1,4 +1,4 @@
-import { formatJournalDate } from "@utils/dates";
+import { formatJournalDate, parseDateString } from "@utils/dates";
 
 describe("formatJournalDate", () => {
     it("formats a date string to 'Month Day, Year' format", () => {
@@ -17,5 +17,16 @@ describe("formatJournalDate", () => {
         const dateStr = "invalid-date";
         const formattedDate = formatJournalDate(dateStr);
         expect(formattedDate).toBe("Invalid Date");
+    });
+});
+
+describe("parseDateString", () => {
+    it("reads a YYYY-MM-DD string as that local date", () => {
+        const date = parseDateString("2026-10-29");
+        expect([date.getFullYear(), date.getMonth(), date.getDate()]).toEqual([2026, 9, 29]);
+    });
+
+    it("falls back to today when no date is chosen", () => {
+        expect(parseDateString(null).toDateString()).toBe(new Date().toDateString());
     });
 });

@@ -1,8 +1,6 @@
 import { ConnectionPillar } from "../dashboard.types";
 import { Text, TouchableOpacity, View } from "react-native";
-import { useRouter } from "expo-router";
-import * as LucideIcons from 'lucide-react-native';
-import { getPillarStatus } from "../utils/getPillarStatus";
+import { usePillarDisplay } from "../utils/usePillarDisplay";
 
 interface PillarProgressRowProps {
     pillar: ConnectionPillar
@@ -11,22 +9,12 @@ interface PillarProgressRowProps {
 
 // The detailed read of a pillar: Home shows the ring, this shows the days behind it
 export default function PillarProgressRow({ pillar, isLast }: PillarProgressRowProps) {
-    const router = useRouter();
-    const iconName = pillar.icon.charAt(0).toUpperCase() + pillar.icon.slice(1);
-    const IconComponent = (LucideIcons as any)[iconName] || LucideIcons.Circle;
-    const name = pillar.name.charAt(0).toUpperCase() + pillar.name.slice(1);
-    const { hasScore, label } = getPillarStatus(pillar);
-
-    const detail = !pillar.hasHabits
-        ? "No habits yet"
-        : hasScore
-            ? `Showed up ${pillar.daysShownUp} of ${pillar.daysCounted} ${pillar.daysCounted === 1 ? "day" : "days"}`
-            : "Your first day counts once it's done";
+    const { IconComponent, name, hasScore, label, detail, openHabits } = usePillarDisplay(pillar);
 
     return (
         <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => router.push("/(tabs)/Habits")}
+            onPress={openHabits}
             accessibilityRole="button"
             accessibilityLabel={`${name}. ${detail}. View habits`}
             className={`py-4 ${isLast ? "" : "border-b border-neutral-300"}`}
@@ -46,14 +34,15 @@ export default function PillarProgressRow({ pillar, isLast }: PillarProgressRowP
                     {label}
                 </Text>
             </View>
-            {hasScore && (
-                <View className="h-1.5 rounded-full bg-neutral-300 mt-3 overflow-hidden">
-                    <View
-                        className="h-full rounded-full"
-                        style={{ width: `${pillar.percentage}%`, backgroundColor: pillar.lightColor }}
-                    />
-                </View>
-            )}
+            {hasScore && <PillarProgressBar percentage={pillar.percentage} color={pillar.lightColor} />}
         </TouchableOpacity>
+    )
+}
+
+function PillarProgressBar({ percentage, color }: { percentage: number, color: string }) {
+    return (
+        <View className="h-1.5 rounded-full bg-neutral-300 mt-3 overflow-hidden">
+            <View className="h-full rounded-full" style={{ width: `${percentage}%`, backgroundColor: color }} />
+        </View>
     )
 }

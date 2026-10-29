@@ -5,8 +5,8 @@ function isBlank(value?: string): boolean {
     return !value || value.trim() === "";
 }
 
-function isEndDateBeforeStart(startDate: string, endDate: string): boolean {
-    return Boolean(endDate) && endDate < startDate;
+function isEndDateBeforeStart(startDate: string, endDate: string | null): boolean {
+    return endDate ? endDate < startDate : false;
 }
 
 type ValidationField = "name" | "duration" | "startDate" | "category" | "endDate";
@@ -16,7 +16,7 @@ export default function creationValidation(
     duration: string,
     category: HabitCategory,
     startDate: string,
-    endDate: string,
+    endDate: string | null,
 ) {
     const rules: { field: ValidationField; invalid: boolean; message: string }[] = [
         { field: "name", invalid: isBlank(name), message: "Habit name cannot be empty" },

@@ -59,8 +59,8 @@ export async function createNewHabitDataAccess(
     category: HabitCategory,
     startDate: string,
     repetition: string,
-    endDate: string,
-    description: string,
+    endDate: string | null,
+    description: string | null,
     userId: string,
 ): Promise<number> {
     const result = await db.insert(habits).values({
@@ -164,8 +164,8 @@ export async function updateHabitDataAccess(
     category: HabitCategory,
     startDate: string,
     repetition: string,
-    endDate: string,
-    description: string,
+    endDate: string | null,
+    description: string | null,
 ): Promise<void> {
     await db.update(habits).set({
         name,

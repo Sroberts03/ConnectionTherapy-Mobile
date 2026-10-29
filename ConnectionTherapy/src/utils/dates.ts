@@ -26,3 +26,10 @@ export function formatJournalDate(date: string): string {
     const options: Intl.DateTimeFormatOptions = {month: 'long', day: 'numeric', year: 'numeric' };
     return dateObj.toLocaleDateString('en-US', options);
 }
+
+// Reads a "YYYY-MM-DD" string as a local date; null (no date chosen yet) falls back to today
+export function parseDateString(date: string | null): Date {
+    if (!date) return new Date();
+    const [year, month, day] = date.split('-').map(Number);
+    return new Date(year ?? 0, (month ?? 1) - 1, day ?? 1);
+}

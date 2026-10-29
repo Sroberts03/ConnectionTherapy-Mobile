@@ -4,7 +4,7 @@ import { Quote } from "./quote.types";
 import { getRandomQuote } from "./service/quote.service";
 
 interface QuoteContextType {
-    quote: Quote
+    quote: Quote | null
     getQuote: () => void
     quoteLoading: boolean
     quoteError: string
@@ -38,7 +38,7 @@ export function QuoteProvider({ children }: { children: ReactNode }) {
     return (
         <QuoteContext.Provider
             value={{
-                quote: quote!,
+                quote,
                 getQuote,
                 quoteLoading,
                 quoteError
@@ -51,7 +51,7 @@ export function QuoteProvider({ children }: { children: ReactNode }) {
 
 export const useQuote = () => {
     const context = useContext(QuoteContext);
-    if (context === undefined) {
+    if (!context) {
         throw new Error("useQuote must be used within a QuoteProvider");
     }
     return context;

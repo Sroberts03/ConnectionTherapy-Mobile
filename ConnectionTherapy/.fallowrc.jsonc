@@ -1,0 +1,6 @@
+{
+  "$schema": "https://fallow.tools/schema.json",
+  // Loaded by babel.config.js under shorthand names ("inline-import", "babel-preset-expo")
+  // and by nativewind's metro/jsxImportSource setup, which static import analysis can't see
+  "ignoreDependencies": ["babel-plugin-inline-import", "babel-preset-expo", "nativewind"]
+}
