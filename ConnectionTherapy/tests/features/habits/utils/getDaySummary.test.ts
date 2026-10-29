@@ -16,6 +16,10 @@ describe("getDaySummary", () => {
         expect(getDaySummary(2, 2, true)).toEqual({ message: "All 2 done today. Nicely done 🌱", percentDone: 100 });
     });
 
+    it("skips the count when the only habit is done", () => {
+        expect(getDaySummary(1, 1, true).message).toBe("Done today. Nicely done 🌱");
+    });
+
     it("speaks about other days without saying today", () => {
         expect(getDaySummary(0, 1, false).message).toBe("0 of 1 done this day");
     });

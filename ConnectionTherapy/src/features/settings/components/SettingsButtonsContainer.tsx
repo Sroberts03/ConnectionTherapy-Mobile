@@ -16,7 +16,6 @@ export default function SettingsButtonsContainer({ buttons, title, className }: 
             onPress={button.onPress}
             color={button.color}
             icon={button.icon}
-            badge={button.comingSoon ? "Soon" : undefined}
         />
     )
     

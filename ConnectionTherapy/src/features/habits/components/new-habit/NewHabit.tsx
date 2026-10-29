@@ -24,10 +24,10 @@ function getNewHabitTitle(category: HabitCategory, habitId?: number): string {
 }
 
 export default function NewHabit({ isVisible, onClose, date, category, habitId, suggestion }: NewHabitProps) {
-    const form = useHabitForm(date, category, habitId, onClose, suggestion);
+    const form = useHabitForm(date, category, habitId, isVisible, onClose, suggestion);
 
     return (
-        <Modal animationType="fade" transparent visible={isVisible} onRequestClose={form.closeAndReset}>
+        <Modal animationType="fade" transparent visible={isVisible} onRequestClose={form.close}>
             <View className="flex-1 bg-black/50 justify-center items-center">
                 <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="w-11/12 max-h-[90%]">
                     <View className="bg-white rounded-3xl overflow-hidden shadow-xl mb-16">
@@ -35,7 +35,7 @@ export default function NewHabit({ isVisible, onClose, date, category, habitId, 
                             <Text className="text-xl font-bold text-neutral-800">
                                 {getNewHabitTitle(form.currentCategory, habitId)}
                             </Text>
-                            <TouchableOpacity onPress={form.closeAndReset} className="bg-neutral-100 p-2 rounded-full">
+                            <TouchableOpacity onPress={form.close} className="bg-neutral-100 p-2 rounded-full">
                                 <Ionicons name="close" size={20} color="#6b7280" />
                             </TouchableOpacity>
                         </View>
@@ -91,7 +91,7 @@ export default function NewHabit({ isVisible, onClose, date, category, habitId, 
 
                             <View className="flex-row gap-4 mb-6">
                                 <TouchableOpacity 
-                                    onPress={form.closeAndReset} 
+                                    onPress={form.close} 
                                     className="flex-1 bg-neutral-100 py-4 rounded-2xl items-center"
                                 >
                                     <Text className="text-neutral-600 font-bold text-base">Cancel</Text>

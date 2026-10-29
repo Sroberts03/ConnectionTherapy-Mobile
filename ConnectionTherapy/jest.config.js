@@ -8,5 +8,6 @@ module.exports = {
     '^@features/(.*)$': '<rootDir>/src/features/$1',
     '^@components/(.*)$': '<rootDir>/src/components/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^@src/(.*)$': '<rootDir>/src/$1',
   },
 };

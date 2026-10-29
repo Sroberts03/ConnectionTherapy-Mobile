@@ -2,9 +2,9 @@ import { Session } from "@supabase/supabase-js";
 import { ConnectionPillar } from "../dashboard.types";
 import { HabitCategory } from "../../habits/habits.types";
 import { GetPillarsRes } from "../dashboard.dto";
-import { getStartOfWeek, getToday } from "../../../utils/dates";
-import { getPillarHabitsDataAccess } from "./dashboard.dataAccess";
-import { getPillarPercent } from "../utils/getPillarPercent";
+import { addDays, getStartOfWeek, getToday } from "../../../utils/dates";
+import { getFirstHabitStartDataAccess, getPillarHabitsDataAccess } from "./dashboard.dataAccess";
+import { getCountFrom, getLastWeekPercent, getPillarPercent } from "../utils/getPillarPercent";
 import HTTPRequest from "@utils/HTTPRequest";
 
 const MIN_DAYS_BEFORE_ALERT = 3;
@@ -31,14 +31,19 @@ export async function getFullPillars(
     const fullPillars = new Map<HabitCategory, ConnectionPillar>();
     const startOfWeek = getStartOfWeek();
     const today = getToday();
+    const firstStart = await getFirstHabitStartDataAccess();
+    const countFrom = getCountFrom(startOfWeek, firstStart);
+    const lastWeekStart = addDays(startOfWeek, -7);
     for (const pillar of pillars) {
         const pillarHabits = await getPillarHabitsDataAccess(pillar.name, startOfWeek, today);
-        const { percentage, evaluatedDays, daysCounted, daysShownUp, hasHabits } = getPillarPercent(pillarHabits, today);
+        const lastWeekHabits = await getPillarHabitsDataAccess(pillar.name, lastWeekStart, addDays(startOfWeek, -1));
+        const lastWeekPercentage = getLastWeekPercent(lastWeekHabits, lastWeekStart, startOfWeek, firstStart);
+        const { percentage, evaluatedDays, daysCounted, daysShownUp, hasHabits } = getPillarPercent(pillarHabits, today, countFrom);
         // Too few finished days to call a trend, so don't raise an alarm yet
         const canJudge = evaluatedDays >= MIN_DAYS_BEFORE_ALERT;
         const concern = canJudge && percentage < 66;
         const danger = canJudge && percentage < 33;
-        fullPillars.set(pillar.name, {...pillar, percentage, concern, danger, daysCounted, daysShownUp, hasHabits})
+        fullPillars.set(pillar.name, {...pillar, percentage, concern, danger, daysCounted, daysShownUp, hasHabits, lastWeekPercentage})
     }
     return fullPillars
 }

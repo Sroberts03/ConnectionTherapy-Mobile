@@ -49,7 +49,7 @@ export default function PillarContainer({ pillar }: PillarContainerProps) {
                         strokeDasharray={hasScore ? "1 0" : "3 6"}
                         fill="none"
                     />
-                    <Circle
+                    {hasScore && <Circle
                         cx={cx}
                         cy={cy}
                         r={radius}
@@ -60,7 +60,7 @@ export default function PillarContainer({ pillar }: PillarContainerProps) {
                         strokeLinecap="round"
                         fill="none"
                         transform={`rotate(-90 ${cx} ${cy})`}
-                    />
+                    />}
                 </Svg>
                 <View className="absolute inset-0 items-center justify-center">
                     <IconComponent size={28} color="#B0A69D" />

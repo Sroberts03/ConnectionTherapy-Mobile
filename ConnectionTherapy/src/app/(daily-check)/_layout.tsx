@@ -4,6 +4,7 @@ export default function DailyCheckLayout() {
     return (
         <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="DailyCheck" />
+            <Stack.Screen name="History" />
         </Stack>
     );
 }

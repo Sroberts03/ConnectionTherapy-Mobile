@@ -8,18 +8,16 @@ interface ManagerButtonProps {
     icon: keyof typeof Feather.glyphMap;
     color?: string | undefined;
     bgColor?: string | undefined;
-    // Shown in place of the chevron, e.g. for a row that isn't built yet
-    badge?: string | undefined;
 }
 
-export default function ManageButton({ title, subtitle, onPress, icon, color = "#4f6650", bgColor = "bg-white", badge }: ManagerButtonProps) {
+export default function ManageButton({ title, subtitle, onPress, icon, color = "#4f6650", bgColor = "bg-white" }: ManagerButtonProps) {
     return (
         <TouchableOpacity 
             className={`border border-neutral-200 rounded-3xl p-4 mb-3 flex-row items-center justify-between ${bgColor}`}
             activeOpacity={0.7}
             onPress={onPress}
             accessibilityRole="button"
-            accessibilityLabel={badge ? `${title}, ${badge.toLowerCase()}` : title}
+            accessibilityLabel={title}
         >
             <View className="flex-row items-center flex-1 pr-4">
                 <View 
@@ -39,13 +37,7 @@ export default function ManageButton({ title, subtitle, onPress, icon, color = "
                     )}
                 </View>
             </View>
-            {badge ? (
-                <View className="px-2.5 py-1 rounded-full bg-neutral-300">
-                    <Text className="text-xs font-semibold text-neutral-600">{badge}</Text>
-                </View>
-            ) : (
-                <Feather name="chevron-right" size={20} color="#7d756b" />
-            )}
+            <Feather name="chevron-right" size={20} color="#7d756b" />
         </TouchableOpacity>
     )
 }

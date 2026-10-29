@@ -33,3 +33,15 @@ export function parseDateString(date: string | null): Date {
     const [year, month, day] = date.split('-').map(Number);
     return new Date(year ?? 0, (month ?? 1) - 1, day ?? 1);
 }
+
+// Whole days from one "YYYY-MM-DD" date to a later one; rounding absorbs daylight-saving shifts
+export function daysBetween(from: string, to: string): number {
+    const msPerDay = 24 * 60 * 60 * 1000;
+    return Math.round((parseDateString(to).getTime() - parseDateString(from).getTime()) / msPerDay);
+}
+
+export function addDays(date: string, days: number): string {
+    const result = parseDateString(date);
+    result.setDate(result.getDate() + days);
+    return formatDate(result);
+}

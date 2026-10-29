@@ -1,6 +1,6 @@
 import { PillarHabit } from "../dashboard.types";
 import { db } from "@src/db/index";
-import { eq, and, between, sql } from "drizzle-orm";
+import { eq, and, between, sql, min } from "drizzle-orm";
 import { habits, habit_entries } from "@src/db/schema";
 
 export async function getPillarHabitsDataAccess(
@@ -28,4 +28,10 @@ export async function getPillarHabitsDataAccess(
         )
     );
     return fetchedHabits;
+}
+
+// The day the user started: their earliest habit's start date, or null before they've made one
+export async function getFirstHabitStartDataAccess(): Promise<string | null> {
+    const [row] = await db.select({ firstStart: min(habits.start_date) }).from(habits);
+    return row?.firstStart ?? null;
 }

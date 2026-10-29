@@ -15,7 +15,7 @@ interface HabitPillarContainerProps {
 }
 
 export default function HabitPillarContainer({category, date}: HabitPillarContainerProps) {
-    const { currentHabits, setHabitError } = useHabitContext();
+    const { currentHabits, setHabitError, habitLoading } = useHabitContext();
     const { IconComponent } = getPillarTheme(category);
     const pillarHabits = Array.from(currentHabits.values()).filter((habit) => habit.category === category);
     const [newHabitVisible, setNewHabitVisible] = useState(false)
@@ -23,6 +23,8 @@ export default function HabitPillarContainer({category, date}: HabitPillarContai
     const [deleteHabitId, setDeleteHabitId] = useState<number | undefined>(undefined);
     const [suggestion, setSuggestion] = useState<HabitSuggestion | undefined>(undefined);
     const starter = habitSuggestions[category];
+    // While habits load, an empty list means "not known yet", not "none", so hold back the suggestion
+    const showSuggestion = !habitLoading && pillarHabits.length === 0;
 
     const getNewHabitComponent = () => {
         if (editHabitId !== undefined) {
@@ -74,7 +76,7 @@ export default function HabitPillarContainer({category, date}: HabitPillarContai
                 </TouchableOpacity>
             </View>
             
-            {pillarHabits.length === 0 && (
+            {showSuggestion && (
                 <TouchableOpacity
                     className="flex-row items-center justify-between mt-3 px-4 py-3 rounded-xl border border-dashed border-primary-300"
                     activeOpacity={0.7}

@@ -9,14 +9,14 @@ interface PillarProgressRowProps {
 
 // The detailed read of a pillar: Home shows the ring, this shows the days behind it
 export default function PillarProgressRow({ pillar, isLast }: PillarProgressRowProps) {
-    const { IconComponent, name, hasScore, label, detail, openHabits } = usePillarDisplay(pillar);
+    const { IconComponent, name, hasScore, label, detail, weekChange, openHabits } = usePillarDisplay(pillar);
 
     return (
         <TouchableOpacity
             activeOpacity={0.7}
             onPress={openHabits}
             accessibilityRole="button"
-            accessibilityLabel={`${name}. ${detail}. View habits`}
+            accessibilityLabel={[name, detail, weekChange, "View habits"].filter(Boolean).join(". ")}
             className={`py-4 ${isLast ? "" : "border-b border-neutral-300"}`}
         >
             <View className="flex-row items-center">
@@ -30,12 +30,22 @@ export default function PillarProgressRow({ pillar, isLast }: PillarProgressRowP
                     <Text className="text-base font-semibold text-neutral-900">{name}</Text>
                     <Text className="text-sm text-neutral-600 mt-0.5">{detail}</Text>
                 </View>
-                <Text className={hasScore ? "text-lg font-bold text-neutral-900" : "text-sm font-medium text-neutral-500"}>
-                    {label}
-                </Text>
+                <PillarScore hasScore={hasScore} label={label} weekChange={weekChange} />
             </View>
             {hasScore && <PillarProgressBar percentage={pillar.percentage} color={pillar.lightColor} />}
         </TouchableOpacity>
+    )
+}
+
+// The score, with how it moved since last week underneath
+function PillarScore({ hasScore, label, weekChange }: { hasScore: boolean, label: string, weekChange: string | null }) {
+    return (
+        <View className="items-end">
+            <Text className={hasScore ? "text-lg font-bold text-neutral-900" : "text-sm font-medium text-neutral-500"}>
+                {label}
+            </Text>
+            {weekChange && <Text className="text-xs text-neutral-500 mt-0.5">{weekChange}</Text>}
+        </View>
     )
 }
 

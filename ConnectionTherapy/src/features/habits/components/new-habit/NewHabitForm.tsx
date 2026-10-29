@@ -9,6 +9,7 @@ import { newHabitInput } from "../../habit.dto";
 import { parseRepeatString } from "../../utils/parseRepeatString";
 import { usePillarContext } from "../../../dashboard/PillarContext";
 import { HabitSuggestion } from "../../utils/habitSuggestions";
+import { getHabitFormDefaults } from "../../utils/getHabitFormDefaults";
 
 function habitReturned(
     newHabit: Habit | null,
@@ -37,7 +38,7 @@ function todayLocalDateStr(): string {
     return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 }
 
-export function useHabitForm(date: Date, category: HabitCategory | undefined, habitId: number | undefined, onClose: () => void, suggestion?: HabitSuggestion) {
+export function useHabitForm(date: Date, category: HabitCategory | undefined, habitId: number | undefined, isVisible: boolean, onClose: () => void, suggestion?: HabitSuggestion) {
     const { currentHabits, setCurrentHabits, reloadTopHabits, setHabitError } = useHabitContext();
     const { reloadPillarPercentages } = usePillarContext();
     const { user } = useAuth();
@@ -53,30 +54,24 @@ export function useHabitForm(date: Date, category: HabitCategory | undefined, ha
     const [endDate, setEndDate] = useState<string | null>(null);
     const [creationError, setCreationError] = useState<CreationError | null>(null);
 
-    // A tapped suggestion pre-fills the form; the user can still change anything
-    useEffect(() => {
-        if (suggestion) {
-            setName(suggestion.name);
-            setDuration(suggestion.duration);
-        }
-    }, [suggestion]);
-
     const reset = () => {
-        setName("");
-        setDescription("");
-        setDuration("");
-        setCurrentCategory(category || HabitCategory.PHYSICAL);
+        const defaults = getHabitFormDefaults(category, suggestion);
+        setName(defaults.name);
+        setDescription(null);
+        setDuration(defaults.duration);
+        setCurrentCategory(defaults.category);
         setRepetition("None");
         setCustomRepetition("");
         setStartDate(localDateStr);
-        setEndDate("");
+        setEndDate(null);
         setCreationError(null);
     };
 
-    const closeAndReset = () => {
-        reset();
-        onClose();
-    };
+    // Reset as the sheet opens, not as it closes, so the fields never visibly clear mid-fade.
+    // A tapped suggestion pre-fills the form; the user can still change anything
+    useEffect(() => {
+        if (isVisible && !habitId) reset();
+    }, [isVisible, suggestion]);
 
     const userIdExists = (): string => {
         if (!user?.id) throw new Error("User not found. Please log in again.");
@@ -89,7 +84,7 @@ export function useHabitForm(date: Date, category: HabitCategory | undefined, ha
             return;
         }
         setHabitError(err instanceof Error ? err.message : "Error creating new habit");
-        closeAndReset();
+        onClose();
     };
 
     const loadHabitIntoForm = async (id: number) => {
@@ -129,7 +124,7 @@ export function useHabitForm(date: Date, category: HabitCategory | undefined, ha
             habitReturned(newHabit, setCurrentHabits, currentHabits);
             reloadTopHabits();
             reloadPillarPercentages();
-            closeAndReset();
+            onClose();
         } catch (err) {
             creationErrorHandler(err);
         }
@@ -141,7 +136,7 @@ export function useHabitForm(date: Date, category: HabitCategory | undefined, ha
             const updatedHabit = await updateHabit({ ...buildRequest(), habitInstanceId: habitId });
             habitReturnOnUpdate(updatedHabit, setCurrentHabits, currentHabits, habitId);
             reloadTopHabits();
-            closeAndReset();
+            onClose();
         } catch (err) {
             creationErrorHandler(err);
         }
@@ -153,6 +148,6 @@ export function useHabitForm(date: Date, category: HabitCategory | undefined, ha
         name, setName, description, setDescription, duration, setDuration,
         currentCategory, setCurrentCategory, repetition, setRepetition,
         customRepetition, setCustomRepetition, startDate, setStartDate,
-        endDate, setEndDate, creationError, handleSave, closeAndReset,
+        endDate, setEndDate, creationError, handleSave, close: onClose,
     };
 }

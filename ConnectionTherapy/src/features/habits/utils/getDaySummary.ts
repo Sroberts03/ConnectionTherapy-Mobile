@@ -11,7 +11,9 @@ export function getDaySummary(done: number, total: number, isToday: boolean): Da
     }
     const percentDone = Math.round((done / total) * 100);
     if (done === total) {
-        return { message: `All ${total} done ${dayWord}. Nicely done 🌱`, percentDone };
+        // "All 1 done" reads like a counter, so a single habit just gets the win
+        const count = total === 1 ? "Done" : `All ${total} done`;
+        return { message: `${count} ${dayWord}. Nicely done 🌱`, percentDone };
     }
     return { message: `${done} of ${total} done ${dayWord}`, percentDone };
 }

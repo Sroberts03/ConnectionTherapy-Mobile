@@ -1,4 +1,4 @@
-import { formatJournalDate, parseDateString } from "@utils/dates";
+import { formatJournalDate, parseDateString, daysBetween, addDays } from "@utils/dates";
 
 describe("formatJournalDate", () => {
     it("formats a date string to 'Month Day, Year' format", () => {
@@ -28,5 +28,26 @@ describe("parseDateString", () => {
 
     it("falls back to today when no date is chosen", () => {
         expect(parseDateString(null).toDateString()).toBe(new Date().toDateString());
+    });
+});
+
+describe("daysBetween", () => {
+    it("counts whole days between two dates", () => {
+        expect(daysBetween("2026-10-25", "2026-10-29")).toBe(4);
+    });
+
+    it("is zero for the same day", () => {
+        expect(daysBetween("2026-10-29", "2026-10-29")).toBe(0);
+    });
+
+    it("stays whole across a daylight-saving change", () => {
+        expect(daysBetween("2026-10-31", "2026-11-02")).toBe(2);
+    });
+});
+
+describe("addDays", () => {
+    it("moves forward and back across months", () => {
+        expect(addDays("2026-10-31", 1)).toBe("2026-11-01");
+        expect(addDays("2026-03-01", -1)).toBe("2026-02-28");
     });
 });

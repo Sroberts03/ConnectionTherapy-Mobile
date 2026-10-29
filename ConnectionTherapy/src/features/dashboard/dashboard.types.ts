@@ -12,6 +12,8 @@ export interface ConnectionPillar {
     daysCounted: number;
     daysShownUp: number;
     hasHabits: boolean;
+    // Last week's score for the same pillar, or null if there's no last week to compare with
+    lastWeekPercentage: number | null;
 }
 
 export interface PillarHabit extends Habit {
