@@ -42,6 +42,7 @@ function IntialLayout() {
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="(journal)" options={{ headerShown: false }} />
+            <Stack.Screen name="(daily-check)" options={{ headerShown: false }} />
         </Stack>
     );
 }

@@ -13,7 +13,7 @@ export default function ConnectionPillars({ pillars }: ConnectionPillarsProps) {
     const router = useRouter()
     return (
         <View className="mt-4">
-            <ViewOtherInfoButton onPress={() => router.push("/(tabs)/Habits")} text="View Progress" />
+            <ViewOtherInfoButton onPress={() => router.push("/(tabs)/Progress")} text="View Progress" />
             <View className="flex-row flex-wrap justify-center gap-4">
                 {Array.from(pillars.values()).map((pillar) => (
                     <PillarContainer key={pillar.id} pillar={pillar} />

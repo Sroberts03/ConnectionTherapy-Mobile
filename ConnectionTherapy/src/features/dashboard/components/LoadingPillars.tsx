@@ -37,7 +37,7 @@ export default function LoadingPillars({ loadingPillars }: LoadingPillarsProps) 
 
     return (
         <View className="mt-4">
-            <ViewOtherInfoButton onPress={() => router.push("/(tabs)/Habits")} text="View Progress" />
+            <ViewOtherInfoButton onPress={() => router.push("/(tabs)/Progress")} text="View Progress" />
             <View className="flex-row flex-wrap justify-center gap-4">
                 {skeletonItems.map((item) => (
                     <SkeletonPillar key={`skeleton-${item}`} />

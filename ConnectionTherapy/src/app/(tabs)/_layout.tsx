@@ -35,28 +35,35 @@ export default function TabLayout() {
                 name="Dashboard"
                 options={{
                     title: "Home",
-                    tabBarIcon: ({ color }) => <Ionicons name="home" size={28} color={color} />,
+                    tabBarIcon: ({ color }) => <Ionicons name="home-outline" size={28} color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="Habits"
                 options={{
                     title: "Habits",
-                    tabBarIcon: ({ color }) => <Ionicons name="checkmark-circle" size={28} color={color} />,
+                    tabBarIcon: ({ color }) => <Ionicons name="checkmark-circle-outline" size={28} color={color} />,
+                }}
+            />
+            <Tabs.Screen
+                name="Progress"
+                options={{
+                    title: "Progress",
+                    tabBarIcon: ({ color }) => <Ionicons name="heart-outline" size={28} color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="Journal"
                 options={{
                     title: "Journal",
-                    tabBarIcon: ({ color }) => <Ionicons name="book" size={28} color={color} />,
+                    tabBarIcon: ({ color }) => <Ionicons name="book-outline" size={28} color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="Settings"
                 options={{
                     title: "Settings",
-                    tabBarIcon: ({ color }) => <Ionicons name="settings" size={28} color={color} />,
+                    tabBarIcon: ({ color }) => <Ionicons name="settings-outline" size={28} color={color} />,
                 }}
             />
         </Tabs>
