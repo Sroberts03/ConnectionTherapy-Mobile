@@ -32,8 +32,10 @@ export async function getFullPillars(
     for (const pillar of pillars) {
         const pillarHabits = await getPillarHabitsDataAccess(pillar.name, startOfWeek, getToday());
         const percentage = getPillarPercent(pillarHabits, dayOfWeek);
-        const concern = percentage < 66;
-        const danger = percentage < 33;
+        // A pillar with no habits yet hasn't started, so it shouldn't raise an alarm
+        const hasHabits = pillarHabits.length > 0;
+        const concern = hasHabits && percentage < 66;
+        const danger = hasHabits && percentage < 33;
         fullPillars.set(pillar.name, {...pillar, percentage, concern, danger})
     }
     return fullPillars

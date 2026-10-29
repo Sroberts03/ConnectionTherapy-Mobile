@@ -15,7 +15,7 @@ interface RepeatInfoProps {
     setRepetition: (repeat: string) => void;
     customRepetition?: string;
     setCustomRepetition: (customRepetition: string) => void;
-    endDate: string;
+    endDate: string | null;
     setEndDate: (date: string) => void;
     showEndDatePicker: boolean;
     setShowEndDatePicker: (show: boolean) => void;
@@ -89,7 +89,7 @@ export default function RepeatInfo({
                 <View className="flex-row justify-between items-center">
                     <Text className="text-sm font-semibold text-neutral-600 mb-2 ml-1">End Date (Optional)</Text>
                     <RemoveEndDateButton
-                        isVisible={endDate !== ""}
+                        isVisible={!!endDate}
                         onPress={() => setEndDate("")}
                     />
                 </View>

@@ -8,7 +8,7 @@ import RepeatInfo from "./RepeatInfo";
 interface HabitStartEndDateInputProps {
     startDate: string
     setStartDate: (date: string) => void
-    endDate: string
+    endDate: string | null
     setEndDate: (date: string) => void
     repetition: string
     setRepetition: (repeat: string) => void

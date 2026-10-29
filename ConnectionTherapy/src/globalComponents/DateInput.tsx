@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons"
 import { getDateInputStyle } from "../utils/getDateInputstyle"
 
 interface DateInputProps {
-    selectedDate: string
+    selectedDate: string | null
     setSelectedDate: (date: string) => void
     showDatePicker: boolean
     setShowDatePicker: (showDatePicker: boolean) => void
@@ -20,7 +20,7 @@ export default function DateInput({ selectedDate, setSelectedDate, showDatePicke
     } = getDateInputStyle(showDatePicker);
 
     let safeDate = new Date();
-    if (selectedDate !== "") {
+    if (selectedDate) {
         const parts = selectedDate.split('-');
         safeDate = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
     }

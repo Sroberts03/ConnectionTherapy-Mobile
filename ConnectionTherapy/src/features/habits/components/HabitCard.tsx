@@ -61,7 +61,7 @@ export default function HabitCard({ habit, setEditHabitId, setDeleteHabitId }: H
 
     return (
         <ReanimatedSwipeable renderRightActions={renderRightActions}>
-            <View className="flex-row items-center justify-between border border-neutral-400 rounded-xl p-4 bg-white">
+            <View className="flex-row items-center justify-between border border-[#e0dcd4] rounded-xl p-4 bg-white">
                 <View className="flex-row items-center flex-1">
                     <View className="mr-4 items-center justify-center">
                         <IconComponent size={28} color={iconColor} />
