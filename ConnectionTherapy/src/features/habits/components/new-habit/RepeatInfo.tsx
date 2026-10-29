@@ -64,12 +64,12 @@ export default function RepeatInfo({
                 <TouchableOpacity 
                     activeOpacity={0.7}
                     onPress={() => setShowRepeatDropdown(!showRepeatDropdown)}
-                    className={`flex-row items-center justify-between bg-neutral-50 border ${showRepeatDropdown ? 'border-teal-500' : 'border-neutral-200'} rounded-2xl px-4 py-4`}
+                    className={`flex-row items-center justify-between bg-neutral-50 border ${showRepeatDropdown ? 'border-primary-500' : 'border-neutral-200'} rounded-2xl px-4 py-4`}
                 >
-                    <Text className={`text-base font-medium text-teal-700`}>
+                    <Text className={`text-base font-medium text-primary-700`}>
                         {getRepeatLabel(repetition)}
                     </Text>
-                    <Ionicons name={showRepeatDropdown ? "chevron-up" : "chevron-down"} size={20} color="#9ca3af" />
+                    <Ionicons name={showRepeatDropdown ? "chevron-up" : "chevron-down"} size={20} color="#7d756b" />
                 </TouchableOpacity>
 
                 <RepeatDropdown
@@ -96,6 +96,7 @@ export default function RepeatInfo({
                 <DateInput
                     selectedDate={endDate}
                     setSelectedDate={setEndDate}
+                    placeholder="No end date"
                     showDatePicker={showEndDatePicker}
                     setShowDatePicker={setShowEndDatePicker}
                 />

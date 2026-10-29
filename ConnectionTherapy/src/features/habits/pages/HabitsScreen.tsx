@@ -5,6 +5,7 @@ import HabitArea from "../components/HabitArea";
 import TakeItOneWeekDialog from "../components/TakeItOneWeekDialog";
 import { useHabitContext } from "../HabitContext";
 import DatePicker from "../components/DatePicker";
+import DaySummary from "../components/DaySummary";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HabitsScreen() {
@@ -49,26 +50,27 @@ export default function HabitsScreen() {
     }
     
     return (
-        <ScrollView 
-            className={`bg-primary-50`}
-            showsVerticalScrollIndicator={false}
-        >
-            <SafeAreaView>
+        <SafeAreaView edges={["top"]} className="flex-1 bg-primary-50">
+            <ScrollView 
+                className="flex-1 pt-2"
+                showsVerticalScrollIndicator={false}
+            >
                 <DatePicker
                     date={date}
                     setDate={setDate}
                 />
                 {showTakeItOneWeekDialog ?
                     <TakeItOneWeekDialog /> :
-                    <View className="ios:mb-12 android:-mb-8">
+                    <View className="ios:mb-32 android:mb-4">
                         <ErrorLoading error={habitError} loading={habitLoading} />
+                        {!habitLoading && <DaySummary isToday={date.toDateString() === new Date().toDateString()} />}
                         <HabitArea
                             date={date}
                             setError={setHabitError}
                         />
                     </View>
                 }
-            </SafeAreaView>
-        </ScrollView>
+            </ScrollView>
+        </SafeAreaView>
     );
 }

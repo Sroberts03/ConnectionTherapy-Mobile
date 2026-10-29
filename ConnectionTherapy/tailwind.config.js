@@ -55,10 +55,11 @@ module.exports = {
           800: "#403a35",
           900: "#312c28",
         },
-      },
-      text: {
-        DEFAULT: '#0f172a',
-        muted: '#64748b',
+        // Used as text-text-primary / text-text-muted
+        text: {
+          primary: "#312c28",
+          muted: "#5f5850",
+        },
       },
     },
   },

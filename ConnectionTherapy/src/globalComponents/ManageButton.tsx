@@ -3,19 +3,23 @@ import { TouchableOpacity, Text, View } from "react-native"
 
 interface ManagerButtonProps {
     title: string;
-    subtitle?: string;
+    subtitle?: string | undefined;
     onPress: () => void;
     icon: keyof typeof Feather.glyphMap;
-    color?: string;
-    bgColor?: string;
+    color?: string | undefined;
+    bgColor?: string | undefined;
+    // Shown in place of the chevron, e.g. for a row that isn't built yet
+    badge?: string | undefined;
 }
 
-export default function ManageButton({ title, subtitle, onPress, icon, color = "#6366f1", bgColor = "bg-white" }: ManagerButtonProps) {
+export default function ManageButton({ title, subtitle, onPress, icon, color = "#4f6650", bgColor = "bg-white", badge }: ManagerButtonProps) {
     return (
         <TouchableOpacity 
-            className={`border border-gray-100 rounded-3xl p-4 mb-3 flex-row items-center justify-between ${bgColor}`}
+            className={`border border-neutral-200 rounded-3xl p-4 mb-3 flex-row items-center justify-between ${bgColor}`}
             activeOpacity={0.7}
             onPress={onPress}
+            accessibilityRole="button"
+            accessibilityLabel={badge ? `${title}, ${badge.toLowerCase()}` : title}
         >
             <View className="flex-row items-center flex-1 pr-4">
                 <View 
@@ -25,17 +29,23 @@ export default function ManageButton({ title, subtitle, onPress, icon, color = "
                     <Feather name={icon} size={22} color={color} />
                 </View>
                 <View className="ml-4 flex-1">
-                    <Text className="font-bold text-slate-800 text-[17px] mb-0.5">
+                    <Text className="font-bold text-neutral-900 text-[17px] mb-0.5">
                         {title}
                     </Text>
                     {subtitle && (
-                        <Text className="text-slate-500 text-sm leading-5">
+                        <Text className="text-neutral-600 text-sm leading-5">
                             {subtitle}
                         </Text>
                     )}
                 </View>
             </View>
-            <Feather name="chevron-right" size={20} color="#cbd5e1" />
+            {badge ? (
+                <View className="px-2.5 py-1 rounded-full bg-neutral-300">
+                    <Text className="text-xs font-semibold text-neutral-600">{badge}</Text>
+                </View>
+            ) : (
+                <Feather name="chevron-right" size={20} color="#7d756b" />
+            )}
         </TouchableOpacity>
     )
 }

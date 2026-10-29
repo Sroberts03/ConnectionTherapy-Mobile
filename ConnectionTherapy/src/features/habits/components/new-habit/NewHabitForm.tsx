@@ -8,6 +8,7 @@ import { useHabitContext } from "../../HabitContext";
 import { newHabitInput } from "../../habit.dto";
 import { parseRepeatString } from "../../utils/parseRepeatString";
 import { usePillarContext } from "../../../dashboard/PillarContext";
+import { HabitSuggestion } from "../../utils/habitSuggestions";
 
 function habitReturned(
     newHabit: Habit | null,
@@ -36,7 +37,7 @@ function todayLocalDateStr(): string {
     return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 }
 
-export function useHabitForm(date: Date, category: HabitCategory | undefined, habitId: number | undefined, onClose: () => void) {
+export function useHabitForm(date: Date, category: HabitCategory | undefined, habitId: number | undefined, onClose: () => void, suggestion?: HabitSuggestion) {
     const { currentHabits, setCurrentHabits, reloadTopHabits, setHabitError } = useHabitContext();
     const { reloadPillarPercentages } = usePillarContext();
     const { user } = useAuth();
@@ -51,6 +52,14 @@ export function useHabitForm(date: Date, category: HabitCategory | undefined, ha
     const [startDate, setStartDate] = useState(localDateStr);
     const [endDate, setEndDate] = useState<string | null>(null);
     const [creationError, setCreationError] = useState<CreationError | null>(null);
+
+    // A tapped suggestion pre-fills the form; the user can still change anything
+    useEffect(() => {
+        if (suggestion) {
+            setName(suggestion.name);
+            setDuration(suggestion.duration);
+        }
+    }, [suggestion]);
 
     const reset = () => {
         setName("");

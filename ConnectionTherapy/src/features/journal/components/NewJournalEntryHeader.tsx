@@ -8,19 +8,18 @@ interface NewJournalEntryHeaderProps {
 }
 
 export default function NewJournalEntryHeader({  date, title, setTitle, titleClassName }: NewJournalEntryHeaderProps) {
-    const titleStyle = titleClassName || "text-xl font-bold text-center text-text-primary mb-4";
+    const titleStyle = titleClassName || "text-lg font-bold text-center text-text-primary px-8";
 
     return (
-        <View className="bg-primary-50 border-b border-gray-200 w-full">
-            <View className="mb-4">
-                <TextInput
-                    value={title}
-                    placeholder={title || "Title"}
-                    onChangeText={(text) => setTitle(text)}
-                    className={titleStyle + "w-full"}
-                />
-            </View>
-            <Text className="text-sm text-center text-neutral-500 mb-4">
+        <View className="bg-primary-50 border-b border-neutral-300 w-full">
+            <TextInput
+                value={title}
+                placeholder={title || "Title"}
+                placeholderTextColor="#7d756b"
+                onChangeText={(text) => setTitle(text)}
+                className={titleStyle + " w-full"}
+            />
+            <Text className="text-base text-center text-text-muted mt-1 mb-5">
                 {date}
             </Text>
         </View>

@@ -7,6 +7,8 @@ import { getPillarHabitsDataAccess } from "./dashboard.dataAccess";
 import { getPillarPercent } from "../utils/getPillarPercent";
 import HTTPRequest from "@utils/HTTPRequest";
 
+const MIN_DAYS_BEFORE_ALERT = 3;
+
 export async function getDashboardPillars(session: Session): 
     Promise<Pick<ConnectionPillar, 'id' | 'name' | 'lightColor' | 'darkColor' | 'icon'>[]> 
 {
@@ -28,15 +30,15 @@ export async function getFullPillars(
 ): Promise<Map<HabitCategory, ConnectionPillar>> {
     const fullPillars = new Map<HabitCategory, ConnectionPillar>();
     const startOfWeek = getStartOfWeek();
-    const dayOfWeek = new Date().getDay();
+    const today = getToday();
     for (const pillar of pillars) {
-        const pillarHabits = await getPillarHabitsDataAccess(pillar.name, startOfWeek, getToday());
-        const percentage = getPillarPercent(pillarHabits, dayOfWeek);
-        // A pillar with no habits yet hasn't started, so it shouldn't raise an alarm
-        const hasHabits = pillarHabits.length > 0;
-        const concern = hasHabits && percentage < 66;
-        const danger = hasHabits && percentage < 33;
-        fullPillars.set(pillar.name, {...pillar, percentage, concern, danger})
+        const pillarHabits = await getPillarHabitsDataAccess(pillar.name, startOfWeek, today);
+        const { percentage, evaluatedDays, daysCounted, daysShownUp, hasHabits } = getPillarPercent(pillarHabits, today);
+        // Too few finished days to call a trend, so don't raise an alarm yet
+        const canJudge = evaluatedDays >= MIN_DAYS_BEFORE_ALERT;
+        const concern = canJudge && percentage < 66;
+        const danger = canJudge && percentage < 33;
+        fullPillars.set(pillar.name, {...pillar, percentage, concern, danger, daysCounted, daysShownUp, hasHabits})
     }
     return fullPillars
 }

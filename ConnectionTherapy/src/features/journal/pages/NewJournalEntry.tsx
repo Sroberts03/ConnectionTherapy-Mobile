@@ -41,7 +41,10 @@ export default function NewJournalEntry({ id }: NewJournalEntryProps) {
         }
     };
 
-    const handleSave = async () => { 
+    const isEmpty = newTitle.trim() === "" && newText.trim() === "";
+
+    const handleSave = async () => {
+        if (isEmpty) return;
         const newEntry: NewJournalEntryDTO = createNewEntry();
         await saveJournalEntry(newEntry);
         if (!error) {
@@ -52,24 +55,25 @@ export default function NewJournalEntry({ id }: NewJournalEntryProps) {
     return (
         <View className="flex-1 items-center justify-center">
             <SafeAreaView className="flex-1 w-full bg-primary-50">
-                <View className="flex-row items-center justify-center relative mb-4">
-                    <BackButton className="absolute left-0 top-4 z-10 ml-5" />
+                <View className="flex-row items-center justify-center relative px-4 pt-2">
+                    <BackButton className="absolute left-4 top-2 z-10" />
                     <NewJournalEntryHeader 
                         title={newTitle}
                         setTitle={setNewTitle}
                         date={formatJournalDate(date)}
                     />
                 </View>
-                <ScrollView className="flex-1 w-full bg-primary-50">
+                <ScrollView className="flex-1 w-full px-4 bg-primary-50">
                     <JournalTextEntry
                         text={newText}
                         setText={setNewText}
                     />
                 </ScrollView>
+                {/* Nothing to save until something's written */}
                 <JournalButton
-                    isVisible={true}
+                    isVisible={!isEmpty}
                     onPress={handleSave}
-                    iconName="save"
+                    iconName="checkmark"
                     className="absolute bottom-12 right-8 bg-primary-500 p-4 rounded-full shadow-sm"
                 />
             </SafeAreaView>

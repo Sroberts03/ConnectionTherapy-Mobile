@@ -1,10 +1,10 @@
-import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
+import ScreenHeader from "../../../globalComponents/ScreenHeader";
 
 export default function SettingsHeader() {
     return (
-        <View className="mt-20">
-            <Ionicons name="settings-outline" size={80} color="#4B5563" className="self-center"/>
+        <View className="px-4 pt-4">
+            <ScreenHeader title="Settings" />
         </View>
     );
 }

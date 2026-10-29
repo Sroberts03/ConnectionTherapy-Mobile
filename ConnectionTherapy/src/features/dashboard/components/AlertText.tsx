@@ -28,7 +28,7 @@ export default function AlertText({ pillar, isVisible, onClose }: AlertTextProps
                         <Ionicons name={iconName} size={32} color={iconColor} />
                     </View>
                     
-                    <Text className="text-xl font-bold text-neutral-900 mb-2">
+                    <Text className="text-xl font-bold text-neutral-900 mb-2 text-center">
                         {title}
                     </Text>
                     

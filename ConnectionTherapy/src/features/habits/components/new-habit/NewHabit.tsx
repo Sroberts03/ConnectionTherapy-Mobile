@@ -8,6 +8,7 @@ import HabitStartEndDateInput from "./HabitStartEndDateInput";
 import CreationErrorMessage from "./CreationError";
 import { useHabitForm } from "./NewHabitForm";
 import HabitCategorySelector from "./HabitCategorySelector";
+import { HabitSuggestion } from "../../utils/habitSuggestions";
 
 interface NewHabitProps {
     isVisible: boolean
@@ -15,14 +16,15 @@ interface NewHabitProps {
     date: Date
     category?: HabitCategory
     habitId?: number
+    suggestion?: HabitSuggestion
 }
 
 function getNewHabitTitle(category: HabitCategory, habitId?: number): string {
     return habitId ? "Edit Habit" : `New ${category} Habit`;
 }
 
-export default function NewHabit({ isVisible, onClose, date, category, habitId }: NewHabitProps) {
-    const form = useHabitForm(date, category, habitId, onClose);
+export default function NewHabit({ isVisible, onClose, date, category, habitId, suggestion }: NewHabitProps) {
+    const form = useHabitForm(date, category, habitId, onClose, suggestion);
 
     return (
         <Modal animationType="fade" transparent visible={isVisible} onRequestClose={form.closeAndReset}>
@@ -96,7 +98,7 @@ export default function NewHabit({ isVisible, onClose, date, category, habitId }
                                 </TouchableOpacity>
                                 <TouchableOpacity 
                                     onPress={form.handleSave} 
-                                    className="flex-1 bg-teal-600 py-4 rounded-2xl items-center shadow-sm"
+                                    className="flex-1 bg-primary-600 py-4 rounded-2xl items-center shadow-sm"
                                 >
                                     <Text className="text-white font-bold text-base">Save Habit</Text>
                                 </TouchableOpacity>

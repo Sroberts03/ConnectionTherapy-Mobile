@@ -50,20 +50,20 @@ export default function DatePicker({date, setDate}: DatePickerProps) {
 
     return (
         <View>
-            <View className="flex-row items-center justify-between bg-white rounded-[2rem] px-6 py-4 w-11/12 self-center shadow-sm border border-neutral-100 mb-4">
-                <TouchableOpacity onPress={handlePrevDay} className="p-2">
-                    <Ionicons name="chevron-back" size={24} color="#9ca3af" />
+            <View className="flex-row items-center justify-between bg-white rounded-[2rem] px-6 py-3 w-11/12 self-center border border-neutral-300 mb-4">
+                <TouchableOpacity onPress={handlePrevDay} className="p-2" accessibilityLabel="Previous day">
+                    <Ionicons name="chevron-back" size={24} color="#7d756b" />
                 </TouchableOpacity>
 
                 <View className="flex-row items-center">
                     <TouchableOpacity onPress={() => setShowPicker(!showPicker)}>
-                        <Ionicons name="calendar-outline" size={24} color="#0d9488" />
+                        <Ionicons name="calendar-outline" size={24} color="#4f6650" />
                     </TouchableOpacity>
-                    <Text className="text-xl font-bold text-neutral-600 ml-4">{getDisplayText()}</Text>
+                    <Text className="text-xl font-bold text-neutral-900 ml-3">{getDisplayText()}</Text>
                 </View>
 
-                <TouchableOpacity onPress={handleNextDay} className="p-2">
-                    <Ionicons name="chevron-forward" size={24} color="#9ca3af" />
+                <TouchableOpacity onPress={handleNextDay} className="p-2" accessibilityLabel="Next day">
+                    <Ionicons name="chevron-forward" size={24} color="#7d756b" />
                 </TouchableOpacity>
             </View>
 

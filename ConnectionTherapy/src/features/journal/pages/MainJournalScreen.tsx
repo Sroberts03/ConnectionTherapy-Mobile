@@ -21,21 +21,19 @@ export default function MainJournalScreen() {
     }, []);
 
     return (
-        <View className={`flex-1 bg-primary-50`}>
-            <ScrollView className={`flex-1 px-4 py-4 bg-primary-50`}>
-                <SafeAreaView>
-                    <View className={`flex-1 bg-primary-50 ios:mb-12 android:-mb-`}>
-                        <ErrorLoading loading={false} error={error} />
-                        <JournalEntryLoading isVisible={loading} />
-                        <JournalEntryArea isVisible={!loading && !error} />
-                    </View>
-                </SafeAreaView>
+        <SafeAreaView edges={["top"]} className={`flex-1 bg-primary-50`}>
+            <ScrollView className={`flex-1 px-4 pt-4`}>
+                <View className={`flex-1 ios:mb-32 android:mb-4`}>
+                    <ErrorLoading loading={false} error={error} />
+                    <JournalEntryLoading isVisible={loading} />
+                    <JournalEntryArea isVisible={!loading && !error} />
+                </View>
             </ScrollView>
             <AddButton
                 onPress={() => router.push(`(journal)/CreateNew`)}
                 containerClassname="absolute ios:bottom-28 android:bottom-4 right-4 bg-primary-500 p-4 rounded-full shadow-sm"
                 isVisible={true}
             />
-        </View>
+        </SafeAreaView>
     )
 }

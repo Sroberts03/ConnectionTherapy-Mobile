@@ -11,25 +11,26 @@ export default function JournalButtonContainer({ onEditPress, onDeletePress }: J
     const [buttonsExapnded, setButtonsExpanded] = useState(false);
 
     return (
-        <View className="flex-col gap-4 justify-between items-center p-4">
-            <JournalButton 
-                onPress={() => setButtonsExpanded(!buttonsExapnded)} 
-                isVisible={true}
-                iconName="menu"
-                className={`absolute bottom-24 right-4 p-4 rounded-full ${buttonsExapnded ? "bg-primary-300" : "bg-primary-500"}`}
-            />
-            <JournalButton 
-                onPress={onEditPress}
-                isVisible={buttonsExapnded} 
-                iconName="pencil"
-                className="absolute bottom-40 right-4 bg-primary-500 p-4 rounded-full"
-            />
+        // Anchored where the new-entry save button sits, so the action lives in one spot
+        <View className="absolute bottom-12 right-8 items-center gap-y-3">
             <JournalButton 
                 onPress={onDeletePress}
                 isVisible={buttonsExapnded} 
                 iconName="trash"
-                className="absolute bottom-56 right-4 bg-red-500 p-4 rounded-full"
+                className="bg-red-500 p-4 rounded-full shadow-sm"
             />    
+            <JournalButton 
+                onPress={onEditPress}
+                isVisible={buttonsExapnded} 
+                iconName="pencil"
+                className="bg-primary-500 p-4 rounded-full shadow-sm"
+            />
+            <JournalButton 
+                onPress={() => setButtonsExpanded(!buttonsExapnded)} 
+                isVisible={true}
+                iconName={buttonsExapnded ? "close" : "menu"}
+                className={`p-4 rounded-full shadow-sm ${buttonsExapnded ? "bg-primary-300" : "bg-primary-500"}`}
+            />
         </View>
     )
 }

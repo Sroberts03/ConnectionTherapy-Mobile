@@ -7,6 +7,7 @@ import { useState } from "react"
 import ConfirmDeleteHabit from "./ConfirmDeleteHabit"
 import { useHabitContext } from "../HabitContext"
 import { getPillarTheme } from "../utils/getPillarTheme"
+import { habitSuggestions, HabitSuggestion } from "../utils/habitSuggestions"
 
 interface HabitPillarContainerProps {
     category: HabitCategory
@@ -16,9 +17,12 @@ interface HabitPillarContainerProps {
 export default function HabitPillarContainer({category, date}: HabitPillarContainerProps) {
     const { currentHabits, setHabitError } = useHabitContext();
     const { IconComponent } = getPillarTheme(category);
+    const pillarHabits = Array.from(currentHabits.values()).filter((habit) => habit.category === category);
     const [newHabitVisible, setNewHabitVisible] = useState(false)
     const [editHabitId, setEditHabitId] = useState<number | undefined>(undefined);
     const [deleteHabitId, setDeleteHabitId] = useState<number | undefined>(undefined);
+    const [suggestion, setSuggestion] = useState<HabitSuggestion | undefined>(undefined);
+    const starter = habitSuggestions[category];
 
     const getNewHabitComponent = () => {
         if (editHabitId !== undefined) {
@@ -35,51 +39,78 @@ export default function HabitPillarContainer({category, date}: HabitPillarContai
             return (
                 <NewHabit
                     isVisible={newHabitVisible}
-                    onClose={() => setNewHabitVisible(false)}
+                    onClose={() => {
+                        setNewHabitVisible(false)
+                        setSuggestion(undefined)
+                    }}
                     category={category}
                     date={date}
+                    {...(suggestion ? { suggestion } : {})}
                 />
             )
         }
     }
 
     return (
-        <View className="bg-white rounded-2xl p-5 shadow-sm border border-neutral-100 mb-4 w-11/12 self-center">
-            <View className="flex-row items-center mb-4">
-                <IconComponent size={24} color="#a4a4a4ff" />
-                <Text className="text-lg font-bold text-neutral-800 ml-2 capitalize">{category}</Text>
+        <View className="bg-white rounded-2xl px-5 py-4 border border-neutral-300 mb-4 w-11/12 self-center">
+            {/* Adding lives in the header so an empty pillar collapses to one quiet line */}
+            <View className="flex-row items-center justify-between">
+                <View className="flex-row items-center">
+                    <IconComponent size={22} color="#7d756b" />
+                    <Text className="text-lg font-bold text-neutral-800 ml-2 capitalize">{category}</Text>
+                </View>
+                <TouchableOpacity 
+                    className="flex-row items-center px-3 py-1.5 rounded-full bg-primary-50"
+                    hitSlop={8}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Add ${category} habit`}
+                    onPress={() => {
+                        setNewHabitVisible(true)
+                        setHabitError("")
+                    }}
+                >
+                    <Ionicons name="add" size={16} color="#4f6650" />
+                    <Text className="text-primary-600 font-semibold ml-0.5">Add</Text>
+                </TouchableOpacity>
             </View>
             
-            <View className="gap-y-3">
-                {Array.from(currentHabits.values()).filter((habit) => habit.category === category).length === 0 && (
-                    <View className="rounded-xl p-5 items-center justify-center">
-                        <View className="p-3 mb-3">
-                            <IconComponent size={24} color="#a4a4a4ff" />
-                        </View>
-                        <Text className="text-neutral-400 font-medium ml-1">No habits yet</Text>
-                        <Text className="text-sm text-neutral-400 ml-1">Start small to build consistency</Text>
+            {pillarHabits.length === 0 && (
+                <TouchableOpacity
+                    className="flex-row items-center justify-between mt-3 px-4 py-3 rounded-xl border border-dashed border-primary-300"
+                    activeOpacity={0.7}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Start with ${starter.name}, ${starter.duration}`}
+                    onPress={() => {
+                        setSuggestion(starter)
+                        setNewHabitVisible(true)
+                        setHabitError("")
+                    }}
+                >
+                    <View className="flex-1">
+                        <Text className="text-xs font-semibold uppercase tracking-wide text-neutral-500">Try starting with</Text>
+                        <Text className="text-base font-medium text-neutral-800 mt-0.5">
+                            {starter.name} <Text className="text-neutral-500 font-normal">· {starter.duration}</Text>
+                        </Text>
                     </View>
-                )}
-                {Array.from(currentHabits.values()).filter((habit) => habit.category === category).map((habit) => (
-                    <HabitCard 
-                        key={habit.id} 
-                        habit={habit} 
-                        setEditHabitId={setEditHabitId}
-                        setDeleteHabitId={setDeleteHabitId}
-                    />
-                ))}
-            </View>
+                    <Ionicons name="arrow-forward" size={18} color="#4f6650" />
+                </TouchableOpacity>
+            )}
 
-            <TouchableOpacity 
-                className="flex-row items-center mt-5 ml-1" 
-                onPress={() => {
-                    setNewHabitVisible(true)
-                    setHabitError("")
-                }}
-            >
-                <Ionicons name="add" size={16} color="#9ca3af" />
-                <Text className="text-neutral-400 font-medium ml-1">Add habit</Text>
-            </TouchableOpacity>
+            {pillarHabits.length > 0 && (
+                <View className="mt-2">
+                    {pillarHabits.map((habit, index) => (
+                        <View key={habit.id} className={index > 0 ? "border-t border-neutral-300" : ""}>
+                            <HabitCard 
+                                habit={habit} 
+                                setEditHabitId={setEditHabitId}
+                                setDeleteHabitId={setDeleteHabitId}
+                                showCategory={false}
+                                nested
+                            />
+                        </View>
+                    ))}
+                </View>
+            )}
 
             <View>
                 {getNewHabitComponent()}

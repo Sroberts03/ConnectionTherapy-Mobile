@@ -12,7 +12,7 @@ export default function HabitDurationInput({ duration, setDuration }: HabitDurat
             <TextInput 
                 className="bg-neutral-50 border border-neutral-200 rounded-2xl px-4 py-4 text-base text-neutral-800"
                 placeholder="e.g. 30 mins, 1 chapter"
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor="#7d756b"
                 value={duration}
                 onChangeText={setDuration}
             />

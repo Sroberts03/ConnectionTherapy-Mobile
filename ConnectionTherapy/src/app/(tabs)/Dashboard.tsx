@@ -9,7 +9,6 @@ import { useQuote } from "@src/features/quote/QuoteContext"
 import { useEffect } from "react"
 import { ScrollView, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import GoToDailyCheck from "@src/features/daily-check/components/GoToDailyCheck"
 
 export default function DashBoard() {
     const { getQuote } = useQuote()
@@ -24,12 +23,12 @@ export default function DashBoard() {
     }, [session])
    
     return (
-        <ScrollView 
-            className="flex-1 bg-primary-50 px-4 py-4"
-            showsVerticalScrollIndicator={false}
-        >
-            <SafeAreaView>
-                <View className="ios:mb-16">
+        <SafeAreaView edges={["top"]} className="flex-1 bg-primary-50">
+            <ScrollView 
+                className="flex-1 px-4 pt-4"
+                showsVerticalScrollIndicator={false}
+            >
+                <View className="ios:mb-32">
                     <DashboardHeader />
                     <QuoteCard />
                     {loadingPillars ? 
@@ -38,7 +37,7 @@ export default function DashBoard() {
                     }
                     <TopHabitsContainer/>
                 </View>
-            </SafeAreaView>
-        </ScrollView>
+            </ScrollView>
+        </SafeAreaView>
     )
 }

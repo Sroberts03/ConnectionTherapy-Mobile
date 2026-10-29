@@ -31,7 +31,7 @@ function IntialLayout() {
     if (loadingAuth) {
         return (
             <View className="flex-1 justify-center items-center">
-                <ActivityIndicator size="large" color="#2563eb" />
+                <ActivityIndicator size="large" color="#4f6650" />
             </View>
         );
     }
@@ -61,7 +61,7 @@ export default function RootLayout() {
     if (!success) {
         return (
             <View className="flex-1 justify-center items-center">
-                <ActivityIndicator size="large" color="#2563eb" />
+                <ActivityIndicator size="large" color="#4f6650" />
                 <Text className="mt-4">Updating Database...</Text>
             </View>
         );

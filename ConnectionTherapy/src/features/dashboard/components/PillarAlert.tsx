@@ -12,26 +12,24 @@ export default function PillarAlert({ pillar }: PillarAlertProps) {
     const { concern, danger } = pillar;
     const [alertTextVisible, setAlertTextVisible] = useState(false);
     
-    const getIcon = () => {
-        if (danger) {
-            return "warning-outline"
-        }
-        return "alert-circle-outline"
-    }
-
     const getColor = () => {
         if (danger) {
-            return "#ef4444"
+            return "#b45309"
         }
-        return "#f59e0b"
+        return "#d97706"
     }
 
     if (!concern && !danger) return null;
     
     return (
         <View className="absolute top-2 right-2">
-            <TouchableOpacity onPress={() => setAlertTextVisible(!alertTextVisible)}>
-                <Ionicons name={getIcon()} size={24} color={getColor()} />
+            <TouchableOpacity
+                onPress={() => setAlertTextVisible(!alertTextVisible)}
+                hitSlop={8}
+                accessibilityLabel={`About your ${pillar.name} pillar`}
+                className="w-7 h-7 rounded-full bg-amber-50 items-center justify-center"
+            >
+                <Ionicons name="leaf-outline" size={16} color={getColor()} />
             </TouchableOpacity>
             <AlertText
                 pillar={pillar}

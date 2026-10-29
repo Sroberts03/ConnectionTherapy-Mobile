@@ -11,31 +11,32 @@ type HabitCardStyle = {
     checkIconColor: string;
 };
 
+// A finished habit stays in its pillar colour and reads as done, not cancelled
 export function getHabitCardStyle(isCompleted: boolean, color: string): HabitCardStyle {
     if (isCompleted) {
         return {
-            iconColor: "#e0dcd4",
-            nameClassName: "text-lg font-semibold text-neutral-400 line-through",
-            descriptionClassName: "text-xs font-semibold text-neutral-400 line-through",
-            categoryBackgroundColor: "#f5f5f5",
-            categoryOpacity: 1,
-            categoryTextColor: "#a3a3a3",
-            categoryTextClassName: "text-[10px] font-semibold capitalize line-through",
-            durationClassName: "text-xs text-neutral-300 line-through",
+            iconColor: color,
+            nameClassName: "text-lg font-semibold text-neutral-600",
+            descriptionClassName: "text-xs font-semibold text-neutral-500",
+            categoryBackgroundColor: color,
+            categoryOpacity: 0.15,
+            categoryTextColor: color,
+            categoryTextClassName: "text-[10px] font-semibold capitalize",
+            durationClassName: "text-xs font-semibold",
             checkIconName: "checkmark-circle",
-            checkIconColor: "#14b850ff",
+            checkIconColor: color,
         };
     }
 
     return {
         iconColor: color,
-        nameClassName: "text-lg font-semibold text-black",
+        nameClassName: "text-lg font-semibold text-neutral-900",
         descriptionClassName: "text-xs font-semibold text-neutral-700",
         categoryBackgroundColor: color,
         categoryOpacity: 0.15,
         categoryTextColor: color,
         categoryTextClassName: "text-[10px] font-semibold capitalize",
-        durationClassName: "text-xs text-neutral-900",
+        durationClassName: "text-xs text-neutral-800",
         checkIconName: "ellipse-outline",
         checkIconColor: color,
     };

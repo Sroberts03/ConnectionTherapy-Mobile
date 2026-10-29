@@ -4,8 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 export default function TakeItOneWeekDialog() {
     return (
         <View className="flex-1 justify-center items-center px-8 py-20 mt-10">
-            <View className="bg-teal-50 p-6 rounded-full mb-6">
-                <Ionicons name="calendar-clear-outline" size={48} color="#0d9488" />
+            <View className="bg-primary-100 p-6 rounded-full mb-6">
+                <Ionicons name="calendar-clear-outline" size={48} color="#4f6650" />
             </View>
             <Text className="text-2xl font-bold text-neutral-800 text-center mb-4">
                 Let's take it one week at a time

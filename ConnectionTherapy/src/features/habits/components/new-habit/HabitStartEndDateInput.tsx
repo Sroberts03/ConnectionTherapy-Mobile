@@ -53,7 +53,7 @@ export default function HabitStartEndDateInput({
 
             <View className="mb-5">
                 <TouchableOpacity className="items-center" onPress={() => setShowRepeatInfo(!showRepeatInfo)}>
-                    <Text className="text-teal-600">{showRepeatInfo ? 'Hide repetition options' : 'Show repetition options'}</Text>
+                    <Text className="text-primary-600">{showRepeatInfo ? 'Hide repetition options' : 'Show repetition options'}</Text>
                 </TouchableOpacity>
                 <View className="border-b-2 border-neutral-100 w-full mt-2"/>
             </View>

@@ -1,18 +1,19 @@
-import { View, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import SettingsButtonArea from "../components/SettingsButtonArea";
 import SettingsHeader from "../components/SettingsHeader";
 
 export default function MainSettingsScreen() {
 
     return (
-        <View className={`flex-1 bg-primary-50`}>
+        <SafeAreaView edges={["top"]} className={`flex-1 bg-primary-50`}>
             <ScrollView
-                className={`flex-1 ios:mb-4 android:-mb-16`}
+                className={`flex-1`}
             >
                 <SettingsHeader />
                 <SettingsButtonArea />
             </ScrollView>
-        </View>
+        </SafeAreaView>
     );
 }
     

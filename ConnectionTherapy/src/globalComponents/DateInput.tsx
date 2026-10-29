@@ -8,9 +8,10 @@ interface DateInputProps {
     setSelectedDate: (date: string) => void
     showDatePicker: boolean
     setShowDatePicker: (showDatePicker: boolean) => void
+    placeholder?: string
 }
 
-export default function DateInput({ selectedDate, setSelectedDate, showDatePicker, setShowDatePicker }: DateInputProps) {
+export default function DateInput({ selectedDate, setSelectedDate, showDatePicker, setShowDatePicker, placeholder = "Select a date" }: DateInputProps) {
     const { 
         mainButtonClass, 
         calendarIconColor, 
@@ -41,8 +42,8 @@ export default function DateInput({ selectedDate, setSelectedDate, showDatePicke
             >
                 <View className="flex-row items-center">
                     <Ionicons name="calendar-outline" size={20} color={calendarIconColor} />
-                    <Text className={dateTextClass}>
-                        {selectedDate === "" ? "Select a date" : formattedDate}
+                    <Text className={selectedDate ? dateTextClass : "text-base font-medium ml-3 text-neutral-500"}>
+                        {selectedDate ? formattedDate : placeholder}
                     </Text>
                 </View>
                 <Ionicons name={chevron} size={20} color={chevronIconColor} />
@@ -52,7 +53,7 @@ export default function DateInput({ selectedDate, setSelectedDate, showDatePicke
                 <View className="bg-white rounded-2xl mt-2 border border-neutral-100">
                     <DateTimePicker
                         value={safeDate}
-                        accentColor="#0d9488"
+                        accentColor="#4f6650"
                         onValueChange={(_event, date) => { 
                             if (date) {
                                 const y = date.getFullYear();

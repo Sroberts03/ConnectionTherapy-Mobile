@@ -7,8 +7,8 @@ interface Props {
 }
 export default function BackButton({ className }: Props) {
     return (
-        <TouchableOpacity onPress={() => router.back()} className={className}>
-            <Feather name="chevron-left" size={20} color="#000000ff" />
+        <TouchableOpacity onPress={() => router.back()} className={className} hitSlop={12} accessibilityRole="button" accessibilityLabel="Go back">
+            <Feather name="chevron-left" size={24} color="#312c28" />
         </TouchableOpacity>
     );
 }

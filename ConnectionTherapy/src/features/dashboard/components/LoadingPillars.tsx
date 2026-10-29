@@ -9,7 +9,7 @@ interface LoadingPillarsProps {
 const SkeletonPillar = () => {
     return (
         <View 
-            className="bg-white rounded-xl border border-gray-100 items-center justify-center w-[140px] h-[150px]"
+            className="bg-white rounded-xl border border-gray-100 items-center justify-center w-[48%] h-[150px]"
             style={{
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 1 },
@@ -37,8 +37,8 @@ export default function LoadingPillars({ loadingPillars }: LoadingPillarsProps) 
 
     return (
         <View className="mt-4">
-            <ViewOtherInfoButton onPress={() => router.push("/(tabs)/Progress")} text="View Progress" />
-            <View className="flex-row flex-wrap justify-center gap-4">
+            <ViewOtherInfoButton onPress={() => router.push("/(tabs)/Progress")} text="View Progress" title="Your Week" />
+            <View className="flex-row flex-wrap justify-between gap-y-4">
                 {skeletonItems.map((item) => (
                     <SkeletonPillar key={`skeleton-${item}`} />
                 ))}

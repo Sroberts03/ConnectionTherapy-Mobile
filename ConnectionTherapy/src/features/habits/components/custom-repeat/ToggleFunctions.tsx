@@ -10,7 +10,7 @@ export function ToggleChip({
     return (
         <TouchableOpacity
             onPress={onPress}
-            className={`${size} rounded-full items-center justify-center border ${selected ? "bg-teal-600 border-teal-600" : "bg-white border-neutral-200"}`}
+            className={`${size} rounded-full items-center justify-center border ${selected ? "bg-primary-600 border-primary-600" : "bg-white border-neutral-200"}`}
         >
             <Text className={`text-xs ${selected ? "text-white font-semibold" : "text-neutral-600"}`}>{label}</Text>
         </TouchableOpacity>

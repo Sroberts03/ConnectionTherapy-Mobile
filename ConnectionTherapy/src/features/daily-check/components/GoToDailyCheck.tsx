@@ -1,31 +1,36 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 
 
 interface GoToDailyCheckProps {
     isVisible: boolean;
 }
+
+// Check-ins aren't built yet, so this previews them instead of offering a button
+// that leads to an empty screen. Swap the badge for a button to /(daily-check)/DailyCheck once they ship.
 export default function GoToDailyCheck( { isVisible }: GoToDailyCheckProps ) {
-    const router = useRouter();
     if (!isVisible) return null;
 
     return (
-        <View className="flex-1 items-center justify-center bg-neutral-300 rounded-2xl w-full h-60 p-4 border border-primary-200">
-            <Text className="text-md font-bold mb-2 text-center">
-                You haven&apos;t completed your daily check-in yet!
+        <View
+            className="rounded-2xl w-full p-5 border border-dashed border-primary-300"
+            accessible
+            accessibilityLabel="Daily check-ins, coming soon"
+        >
+            <View className="flex-row items-center justify-between mb-3">
+                <View className="w-10 h-10 rounded-full bg-primary-100 items-center justify-center">
+                    <Ionicons name="sunny-outline" size={20} color="#4f6650" />
+                </View>
+                <View className="px-2.5 py-1 rounded-full bg-primary-100">
+                    <Text className="text-xs font-semibold text-primary-700">Coming soon</Text>
+                </View>
+            </View>
+            <Text className="text-lg font-bold text-neutral-900 mb-1">
+                Daily check-ins
             </Text>
-            <Text className="text-center">
-                Take some time to check in and reflect on your day. 
-                This is a great way to stay mindful and track your progress.
+            <Text className="text-base text-neutral-600 leading-6">
+                A minute each day to notice how you&apos;re feeling, before the day carries you along.
             </Text>
-            <TouchableOpacity 
-                className="bg-primary-300 px-4 py-2 rounded-lg mt-4 flex-row items-center justify-center gap-2"
-                onPress={() => router.push("/(daily-check)/DailyCheck")}
-            >
-                <Text>Go To Daily Check In</Text>
-                <Ionicons name="arrow-forward" size={16} color="black" />   
-            </TouchableOpacity>
         </View>
     )
 }

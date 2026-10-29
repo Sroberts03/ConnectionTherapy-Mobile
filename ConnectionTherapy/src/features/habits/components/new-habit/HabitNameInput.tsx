@@ -12,7 +12,7 @@ export default function HabitNameInput({ name, setName }: HabitNameInputProps) {
             <TextInput 
                 className="bg-neutral-50 border border-neutral-200 rounded-2xl px-4 py-4 text-base text-neutral-800"
                 placeholder="e.g. Read a book"
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor="#7d756b"
                 value={name}
                 onChangeText={setName}
             />

@@ -20,9 +20,9 @@ export default function RepeatDropdown({ isVisible, repetition, setShowRepeatDro
                         setRepetition(opt.value);
                         setShowRepeatDropdown(false);
                     }}
-                    className={`px-4 py-4 ${index < repeatOptions.length - 1 ? 'border-b border-neutral-100' : ''} ${repetition === opt.value ? 'bg-teal-50' : ''}`}
+                    className={`px-4 py-4 ${index < repeatOptions.length - 1 ? 'border-b border-neutral-100' : ''} ${repetition === opt.value ? 'bg-primary-100' : ''}`}
                 >
-                    <Text className={`text-base font-medium ${repetition === opt.value ? 'text-teal-700' : 'text-neutral-700'}`}>
+                    <Text className={`text-base font-medium ${repetition === opt.value ? 'text-primary-700' : 'text-neutral-700'}`}>
                         {opt.label}
                     </Text>
                 </TouchableOpacity>

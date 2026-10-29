@@ -19,7 +19,7 @@ export default function ErrorLoading({ error, loading }: Props) {
         return (
             <ActivityIndicator
                 size="large"
-                color="#0000ff"
+                color="#4f6650"
             />
         );
     }

@@ -1,4 +1,4 @@
-import { HabitCategory } from "../habits/habits.types";
+import { Habit, HabitCategory } from "../habits/habits.types";
 
 export interface ConnectionPillar {
     id: number;
@@ -9,4 +9,11 @@ export interface ConnectionPillar {
     icon: string;
     concern: boolean;
     danger: boolean;
+    daysCounted: number;
+    daysShownUp: number;
+    hasHabits: boolean;
+}
+
+export interface PillarHabit extends Habit {
+    completeBy: string;
 }
